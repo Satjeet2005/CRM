@@ -18,8 +18,8 @@ export function PermissionsGrid({ permissions = [] }: PermissionsGridProps) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3.5 min-w-0">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-lg)] border border-[var(--color-primary-200)] bg-[var(--color-primary-50)] text-[var(--color-primary-600)] dark:border-[var(--color-primary-800)] dark:bg-[var(--color-primary-950)]/40 dark:text-[var(--color-primary-400)]">
-            <Key className="h-5 w-5" aria-hidden="true" />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)] bg-[var(--color-bg-canvas)] text-[var(--color-fg-default)] shadow-xs">
+            <Key className="h-5 w-5 text-[var(--color-fg-muted)]" aria-hidden="true" />
           </div>
           <div className="min-w-0 flex flex-col justify-center">
             <h2 className="text-base font-semibold leading-[22px] text-[var(--color-fg-default)] truncate">

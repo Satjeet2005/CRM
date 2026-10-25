@@ -159,8 +159,8 @@ export default function SettingsOverviewPage() {
       {/* Enterprise Platform Governance Card */}
       <Card className="p-5 border-[var(--color-border-default)] shadow-xs rounded-[var(--radius-xl)] bg-[var(--color-bg-surface)]">
         <div className="flex items-start gap-3.5">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-bg-subtle)] text-[var(--color-fg-default)]">
-            <Shield className="h-4.5 w-4.5" aria-hidden="true" />
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)] bg-[var(--color-bg-canvas)] text-[var(--color-fg-default)] shadow-xs">
+            <Shield className="h-4.5 w-4.5 text-[var(--color-fg-muted)]" aria-hidden="true" />
           </div>
           <div className="space-y-1.5 flex-1 min-w-0">
             <h3 className="text-sm font-semibold leading-5 text-[var(--color-fg-default)]">
