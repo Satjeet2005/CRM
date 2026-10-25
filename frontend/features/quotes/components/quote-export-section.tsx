@@ -255,7 +255,7 @@ export function QuoteExportSection({ quote }: QuoteExportSectionProps) {
                       onClick={() => handleCopyHash(del.sha256_hash)}
                       className="inline-flex items-center gap-1 text-[10px] font-mono bg-[var(--surface)] px-1.5 py-0.5 rounded border border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--surface-muted)] cursor-pointer"
                       title="Copy full 64-char SHA-256 fingerprint"
-                      aria-label="Copy SHA-256 fingerprint"
+                      aria-label={`Copy SHA-256 fingerprint ${del.sha256_hash.slice(0, 10)}...`}
                     >
                       {copiedHash === del.sha256_hash ? (
                         <Check className="h-3 w-3 text-emerald-600" />

@@ -2,43 +2,40 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import {
-  FileText,
   Calculator,
   ShieldAlert,
   ShieldCheck,
   CheckCircle2,
   AlertTriangle,
-  Clock,
   Save,
   RotateCcw,
   Eye,
   EyeOff,
   Layers,
   ArrowLeft,
-  Info,
   Building,
   Briefcase,
   FileSpreadsheet,
-  Check,
-  Percent,
 } from "lucide-react";
 import { toast } from "sonner";
 import { PageContainer } from "@/components/layout/page-container";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { StatusBadge } from "@/components/ui/status-badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/sakani/button";
+import { Input } from "@/components/sakani/input";
+import { Badge } from "@/components/sakani/badge";
+import { Card } from "@/components/sakani/card";
+import { LoadingSkeleton } from "@/components/data-display/loading-skeleton";
 import {
   Sheet,
   SheetPopup,
+  SheetHeader,
   SheetTitle,
   SheetDescription,
-} from "@/components/ui/sheet";
+  SheetBody,
+} from "@/components/sakani/sheet";
 import { ErrorState } from "@/components/data-display/error-state";
-import { DateTimeText } from "@/components/data-display/date-time-text";
-import { formatMoney, formatDate } from "@/lib/formatters/formatters";
+import { formatMoney } from "@/lib/formatters/formatters";
 import { useAuth } from "@/hooks/use-auth";
 import { ApiError } from "@/lib/api/client";
 import {
@@ -46,7 +43,6 @@ import {
   useCalculationTrace,
   useUpdateQuoteDraft,
   type QuoteDetail,
-  type QuoteRevisionLine,
   type QuoteDraftLineUpdateInput,
   type CalculationTrace,
 } from "@/features/quotes/api";
@@ -100,10 +96,8 @@ export default function QuoteDetailPage() {
   if (isLoading) {
     return (
       <PageContainer>
-        <div className="space-y-6 mt-4">
-          <Skeleton className="h-10 w-1/3" />
-          <Skeleton className="h-64 w-full" />
-          <Skeleton className="h-48 w-full" />
+        <div className="space-y-4 max-w-5xl py-6">
+          <LoadingSkeleton rows={6} />
         </div>
       </PageContainer>
     );
@@ -330,52 +324,66 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
   const policyEval = (quote.approval_triggers || []) as unknown as PolicyTriggerItem[];
   const requiresApproval = quote.requires_manager_approval;
 
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "draft":
+        return <Badge variant="neutral" emphasis="subtle">DRAFT</Badge>;
+      case "in_review":
+        return <Badge variant="warning" emphasis="subtle">IN REVIEW</Badge>;
+      case "approved":
+        return <Badge variant="success" emphasis="subtle">APPROVED</Badge>;
+      case "rejected":
+        return <Badge variant="danger" emphasis="subtle">REJECTED</Badge>;
+      case "converted":
+        return <Badge variant="info" emphasis="subtle">CONVERTED</Badge>;
+      default:
+        return <Badge variant="neutral" emphasis="subtle">{status.toUpperCase()}</Badge>;
+    }
+  };
+
   return (
     <PageContainer>
       {/* Top Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--border)] pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--color-border-subtle)] pb-4">
         <div>
           <div className="flex items-center gap-3">
             <Link
               href="/app/quotes"
-              className="text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] inline-flex items-center gap-1"
+              className="text-xs text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] inline-flex items-center gap-1 transition-colors focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] rounded-[var(--radius-xs)]"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               <span>Back to Quotations</span>
             </Link>
-            <span className="text-[var(--border)]">|</span>
-            <span className="text-xs font-mono text-[var(--muted-foreground)]">
+            <span className="text-[var(--color-border-subtle)]">|</span>
+            <span className="text-xs font-mono text-[var(--color-fg-muted)]">
               v{quote.version}
             </span>
           </div>
 
           <div className="flex items-center gap-3 mt-1.5">
-            <h1 className="text-xl font-bold tracking-tight font-mono text-[var(--foreground)]">
+            <h1 className="text-xl font-bold tracking-tight font-mono text-[var(--color-fg-default)]">
               {quote.quote_number}
             </h1>
-            <StatusBadge
-              variant={quote.status === "draft" ? "neutral" : "info"}
-              label={quote.status.toUpperCase()}
-            />
+            {getStatusBadge(quote.status)}
             {currentRev && (
-              <span className="inline-flex items-center gap-1 rounded bg-[var(--surface-muted)] px-2 py-0.5 text-xs font-medium font-mono text-[var(--foreground)] border border-[var(--border)]">
-                <Layers className="h-3 w-3 text-[var(--muted-foreground)]" />
-                Revision {currentRev.revision_number}
+              <span className="inline-flex items-center gap-1 rounded-[var(--radius-sm)] bg-[var(--color-bg-subtle)] px-2 py-0.5 text-xs font-medium font-mono text-[var(--color-fg-default)] border border-[var(--color-border-subtle)]">
+                <Layers className="h-3 w-3 text-[var(--color-fg-muted)]" />
+                <span>Revision {currentRev.revision_number}</span>
               </span>
             )}
             {isDirty && (
-              <span className="inline-flex items-center gap-1 rounded bg-amber-50 border border-amber-200 px-2 py-0.5 text-[11px] font-medium text-amber-700">
+              <span className="inline-flex items-center gap-1 rounded-[var(--radius-sm)] bg-amber-50 border border-amber-200 px-2 py-0.5 text-[11px] font-semibold text-[var(--color-warning-700)]">
                 Unsaved Edits
               </span>
             )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 text-xs text-[var(--muted-foreground)] mt-1">
+          <div className="flex flex-wrap items-center gap-3 text-xs text-[var(--color-fg-muted)] mt-1">
             <span className="inline-flex items-center gap-1">
               <Building className="h-3.5 w-3.5" />
               <Link
                 href={`/app/accounts/${quote.account_id}`}
-                className="hover:underline font-medium text-[var(--foreground)]"
+                className="hover:underline font-semibold text-[var(--color-fg-default)]"
               >
                 {quote.account_name}
               </Link>
@@ -385,7 +393,7 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
               <Briefcase className="h-3.5 w-3.5" />
               <Link
                 href={`/app/opportunities/${quote.opportunity_id}`}
-                className="hover:underline text-[var(--muted-foreground)]"
+                className="hover:underline text-[var(--color-fg-muted)]"
               >
                 {quote.opportunity_name}
               </Link>
@@ -397,7 +405,7 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
                   <FileSpreadsheet className="h-3.5 w-3.5" />
                   <Link
                     href={`/app/rfqs/${quote.rfq_id}`}
-                    className="hover:underline text-[var(--primary)] font-mono"
+                    className="hover:underline text-[var(--color-primary-700)] font-mono font-medium"
                   >
                     {quote.rfq_number}
                   </Link>
@@ -436,7 +444,7 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
             onClick={() => setInspectorOpen(true)}
             className="gap-1.5 text-xs h-9 cursor-pointer"
           >
-            <Calculator className="h-3.5 w-3.5 text-[var(--primary)]" />
+            <Calculator className="h-3.5 w-3.5 text-[var(--color-primary-700)]" />
             <span>Calculation Inspector</span>
           </Button>
 
@@ -454,7 +462,7 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
                 }
               }}
               disabled={submitApprovalMutation.isPending || isDirty}
-              className="gap-1.5 text-xs h-9 cursor-pointer border-amber-300 bg-amber-50 text-amber-900 hover:bg-amber-100"
+              className="gap-1.5 text-xs h-9 cursor-pointer border-amber-300 bg-amber-50 text-[var(--color-warning-700)] hover:bg-amber-100"
               title={isDirty ? "Save draft changes before submitting for approval" : undefined}
             >
               <ShieldAlert className="h-3.5 w-3.5 text-amber-600" />
@@ -494,10 +502,10 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
       {/* Customer Preview Mode Banner */}
       {previewMode && (
         <div className="my-4 rounded-[var(--radius-lg)] border-2 border-dashed border-amber-300 bg-amber-50 p-4 text-center">
-          <span className="text-sm font-bold tracking-widest text-amber-900 uppercase font-mono block">
+          <span className="text-sm font-bold tracking-widest text-[var(--color-warning-700)] uppercase font-mono block">
             DRAFT — NOT APPROVED COMMERCIAL PROPOSAL
           </span>
-          <span className="text-xs text-amber-700 mt-1 block">
+          <span className="text-xs text-[var(--color-warning-700)] mt-1 block">
             Customer presentation mode with internal cost and policy masking. For client review only.
           </span>
         </div>
@@ -507,13 +515,13 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Section: Line Items Table (8 cols) */}
         <div className="lg:col-span-8 space-y-4">
-          <div className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] shadow-2xs overflow-hidden">
-            <div className="p-4 border-b border-[var(--border)] flex items-center justify-between bg-[var(--surface-muted)]/30">
+          <div className="rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] shadow-2xs overflow-hidden">
+            <div className="p-4 border-b border-[var(--color-border-subtle)] flex items-center justify-between bg-[var(--color-bg-subtle)]/40">
               <div>
-                <h2 className="text-sm font-semibold text-[var(--foreground)]">
+                <h2 className="text-sm font-semibold text-[var(--color-fg-default)]">
                   Line Items ({draftLines.length})
                 </h2>
-                <p className="text-xs text-[var(--muted-foreground)]">
+                <p className="text-xs text-[var(--color-fg-muted)]">
                   {previewMode
                     ? "Itemized commercial specifications and pricing"
                     : "Edit quantity, unit selling prices, line discount %, and applicable tax rates"}
@@ -523,7 +531,7 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
 
             <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Line items table">
               <table className="w-full text-left text-xs">
-                <thead className="bg-[var(--surface-muted)] border-b border-[var(--border)] text-[var(--muted-foreground)] uppercase tracking-wider font-semibold">
+                <thead className="bg-[var(--color-bg-subtle)] border-b border-[var(--color-border-subtle)] text-[var(--color-fg-muted)] uppercase tracking-wider font-semibold">
                   <tr>
                     <th className="py-2.5 px-3 w-8">#</th>
                     <th className="py-2.5 px-3 min-w-[160px]">Product / Description</th>
@@ -532,12 +540,12 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
                     <th className="py-2.5 px-3 text-right w-20">Disc %</th>
                     <th className="py-2.5 px-3 text-right w-16">Tax %</th>
                     {canViewCost && !previewMode && (
-                      <th className="py-2.5 px-3 text-right w-24 text-amber-700">Cost (INR)</th>
+                      <th className="py-2.5 px-3 text-right w-24 text-[var(--color-warning-700)]">Cost (INR)</th>
                     )}
                     <th className="py-2.5 px-3 text-right min-w-[110px]">Line Total</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[var(--border)]">
+                <tbody className="divide-y divide-[var(--color-border-subtle)]">
                   {draftLines.map((ln, idx) => {
                     const q = parseFloat(ln.quantity) || 0;
                     const p = parseFloat(ln.unit_price) || 0;
@@ -553,18 +561,18 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
                     const serverLine = currentRev?.lines[idx];
 
                     return (
-                      <tr key={ln.id} className="hover:bg-[var(--surface-muted)]/30 transition-colors">
-                        <td className="py-2.5 px-3 font-mono text-[var(--muted-foreground)]">
+                      <tr key={ln.id} className="hover:bg-[var(--color-bg-subtle)]/40 transition-colors">
+                        <td className="py-2.5 px-3 font-mono text-[var(--color-fg-muted)]">
                           {ln.line_order}
                         </td>
                         <td className="py-2.5 px-3">
-                          <span className="font-semibold text-[var(--foreground)] block">
+                          <span className="font-semibold text-[var(--color-fg-default)] block">
                             {ln.product_name}
                           </span>
-                          <span className="font-mono text-[11px] text-[var(--primary)] block">
+                          <span className="font-mono text-[11px] text-[var(--color-primary-700)] block font-medium">
                             SKU: {ln.sku}
                           </span>
-                          <span className="text-[11px] text-[var(--muted-foreground)] line-clamp-1">
+                          <span className="text-[11px] text-[var(--color-fg-muted)] line-clamp-1">
                             {ln.description}
                           </span>
                         </td>
@@ -582,7 +590,7 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
                               className="h-7 text-right text-xs font-mono w-20 ml-auto"
                             />
                           ) : (
-                            <span className="font-mono font-medium">
+                            <span className="font-mono font-medium text-[var(--color-fg-default)]">
                               {parseFloat(ln.quantity).toFixed(2)} {ln.unit}
                             </span>
                           )}
@@ -601,7 +609,7 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
                               className="h-7 text-right text-xs font-mono w-24 ml-auto"
                             />
                           ) : (
-                            <span className="font-mono font-medium">
+                            <span className="font-mono font-medium text-[var(--color-fg-default)]">
                               ₹{parseFloat(ln.unit_price).toFixed(2)}
                             </span>
                           )}
@@ -623,11 +631,11 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
                                 }
                                 className={`h-7 text-right text-xs font-mono pr-4 ${
                                   parseFloat(ln.discount_percent) > 5
-                                    ? "border-amber-400 bg-amber-50 text-amber-900"
+                                    ? "border-amber-400 bg-amber-50 text-[var(--color-warning-700)]"
                                     : ""
                                 }`}
                               />
-                              <span className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[10px] text-[var(--muted-foreground)] pointer-events-none">
+                              <span className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[10px] text-[var(--color-fg-muted)] pointer-events-none">
                                 %
                               </span>
                             </div>
@@ -635,8 +643,8 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
                             <span
                               className={`font-mono text-xs ${
                                 parseFloat(ln.discount_percent) > 5
-                                  ? "text-amber-700 font-semibold"
-                                  : "text-[var(--muted-foreground)]"
+                                  ? "text-[var(--color-warning-700)] font-semibold"
+                                  : "text-[var(--color-fg-muted)]"
                               }`}
                             >
                               {parseFloat(ln.discount_percent).toFixed(1)}%
@@ -660,12 +668,12 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
                                 }
                                 className="h-7 text-right text-xs font-mono pr-4"
                               />
-                              <span className="absolute right-1 top-1/2 -translate-y-1/2 text-[10px] text-[var(--muted-foreground)] pointer-events-none">
+                              <span className="absolute right-1 top-1/2 -translate-y-1/2 text-[10px] text-[var(--color-fg-muted)] pointer-events-none">
                                 %
                               </span>
                             </div>
                           ) : (
-                            <span className="font-mono text-[var(--muted-foreground)]">
+                            <span className="font-mono text-[var(--color-fg-muted)]">
                               {parseFloat(ln.tax_rate_percent).toFixed(0)}%
                             </span>
                           )}
@@ -673,24 +681,24 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
 
                         {/* Unit Cost & Margin (Server-side RBAC restricted) */}
                         {canViewCost && !previewMode && (
-                          <td className="py-2.5 px-3 text-right font-mono text-[11px] text-amber-800">
+                          <td className="py-2.5 px-3 text-right font-mono text-[11px] text-amber-900">
                             {serverLine?.unit_cost !== null && serverLine?.unit_cost !== undefined ? (
                               <div>
-                                <span>₹{parseFloat(String(serverLine.unit_cost)).toFixed(2)}</span>
+                                <span className="font-semibold">₹{parseFloat(String(serverLine.unit_cost)).toFixed(2)}</span>
                                 {serverLine.margin_percent !== null && (
-                                  <span className="block text-[10px] text-emerald-700 font-semibold">
+                                  <span className="block text-[10px] text-[var(--color-success-700)] font-semibold">
                                     {parseFloat(String(serverLine.margin_percent)).toFixed(1)}% mgn
                                   </span>
                                 )}
                               </div>
                             ) : (
-                              <span className="text-[var(--muted-foreground)] italic">uncosted</span>
+                              <span className="text-[var(--color-fg-muted)] italic">uncosted</span>
                             )}
                           </td>
                         )}
 
                         {/* Line Total */}
-                        <td className="py-2.5 px-3 text-right font-mono font-bold text-[var(--foreground)]">
+                        <td className="py-2.5 px-3 text-right font-mono font-bold text-[var(--color-fg-default)]">
                           ₹
                           {isDirty
                             ? lineTotal.toLocaleString("en-IN", {
@@ -711,13 +719,13 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
           </div>
 
           {/* Commercial Terms & Notes */}
-          <div className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-2xs space-y-3">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
+          <Card className="p-4 space-y-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-fg-muted)]">
               Commercial Terms & Delivery Conditions
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="quote-payment-terms" className="text-xs font-medium text-[var(--foreground)] block mb-1">
+                <label htmlFor="quote-payment-terms" className="text-xs font-medium text-[var(--color-fg-default)] block mb-1">
                   Payment Terms
                 </label>
                 {canEditDraft && !previewMode ? (
@@ -733,14 +741,14 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
                     className="h-8 text-xs"
                   />
                 ) : (
-                  <span className="text-xs text-[var(--foreground)] font-medium">
+                  <span className="text-xs text-[var(--color-fg-default)] font-medium">
                     {paymentTerms || "Net 30"}
                   </span>
                 )}
               </div>
 
               <div>
-                <label htmlFor="quote-delivery-terms" className="text-xs font-medium text-[var(--foreground)] block mb-1">
+                <label htmlFor="quote-delivery-terms" className="text-xs font-medium text-[var(--color-fg-default)] block mb-1">
                   Delivery Terms
                 </label>
                 {canEditDraft && !previewMode ? (
@@ -756,7 +764,7 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
                     className="h-8 text-xs"
                   />
                 ) : (
-                  <span className="text-xs text-[var(--foreground)] font-medium">
+                  <span className="text-xs text-[var(--color-fg-default)] font-medium">
                     {deliveryTerms || "Ex-Works"}
                   </span>
                 )}
@@ -764,7 +772,7 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
             </div>
 
             <div>
-              <label htmlFor="quote-internal-notes" className="text-xs font-medium text-[var(--foreground)] block mb-1">
+              <label htmlFor="quote-internal-notes" className="text-xs font-medium text-[var(--color-fg-default)] block mb-1">
                 Internal Quote Notes & Special Handling
               </label>
               {canEditDraft && !previewMode ? (
@@ -777,38 +785,38 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
                   }}
                   rows={2}
                   placeholder="Notes, scope clarifications, and customer-specific commercial exceptions..."
-                  className="w-full text-xs rounded-[var(--radius-md)] border border-[var(--border)] bg-[var(--surface)] p-2 focus-visible:outline-2 focus-visible:outline-[var(--primary)] text-[var(--foreground)]"
+                  className="w-full text-xs rounded-[var(--radius-md)] border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] p-2 focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] text-[var(--color-fg-default)]"
                 />
               ) : (
-                <p className="text-xs text-[var(--muted-foreground)] italic">
+                <p className="text-xs text-[var(--color-fg-muted)] italic">
                   {notes || "No additional commercial conditions recorded."}
                 </p>
               )}
             </div>
-          </div>
+          </Card>
         </div>
 
         {/* Right Section: Sticky Totals & Policy Triggers Panel */}
         <div className="lg:col-span-4 space-y-4 lg:sticky lg:top-4">
           {/* Totals Summary Card */}
-          <div className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-2xs space-y-4">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)] border-b border-[var(--border)] pb-2">
+          <Card className="p-5 space-y-4">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--color-fg-muted)] border-b border-[var(--color-border-subtle)] pb-2">
               Quotation Summary
             </h2>
 
             <div className="space-y-2 text-xs">
-              <div className="flex justify-between text-[var(--muted-foreground)]">
+              <div className="flex justify-between text-[var(--color-fg-muted)]">
                 <span>Gross Subtotal</span>
-                <span className="font-mono text-[var(--foreground)]">
+                <span className="font-mono text-[var(--color-fg-default)]">
                   {isDirty
                     ? formatMoney(liveTotals.subtotal, currency)
                     : formatMoney(serverTotals?.subtotal, currency)}
                 </span>
               </div>
 
-              <div className="flex justify-between text-[var(--muted-foreground)]">
+              <div className="flex justify-between text-[var(--color-fg-muted)]">
                 <span>Total Discount</span>
-                <span className="font-mono text-emerald-700">
+                <span className="font-mono text-[var(--color-success-700)] font-semibold">
                   -
                   {isDirty
                     ? formatMoney(liveTotals.totalDiscount, currency)
@@ -816,32 +824,32 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
                 </span>
               </div>
 
-              <div className="flex justify-between text-[var(--muted-foreground)] pt-1 border-t border-[var(--border)]/50">
+              <div className="flex justify-between text-[var(--color-fg-muted)] pt-1 border-t border-[var(--color-border-subtle)]/60">
                 <span>Taxable Amount</span>
-                <span className="font-mono text-[var(--foreground)]">
+                <span className="font-mono text-[var(--color-fg-default)]">
                   {isDirty
                     ? formatMoney(liveTotals.taxable, currency)
                     : formatMoney(serverTotals?.taxable_subtotal, currency)}
                 </span>
               </div>
 
-              <div className="flex justify-between text-[var(--muted-foreground)]">
+              <div className="flex justify-between text-[var(--color-fg-muted)]">
                 <span>Estimated GST / Tax</span>
-                <span className="font-mono text-[var(--foreground)]">
+                <span className="font-mono text-[var(--color-fg-default)]">
                   {isDirty
                     ? formatMoney(liveTotals.taxTotal, currency)
                     : formatMoney(serverTotals?.tax_total, currency)}
                 </span>
               </div>
 
-              <div className="flex justify-between items-baseline pt-3 border-t-2 border-[var(--border)]">
+              <div className="flex justify-between items-baseline pt-3 border-t-2 border-[var(--color-border-subtle)]">
                 <div>
-                  <span className="text-sm font-bold text-[var(--foreground)] block">Grand Total</span>
-                  <span className="text-[10px] text-[var(--muted-foreground)] font-mono">
+                  <span className="text-sm font-bold text-[var(--color-fg-default)] block">Grand Total</span>
+                  <span className="text-[10px] text-[var(--color-fg-muted)] font-mono">
                     All taxes & discounts included
                   </span>
                 </div>
-                <span className="text-xl font-extrabold font-mono text-[var(--primary)]">
+                <span className="text-xl font-extrabold font-mono text-[var(--color-primary-700)]">
                   {isDirty
                     ? formatMoney(liveTotals.grandTotal, currency)
                     : formatMoney(serverTotals?.grand_total, currency)}
@@ -865,7 +873,7 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
                 </div>
                 <div className="flex justify-between text-amber-900">
                   <span>Projected Gross Margin:</span>
-                  <span className="font-bold text-emerald-800">
+                  <span className="font-bold text-[var(--color-success-700)]">
                     {serverTotals?.overall_margin_percent !== null && serverTotals?.overall_margin_percent !== undefined
                       ? `${parseFloat(String(serverTotals?.overall_margin_percent)).toFixed(2)}%`
                       : "—"}
@@ -873,34 +881,34 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
                 </div>
               </div>
             )}
-          </div>
+          </Card>
 
           {/* Customer Document Export Section */}
           <QuoteExportSection quote={quote} />
 
           {/* Policy Governance & Approval Triggers Panel (Hidden in Customer Preview) */}
           {!previewMode && (
-            <div className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-2xs space-y-3">
-              <div className="flex items-center justify-between border-b border-[var(--border)] pb-2">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
+            <Card className="p-5 space-y-3">
+              <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] pb-2">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-fg-muted)]">
                   Commercial Policy Governance
                 </h3>
                 {requiresApproval ? (
-                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-[var(--radius-sm)]">
-                    <ShieldAlert className="h-3 w-3 text-amber-600" />
-                    Approval Required
+                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[var(--color-warning-700)] bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-[var(--radius-sm)]">
+                    <ShieldAlert className="h-3 w-3 text-amber-600 shrink-0" />
+                    <span>Approval Required</span>
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-[var(--radius-sm)]">
-                    <ShieldCheck className="h-3 w-3 text-emerald-600" />
-                    Standard Limits
+                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[var(--color-success-700)] bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-[var(--radius-sm)]">
+                    <ShieldCheck className="h-3 w-3 text-emerald-600 shrink-0" />
+                    <span>Standard Limits</span>
                   </span>
                 )}
               </div>
 
               {policyEval.length > 0 ? (
                 <div className="space-y-2">
-                  <p className="text-xs text-[var(--muted-foreground)]">
+                  <p className="text-xs text-[var(--color-fg-muted)]">
                     This quotation activates organization governance policies:
                   </p>
                   <ul className="space-y-1.5">
@@ -919,7 +927,7 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
                   </ul>
                 </div>
               ) : (
-                <div className="rounded-[var(--radius-sm)] bg-emerald-50 border border-emerald-200 p-2.5 text-xs text-emerald-800 flex items-center gap-2">
+                <div className="rounded-[var(--radius-sm)] bg-emerald-50 border border-emerald-200 p-2.5 text-xs text-[var(--color-success-700)] flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
                   <span>Compliant with standard sales authorization limits (no discount or value thresholds breached).</span>
                 </div>
@@ -927,24 +935,24 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
 
               {/* Change Proposals Workspace */}
               <QuoteProposalsSection quote={quote} />
-            </div>
+            </Card>
           )}
         </div>
       </div>
 
       {/* Sheet Popup for Calculation Inspector */}
       <Sheet open={inspectorOpen} onOpenChange={setInspectorOpen}>
-        <SheetPopup side="right" className="w-full sm:max-w-xl overflow-y-auto">
-          <div className="border-b border-[var(--border)] pb-3">
+        <SheetPopup side="right" size="lg" closeLabel="Close sheet" className="overflow-y-auto">
+          <SheetHeader>
             <SheetTitle className="text-base font-bold flex items-center gap-2">
-              <Calculator className="h-4 w-4 text-[var(--primary)]" />
+              <Calculator className="h-4 w-4 text-[var(--color-primary-700)]" />
               <span>Authoritative Calculation Trace</span>
             </SheetTitle>
-            <SheetDescription className="text-xs text-[var(--muted-foreground)] mt-0.5">
+            <SheetDescription className="text-xs text-[var(--color-fg-muted)] mt-0.5">
               Ordered arithmetic graph with Decimal ROUND_HALF_UP rounding rules.
             </SheetDescription>
             {trace && (
-              <div className="mt-2 text-[11px] font-mono text-[var(--muted-foreground)] flex items-center gap-4">
+              <div className="mt-2 text-[11px] font-mono text-[var(--color-fg-muted)] flex items-center gap-4">
                 <span>Engine: {trace.calculator_version}</span>
                 <span>Rev: #{trace.revision_number}</span>
                 <span className="truncate max-w-[180px]">
@@ -952,56 +960,56 @@ function QuoteBuilderInner({ quote, trace, traceLoading }: QuoteBuilderInnerProp
                 </span>
               </div>
             )}
-          </div>
+          </SheetHeader>
 
-          {traceLoading ? (
-            <div className="space-y-3 mt-4">
-              <Skeleton className="h-16 w-full" />
-              <Skeleton className="h-16 w-full" />
-              <Skeleton className="h-16 w-full" />
-            </div>
-          ) : !trace || trace.nodes.length === 0 ? (
-            <div className="py-8 text-center text-xs text-[var(--muted-foreground)]">
-              No calculation trace nodes available.
-            </div>
-          ) : (
-            <div className="mt-4 space-y-3">
-              {(trace.nodes as unknown as TraceNodeItem[]).map((node, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-[var(--radius-md)] border border-[var(--border)] bg-[var(--surface-muted)]/40 p-3 space-y-1.5 font-mono text-xs"
-                >
-                  <div className="flex items-center justify-between text-[11px]">
-                    <span className="font-semibold text-[var(--primary)]">
-                      {node.label || node.output_key}
-                    </span>
-                    <span className="text-[10px] text-[var(--muted-foreground)] uppercase">
-                      {node.operation} ({node.rounding})
-                    </span>
-                  </div>
-
-                  <div className="text-[11px] text-[var(--foreground)] bg-[var(--surface)] p-2 rounded border border-[var(--border)] flex items-center justify-between">
-                    <span className="text-[var(--muted-foreground)]">
-                      {node.formula_text}
-                    </span>
-                    <span className="font-bold text-[var(--foreground)]">
-                      = {node.result}
-                    </span>
-                  </div>
-
-                  {node.inputs && Object.keys(node.inputs).length > 0 && (
-                    <div className="flex flex-wrap gap-2 text-[10px] text-[var(--muted-foreground)] pt-0.5">
-                      {Object.entries(node.inputs).map(([k, v]) => (
-                        <span key={k} className="bg-[var(--surface)] px-1.5 py-0.5 rounded border border-[var(--border)]">
-                          {k}: <strong className="text-[var(--foreground)]">{String(v)}</strong>
-                        </span>
-                      ))}
+          <SheetBody className="p-6">
+            {traceLoading ? (
+              <div className="space-y-3">
+                <LoadingSkeleton rows={4} />
+              </div>
+            ) : !trace || trace.nodes.length === 0 ? (
+              <div className="py-8 text-center text-xs text-[var(--color-fg-muted)]">
+                No calculation trace nodes available.
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {(trace.nodes as unknown as TraceNodeItem[]).map((node, idx) => (
+                  <div
+                    key={idx}
+                    className="rounded-[var(--radius-md)] border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)]/40 p-3 space-y-1.5 font-mono text-xs"
+                  >
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="font-semibold text-[var(--color-primary-700)]">
+                        {node.label || node.output_key}
+                      </span>
+                      <span className="text-[10px] text-[var(--color-fg-muted)] uppercase">
+                        {node.operation} ({node.rounding})
+                      </span>
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
+
+                    <div className="text-[11px] text-[var(--color-fg-default)] bg-[var(--color-bg-surface)] p-2 rounded border border-[var(--color-border-subtle)] flex items-center justify-between">
+                      <span className="text-[var(--color-fg-muted)]">
+                        {node.formula_text}
+                      </span>
+                      <span className="font-bold text-[var(--color-fg-default)]">
+                        = {node.result}
+                      </span>
+                    </div>
+
+                    {node.inputs && Object.keys(node.inputs).length > 0 && (
+                      <div className="flex flex-wrap gap-2 text-[10px] text-[var(--color-fg-muted)] pt-0.5">
+                        {Object.entries(node.inputs).map(([k, v]) => (
+                          <span key={k} className="bg-[var(--color-bg-surface)] px-1.5 py-0.5 rounded border border-[var(--color-border-subtle)]">
+                            {k}: <strong className="text-[var(--color-fg-default)]">{String(v)}</strong>
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </SheetBody>
         </SheetPopup>
       </Sheet>
     </PageContainer>

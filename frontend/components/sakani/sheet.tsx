@@ -40,11 +40,13 @@ export interface SheetPopupProps
   extends React.ComponentPropsWithoutRef<typeof BaseDialog.Popup> {
   side?: "left" | "right";
   size?: "sm" | "md" | "lg" | "xl";
+  closeLabel?: string;
 }
 
 export function SheetPopup({
   side = "right",
   size = "md",
+  closeLabel = "Close sheet",
   className,
   children,
   ...props
@@ -72,7 +74,7 @@ export function SheetPopup({
       >
         {children}
         <BaseDialog.Close
-          aria-label="Close panel"
+          aria-label={closeLabel}
           className="absolute right-4 top-4 rounded-[var(--radius-sm)] p-1.5 text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-subtle)] hover:text-[var(--color-fg-default)] focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] cursor-pointer transition-colors"
         >
           <X className="h-4 w-4" />
@@ -126,11 +128,17 @@ export function SheetDescription({
 
 export function SheetBody({
   className,
+  tabIndex = 0,
+  role = "region",
+  "aria-label": ariaLabel = "Panel content",
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+}: React.HTMLAttributes<HTMLDivElement> & { "aria-label"?: string }) {
   return (
     <div
-      className={cn("flex-1 overflow-y-auto p-6 space-y-4", className)}
+      role={role}
+      tabIndex={tabIndex}
+      aria-label={ariaLabel}
+      className={cn("flex-1 overflow-y-auto p-6 space-y-4 focus-visible:outline-none", className)}
       {...props}
     />
   );
