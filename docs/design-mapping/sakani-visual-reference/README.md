@@ -48,4 +48,3 @@ Visual refinement must never compromise ForgeFlow's authoritative operational, s
 - [`component-reference.md`](./component-reference.md): Specification of Sakani primitives, block components (`DataTableBlock`, `KanbanBoardBlock`), and their ForgeFlow mappings.
 - [`screen-parity-matrix.md`](./screen-parity-matrix.md): Screen-by-screen comparative audit distinguishing direct comparisons from layout references and purpose-built compositions.
 - [`acceptance-criteria.md`](./acceptance-criteria.md): Quantitative and qualitative gates required for approving visual parity (overflow rules, contrast, touch targets).
-- [`screenshots/`](./screenshots/): Direct visual evidence comparing Sakani ground-truth screens with ForgeFlow baseline screens.

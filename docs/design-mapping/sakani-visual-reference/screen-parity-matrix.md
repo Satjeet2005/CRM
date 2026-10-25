@@ -31,8 +31,8 @@ This matrix documents a screen-by-screen comparative audit between the canonical
 ## 3. Core CRM Screens Audit
 
 ### 3.1 Dashboard (`/app/dashboard` — Tier 1: Direct Comparison)
-- **Sakani Reference**: [`sakani-dashboard-desktop-1440x900.png`](./screenshots/sakani-dashboard-desktop-1440x900.png) (Visual Target)
-- **ForgeFlow Baseline**: [`forgeflow-dashboard-desktop-1440x900.png`](./screenshots/forgeflow-dashboard-desktop-1440x900.png) (Current Baseline)
+- **Sakani Reference**: Sakani CRM Dashboard (`/` on `saas-crm-sakani-ds.vercel.app` / local port 5173) (Visual Target)
+- **ForgeFlow Route**: `/app/dashboard`
 - **KPI / Stat-Card Visual Target Comparison & Anatomy**:
   - **Visual Benchmark**: The Sakani CRM dashboard reference establishes the exact target geometry and typography:
     - **Surface & Border**: Pure white surface (`var(--color-bg-surface)` / `#FFFFFF`) with a subtle 1px warm-neutral border (`var(--color-border-subtle)` / `#E7E5E1`) and soft elevation (`var(--shadow-xs)`).
