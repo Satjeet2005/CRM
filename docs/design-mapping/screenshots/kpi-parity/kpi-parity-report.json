@@ -1,0 +1,204 @@
+{
+  "timestamp": "2026-10-25T14:15:52.548Z",
+  "axeResults": {
+    "desktopLight": {
+      "violations": 0,
+      "details": []
+    },
+    "desktopDark": {
+      "violations": 0,
+      "details": []
+    }
+  },
+  "measurements": {
+    "desktop": {
+      "grid": {
+        "width": 1136,
+        "height": 112,
+        "gap": "10px",
+        "columnGap": "10px",
+        "gridTemplateColumns": "276.5px 276.5px 276.5px 276.5px"
+      },
+      "cards": [
+        {
+          "index": 0,
+          "title": "Total Open Pipeline",
+          "value": "₹31,25,000.00",
+          "width": 276.5,
+          "height": 112,
+          "paddingTop": "12px",
+          "paddingRight": "12px",
+          "paddingBottom": "12px",
+          "paddingLeft": "12px",
+          "borderRadius": "16px",
+          "borderWidth": "1px",
+          "borderColor": "rgb(231, 229, 225)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "titleTypography": {
+            "fontFamily": "\"Geist Variable\", Geist, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+            "fontSize": "14px",
+            "lineHeight": "20px",
+            "fontWeight": "500",
+            "color": "rgb(112, 106, 99)"
+          },
+          "valueTypography": {
+            "fontFamily": "\"Geist Variable\", Geist, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+            "fontSize": "32px",
+            "lineHeight": "38px",
+            "fontWeight": "700",
+            "letterSpacing": "-0.64px",
+            "color": "rgb(20, 20, 20)"
+          },
+          "actionTypography": {
+            "fontFamily": "\"Geist Variable\", Geist, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+            "fontSize": "12px",
+            "lineHeight": "16px",
+            "color": "rgb(20, 20, 20)"
+          }
+        },
+        {
+          "index": 1,
+          "title": "Open Deals",
+          "value": "4",
+          "width": 276.5,
+          "height": 112,
+          "paddingTop": "12px",
+          "paddingRight": "12px",
+          "paddingBottom": "12px",
+          "paddingLeft": "12px",
+          "borderRadius": "16px",
+          "borderWidth": "1px",
+          "borderColor": "rgb(231, 229, 225)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "titleTypography": {
+            "fontFamily": "\"Geist Variable\", Geist, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+            "fontSize": "14px",
+            "lineHeight": "20px",
+            "fontWeight": "500",
+            "color": "rgb(112, 106, 99)"
+          },
+          "valueTypography": {
+            "fontFamily": "\"Geist Variable\", Geist, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+            "fontSize": "32px",
+            "lineHeight": "38px",
+            "fontWeight": "700",
+            "letterSpacing": "-0.64px",
+            "color": "rgb(20, 20, 20)"
+          },
+          "actionTypography": {
+            "fontFamily": "\"Geist Variable\", Geist, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+            "fontSize": "12px",
+            "lineHeight": "16px",
+            "color": "rgb(20, 20, 20)"
+          }
+        },
+        {
+          "index": 2,
+          "title": "Active Accounts",
+          "value": "49",
+          "width": 276.5,
+          "height": 112,
+          "paddingTop": "12px",
+          "paddingRight": "12px",
+          "paddingBottom": "12px",
+          "paddingLeft": "12px",
+          "borderRadius": "16px",
+          "borderWidth": "1px",
+          "borderColor": "rgb(231, 229, 225)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "titleTypography": {
+            "fontFamily": "\"Geist Variable\", Geist, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+            "fontSize": "14px",
+            "lineHeight": "20px",
+            "fontWeight": "500",
+            "color": "rgb(112, 106, 99)"
+          },
+          "valueTypography": {
+            "fontFamily": "\"Geist Variable\", Geist, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+            "fontSize": "32px",
+            "lineHeight": "38px",
+            "fontWeight": "700",
+            "letterSpacing": "-0.64px",
+            "color": "rgb(20, 20, 20)"
+          },
+          "actionTypography": {
+            "fontFamily": "\"Geist Variable\", Geist, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+            "fontSize": "12px",
+            "lineHeight": "16px",
+            "color": "rgb(20, 20, 20)"
+          }
+        },
+        {
+          "index": 3,
+          "title": "Overdue Tasks",
+          "value": "3",
+          "width": 276.5,
+          "height": 112,
+          "paddingTop": "12px",
+          "paddingRight": "12px",
+          "paddingBottom": "12px",
+          "paddingLeft": "12px",
+          "borderRadius": "16px",
+          "borderWidth": "1px",
+          "borderColor": "rgb(231, 229, 225)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "titleTypography": {
+            "fontFamily": "\"Geist Variable\", Geist, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+            "fontSize": "14px",
+            "lineHeight": "20px",
+            "fontWeight": "500",
+            "color": "rgb(112, 106, 99)"
+          },
+          "valueTypography": {
+            "fontFamily": "\"Geist Variable\", Geist, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+            "fontSize": "32px",
+            "lineHeight": "38px",
+            "fontWeight": "700",
+            "letterSpacing": "-0.64px",
+            "color": "rgb(180, 35, 24)"
+          },
+          "actionTypography": {
+            "fontFamily": "\"Geist Variable\", Geist, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+            "fontSize": "12px",
+            "lineHeight": "16px",
+            "color": "rgb(20, 20, 20)"
+          }
+        }
+      ]
+    }
+  },
+  "screenshots": [
+    {
+      "name": "kpi-dashboard-desktop-1440x900",
+      "path": "/home/satjeet/Desktop/CRM/docs/design-mapping/screenshots/kpi-parity/kpi-dashboard-desktop-1440x900.png"
+    },
+    {
+      "name": "kpi-strip-desktop-1440x900",
+      "path": "/home/satjeet/Desktop/CRM/docs/design-mapping/screenshots/kpi-parity/kpi-strip-desktop-1440x900.png"
+    },
+    {
+      "name": "kpi-dashboard-dark-desktop-1440x900",
+      "path": "/home/satjeet/Desktop/CRM/docs/design-mapping/screenshots/kpi-parity/kpi-dashboard-dark-desktop-1440x900.png"
+    },
+    {
+      "name": "kpi-strip-dark-desktop-1440x900",
+      "path": "/home/satjeet/Desktop/CRM/docs/design-mapping/screenshots/kpi-parity/kpi-strip-dark-desktop-1440x900.png"
+    },
+    {
+      "name": "kpi-dashboard-tablet-1024x768",
+      "path": "/home/satjeet/Desktop/CRM/docs/design-mapping/screenshots/kpi-parity/kpi-dashboard-tablet-1024x768.png"
+    },
+    {
+      "name": "kpi-strip-tablet-1024x768",
+      "path": "/home/satjeet/Desktop/CRM/docs/design-mapping/screenshots/kpi-parity/kpi-strip-tablet-1024x768.png"
+    },
+    {
+      "name": "kpi-dashboard-mobile-390x844",
+      "path": "/home/satjeet/Desktop/CRM/docs/design-mapping/screenshots/kpi-parity/kpi-dashboard-mobile-390x844.png"
+    },
+    {
+      "name": "kpi-strip-mobile-390x844",
+      "path": "/home/satjeet/Desktop/CRM/docs/design-mapping/screenshots/kpi-parity/kpi-strip-mobile-390x844.png"
+    }
+  ]
+}

@@ -1,0 +1,255 @@
+{
+  "timestamp": "2026-10-25T16:52:46.427Z",
+  "axeResults": {
+    "light": {
+      "violations": [],
+      "violationCount": 0
+    },
+    "sheet": {
+      "violations": [],
+      "violationCount": 0
+    },
+    "dark": {
+      "violations": [],
+      "violationCount": 0
+    },
+    "tablet": {
+      "violations": [],
+      "violationCount": 0
+    },
+    "mobile": {
+      "violations": [],
+      "violationCount": 0
+    }
+  },
+  "measurements": {
+    "desktop": {
+      "card": {
+        "width": 459.3,
+        "height": 339,
+        "padding": "20px",
+        "borderRadius": "16px",
+        "borderColor": "rgb(219, 218, 215)",
+        "backgroundColor": "rgb(255, 255, 255)"
+      },
+      "header": {
+        "title": {
+          "text": "Attention Required",
+          "fontFamily": "geistSans, \"geistSans Fallback\"",
+          "fontSize": "16px",
+          "lineHeight": "22px",
+          "fontWeight": "500",
+          "color": "rgb(20, 20, 20)"
+        },
+        "description": {
+          "text": "Overdue tasks & closing deals",
+          "fontFamily": "geistSans, \"geistSans Fallback\"",
+          "fontSize": "13px",
+          "lineHeight": "18px",
+          "fontWeight": "500",
+          "color": "rgb(112, 106, 99)"
+        },
+        "action": {
+          "text": "View all",
+          "width": 70,
+          "height": 32,
+          "borderRadius": "8px",
+          "borderWidth": "1px",
+          "borderColor": "rgb(219, 218, 215)"
+        }
+      },
+      "previewRowCount": 4,
+      "badgeAligned": true,
+      "rows": [
+        {
+          "index": 0,
+          "title": {
+            "text": "Overdue Task: Send Revised Flange Specs to Bharat Petrochem",
+            "fontFamily": "geistSans, \"geistSans Fallback\"",
+            "fontSize": "14px",
+            "lineHeight": "20px",
+            "fontWeight": "600",
+            "color": "rgb(20, 20, 20)"
+          },
+          "description": {
+            "text": "Task was due 4 day(s) ago (2026-10-21).",
+            "fontFamily": "geistSans, \"geistSans Fallback\"",
+            "fontSize": "13px",
+            "lineHeight": "18px",
+            "fontWeight": "500",
+            "color": "rgb(112, 106, 99)"
+          },
+          "icon": {
+            "width": 30,
+            "height": 30,
+            "borderRadius": "9999px",
+            "backgroundColor": "rgb(254, 243, 242)",
+            "borderColor": "rgb(254, 205, 202)"
+          },
+          "badge": {
+            "text": "critical",
+            "width": 72,
+            "height": 16,
+            "leftX": 1199,
+            "rightX": 1271,
+            "backgroundColor": "rgb(254, 243, 242)",
+            "color": "rgb(180, 35, 24)",
+            "borderRadius": "9999px"
+          },
+          "action": {
+            "text": "View Details",
+            "href": "/app/tasks",
+            "width": 88,
+            "leftX": 1291,
+            "rightX": 1379
+          }
+        },
+        {
+          "index": 1,
+          "title": {
+            "text": "Overdue Task: Follow up with Zenith on Trial Fitting Delivery",
+            "fontFamily": "geistSans, \"geistSans Fallback\"",
+            "fontSize": "14px",
+            "lineHeight": "20px",
+            "fontWeight": "600",
+            "color": "rgb(20, 20, 20)"
+          },
+          "description": {
+            "text": "Task was due 3 day(s) ago (2026-10-22).",
+            "fontFamily": "geistSans, \"geistSans Fallback\"",
+            "fontSize": "13px",
+            "lineHeight": "18px",
+            "fontWeight": "500",
+            "color": "rgb(112, 106, 99)"
+          },
+          "icon": {
+            "width": 30,
+            "height": 30,
+            "borderRadius": "9999px",
+            "backgroundColor": "rgb(254, 243, 242)",
+            "borderColor": "rgb(254, 205, 202)"
+          },
+          "badge": {
+            "text": "critical",
+            "width": 72,
+            "height": 16,
+            "leftX": 1199,
+            "rightX": 1271,
+            "backgroundColor": "rgb(254, 243, 242)",
+            "color": "rgb(180, 35, 24)",
+            "borderRadius": "9999px"
+          },
+          "action": {
+            "text": "View Details",
+            "href": "/app/tasks",
+            "width": 88,
+            "leftX": 1291,
+            "rightX": 1379
+          }
+        },
+        {
+          "index": 2,
+          "title": {
+            "text": "Overdue Task: Call Rajesh Kumar regarding Distillation Spools",
+            "fontFamily": "geistSans, \"geistSans Fallback\"",
+            "fontSize": "14px",
+            "lineHeight": "20px",
+            "fontWeight": "600",
+            "color": "rgb(20, 20, 20)"
+          },
+          "description": {
+            "text": "Task was due 1 day(s) ago (2026-10-24).",
+            "fontFamily": "geistSans, \"geistSans Fallback\"",
+            "fontSize": "13px",
+            "lineHeight": "18px",
+            "fontWeight": "500",
+            "color": "rgb(112, 106, 99)"
+          },
+          "icon": {
+            "width": 30,
+            "height": 30,
+            "borderRadius": "9999px",
+            "backgroundColor": "rgb(254, 243, 242)",
+            "borderColor": "rgb(254, 205, 202)"
+          },
+          "badge": {
+            "text": "critical",
+            "width": 72,
+            "height": 16,
+            "leftX": 1199,
+            "rightX": 1271,
+            "backgroundColor": "rgb(254, 243, 242)",
+            "color": "rgb(180, 35, 24)",
+            "borderRadius": "9999px"
+          },
+          "action": {
+            "text": "View Details",
+            "href": "/app/tasks",
+            "width": 88,
+            "leftX": 1291,
+            "rightX": 1379
+          }
+        },
+        {
+          "index": 3,
+          "title": {
+            "text": "RFQ RFQ-2026-0026 requires review",
+            "fontFamily": "geistSans, \"geistSans Fallback\"",
+            "fontSize": "14px",
+            "lineHeight": "20px",
+            "fontWeight": "600",
+            "color": "rgb(20, 20, 20)"
+          },
+          "description": {
+            "text": "'Piping Replacement Package 1792933423915-867' has 4 lines requiring verification before quote creation.",
+            "fontFamily": "geistSans, \"geistSans Fallback\"",
+            "fontSize": "13px",
+            "lineHeight": "18px",
+            "fontWeight": "500",
+            "color": "rgb(112, 106, 99)"
+          },
+          "icon": {
+            "width": 30,
+            "height": 30,
+            "borderRadius": "9999px",
+            "backgroundColor": "rgb(255, 251, 240)",
+            "borderColor": "rgb(254, 223, 137)"
+          },
+          "badge": {
+            "text": "warning",
+            "width": 72,
+            "height": 16,
+            "leftX": 1199,
+            "rightX": 1271,
+            "backgroundColor": "rgb(255, 251, 240)",
+            "color": "rgb(181, 71, 8)",
+            "borderRadius": "9999px"
+          },
+          "action": {
+            "text": "View Details",
+            "href": "/app/rfqs/564de531-5de5-4554-943a-67dcd7a43a0e",
+            "width": 88,
+            "leftX": 1291,
+            "rightX": 1379
+          }
+        }
+      ]
+    },
+    "sheet": {
+      "width": 576,
+      "height": 900,
+      "totalQueueItems": 10
+    }
+  },
+  "screenshots": [
+    "attention-required-dashboard-desktop-1440x900.png",
+    "attention-required-card-desktop-1440x900.png",
+    "attention-required-sheet-desktop-1440x900.png",
+    "attention-required-card-dark-desktop-1440x900.png",
+    "attention-required-dashboard-dark-desktop-1440x900.png",
+    "attention-required-card-tablet-1024x768.png",
+    "attention-required-dashboard-tablet-1024x768.png",
+    "attention-required-card-mobile-390x844.png",
+    "attention-required-dashboard-mobile-390x844.png"
+  ]
+}

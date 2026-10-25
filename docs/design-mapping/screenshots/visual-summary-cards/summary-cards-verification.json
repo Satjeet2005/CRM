@@ -1,0 +1,143 @@
+{
+  "timestamp": "2026-10-25T15:01:14.683Z",
+  "axeResults": {
+    "light": {
+      "violations": [],
+      "violationCount": 0
+    },
+    "dark": {
+      "violations": [],
+      "violationCount": 0
+    }
+  },
+  "measurements": {
+    "desktop": {
+      "container": {
+        "gap": "16px",
+        "gridTemplateColumns": "560px 560px"
+      },
+      "cards": [
+        {
+          "type": "rfq-review-queue",
+          "href": "/app/rfqs",
+          "width": 560,
+          "height": 78,
+          "paddingTop": "16px",
+          "paddingRight": "16px",
+          "paddingBottom": "16px",
+          "paddingLeft": "16px",
+          "borderRadius": "16px",
+          "borderWidth": "1px",
+          "borderColor": "rgb(219, 218, 215)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "columnGap": "16px",
+          "iconBox": {
+            "width": 40,
+            "height": 40,
+            "borderRadius": "12px",
+            "padding": "10px",
+            "backgroundColor": "rgb(255, 243, 237)",
+            "borderColor": "rgb(255, 199, 168)",
+            "borderWidth": "1px",
+            "color": "rgb(212, 56, 0)",
+            "svgWidth": 20,
+            "svgHeight": 20
+          },
+          "title": {
+            "text": "RFQ Review Queue",
+            "fontFamily": "geistSans, \"geistSans Fallback\"",
+            "fontSize": "14px",
+            "lineHeight": "20px",
+            "fontWeight": "600",
+            "color": "rgb(20, 20, 20)"
+          },
+          "description": {
+            "text": "51 lines requiring review",
+            "fontFamily": "geistSans, \"geistSans Fallback\"",
+            "fontSize": "14px",
+            "lineHeight": "20px",
+            "fontWeight": "500",
+            "color": "rgb(112, 106, 99)"
+          },
+          "badge": {
+            "text": "Active in Phase 3",
+            "width": 115,
+            "height": 20,
+            "fontFamily": "geistSans, \"geistSans Fallback\"",
+            "fontSize": "12px",
+            "fontWeight": "500",
+            "backgroundColor": "rgb(255, 243, 237)",
+            "color": "rgb(191, 50, 0)",
+            "borderRadius": "9999px"
+          }
+        },
+        {
+          "type": "quotations-pricing",
+          "href": "/app/quotes",
+          "width": 560,
+          "height": 78,
+          "paddingTop": "16px",
+          "paddingRight": "16px",
+          "paddingBottom": "16px",
+          "paddingLeft": "16px",
+          "borderRadius": "16px",
+          "borderWidth": "1px",
+          "borderColor": "rgb(219, 218, 215)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "columnGap": "16px",
+          "iconBox": {
+            "width": 40,
+            "height": 40,
+            "borderRadius": "12px",
+            "padding": "10px",
+            "backgroundColor": "rgb(239, 248, 255)",
+            "borderColor": "rgb(178, 221, 255)",
+            "borderWidth": "1px",
+            "color": "rgb(23, 92, 211)",
+            "svgWidth": 20,
+            "svgHeight": 20
+          },
+          "title": {
+            "text": "Quotations & Pricing",
+            "fontFamily": "geistSans, \"geistSans Fallback\"",
+            "fontSize": "14px",
+            "lineHeight": "20px",
+            "fontWeight": "600",
+            "color": "rgb(20, 20, 20)"
+          },
+          "description": {
+            "text": "1 active quote drafts",
+            "fontFamily": "geistSans, \"geistSans Fallback\"",
+            "fontSize": "14px",
+            "lineHeight": "20px",
+            "fontWeight": "500",
+            "color": "rgb(112, 106, 99)"
+          },
+          "badge": {
+            "text": "Active in Phase 4",
+            "width": 115,
+            "height": 20,
+            "fontFamily": "geistSans, \"geistSans Fallback\"",
+            "fontSize": "12px",
+            "fontWeight": "500",
+            "backgroundColor": "rgb(239, 248, 255)",
+            "color": "rgb(23, 92, 211)",
+            "borderRadius": "9999px"
+          }
+        }
+      ]
+    }
+  },
+  "screenshots": [
+    "summary-cards-dashboard-desktop-1440x900.png",
+    "summary-cards-strip-desktop-1440x900.png",
+    "card-rfq-review-desktop.png",
+    "card-quotes-desktop.png",
+    "summary-cards-strip-dark-desktop-1440x900.png",
+    "summary-cards-dashboard-dark-desktop-1440x900.png",
+    "summary-cards-strip-tablet-1024x768.png",
+    "summary-cards-dashboard-tablet-1024x768.png",
+    "summary-cards-strip-mobile-390x844.png",
+    "summary-cards-dashboard-mobile-390x844.png"
+  ]
+}

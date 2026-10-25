@@ -1,0 +1,140 @@
+{
+  "timestamp": "2026-10-25T17:16:47.548Z",
+  "axeResults": {
+    "light": {
+      "violations": [],
+      "violationCount": 0
+    },
+    "dark": {
+      "violations": [],
+      "violationCount": 0
+    },
+    "tablet": {
+      "violations": [],
+      "violationCount": 0
+    },
+    "mobile": {
+      "violations": [],
+      "violationCount": 0
+    }
+  },
+  "measurements": {
+    "desktop": {
+      "card": {
+        "width": 1136,
+        "height": 451,
+        "padding": "20px",
+        "borderRadius": "16px",
+        "borderColor": "rgb(219, 218, 215)",
+        "backgroundColor": "rgb(255, 255, 255)"
+      },
+      "identityHeader": {
+        "iconTile": {
+          "width": 38,
+          "height": 38,
+          "borderRadius": "12px",
+          "backgroundColor": "rgb(255, 243, 237)",
+          "borderColor": "rgb(255, 199, 168)"
+        },
+        "displayName": {
+          "text": "Alex Admin",
+          "fontSize": "16px",
+          "fontWeight": "600",
+          "color": "rgb(20, 20, 20)"
+        },
+        "email": {
+          "text": "admin@forgeflow.demo",
+          "fontSize": "13px",
+          "color": "rgb(112, 106, 99)"
+        },
+        "badges": [
+          {
+            "text": "Admin",
+            "backgroundColor": "rgb(245, 244, 242)",
+            "color": "rgb(58, 56, 55)",
+            "borderRadius": "9999px"
+          },
+          {
+            "text": "Session verified",
+            "backgroundColor": "rgb(241, 254, 246)",
+            "color": "rgb(2, 122, 72)",
+            "borderRadius": "9999px"
+          }
+        ]
+      },
+      "columns": {
+        "orgWidth": 415.7,
+        "permWidth": 646.3,
+        "orgPct": 39,
+        "permPct": 61
+      },
+      "permissionGroups": {
+        "groupCount": 7,
+        "totalPermissionsCount": 16,
+        "groups": [
+          {
+            "label": "Audit",
+            "chips": [
+              "audit:read"
+            ]
+          },
+          {
+            "label": "Catalog",
+            "chips": [
+              "catalog:cost",
+              "catalog:manage",
+              "catalog:read"
+            ]
+          },
+          {
+            "label": "CRM",
+            "chips": [
+              "crm:read",
+              "crm:write"
+            ]
+          },
+          {
+            "label": "Proposals",
+            "chips": [
+              "proposals:approve",
+              "proposals:create"
+            ]
+          },
+          {
+            "label": "Quotes",
+            "chips": [
+              "quotes:draft",
+              "quotes:export",
+              "quotes:read"
+            ]
+          },
+          {
+            "label": "RFQ",
+            "chips": [
+              "rfq:import",
+              "rfq:read",
+              "rfq:resolve"
+            ]
+          },
+          {
+            "label": "Administration",
+            "chips": [
+              "settings:manage",
+              "users:manage"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "screenshots": [
+    "session-panel-dashboard-desktop-1440x900.png",
+    "session-panel-card-desktop-1440x900.png",
+    "session-panel-card-dark-desktop-1440x900.png",
+    "session-panel-dashboard-dark-desktop-1440x900.png",
+    "session-panel-card-tablet-1024x768.png",
+    "session-panel-dashboard-tablet-1024x768.png",
+    "session-panel-card-mobile-390x844.png",
+    "session-panel-dashboard-mobile-390x844.png"
+  ]
+}

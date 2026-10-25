@@ -3,19 +3,13 @@
 import * as React from "react";
 import Link from "next/link";
 import {
-  ShieldCheck,
-  Building,
-  Key,
   ArrowRight,
-  TrendingUp,
-  Briefcase,
-  AlertTriangle,
   FileSpreadsheet,
   FileText,
 } from "lucide-react";
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
-import { Card, Badge } from "@/components/sakani";
+import { Card, Badge, StatCard, Button } from "@/components/sakani";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { formatMoney } from "@/lib/formatters/formatters";
@@ -25,6 +19,7 @@ import { AttentionQueue } from "@/features/dashboard/components/attention-queue"
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const [isAttentionSheetOpen, setIsAttentionSheetOpen] = React.useState(false);
   const { data: summary, isLoading: summaryLoading } = useDashboardSummary();
   const { data: attentionItems, isLoading: attentionLoading } = useDashboardAttention(10);
 
@@ -39,147 +34,158 @@ export default function DashboardPage() {
       <div className="mt-6 space-y-6">
         {/* KPI Summary Cards */}
         {summaryLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Skeleton className="h-28 w-full rounded-[var(--radius-xl)]" />
-            <Skeleton className="h-28 w-full rounded-[var(--radius-xl)]" />
-            <Skeleton className="h-28 w-full rounded-[var(--radius-xl)]" />
-            <Skeleton className="h-28 w-full rounded-[var(--radius-xl)]" />
+          <div data-slot="kpi-grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <Skeleton className="h-[109px] w-full rounded-[var(--radius-xl)]" />
+            <Skeleton className="h-[109px] w-full rounded-[var(--radius-xl)]" />
+            <Skeleton className="h-[109px] w-full rounded-[var(--radius-xl)]" />
+            <Skeleton className="h-[109px] w-full rounded-[var(--radius-xl)]" />
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Open Pipeline Value */}
-            <Card className="p-5 space-y-2">
-              <div className="flex items-center justify-between text-xs text-[var(--color-fg-muted)]">
-                <span className="font-medium">Total Open Pipeline</span>
-                <TrendingUp className="h-4 w-4 text-[var(--color-primary-500)]" aria-hidden="true" />
-              </div>
-              <div className="text-2xl font-bold tracking-tight text-[var(--color-fg-default)]">
-                {summary ? formatMoney(summary.open_pipeline_value, "INR") : "—"}
-              </div>
-              <p className="text-[11px] text-[var(--color-fg-muted)]">
-                Across {summary?.open_opportunities_count || 0} active opportunities
-              </p>
-            </Card>
+          <div data-slot="kpi-grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {/* 1. Total Open Pipeline */}
+            <StatCard
+              title="Total Open Pipeline"
+              value={summary ? formatMoney(summary.open_pipeline_value, "INR") : "—"}
+              description={`Across ${summary?.open_opportunities_count || 0} active opportunities`}
+            />
 
-            {/* Open Opportunities */}
-            <Card className="p-5 space-y-2">
-              <div className="flex items-center justify-between text-xs text-[var(--color-fg-muted)]">
-                <span className="font-medium">Open Deals</span>
-                <Briefcase className="h-4 w-4 text-[var(--color-primary-500)]" aria-hidden="true" />
-              </div>
-              <div className="text-2xl font-bold tracking-tight text-[var(--color-fg-default)]">
-                {summary?.open_opportunities_count ?? 0}
-              </div>
-              <Link
-                href="/app/opportunities"
-                className="text-[11px] text-[var(--color-primary-600)] hover:underline inline-flex items-center gap-1 font-medium focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] rounded-[var(--radius-xs)]"
-              >
-                <span>View pipeline board</span>
-                <ArrowRight className="h-3 w-3" aria-hidden="true" />
-              </Link>
-            </Card>
+            {/* 2. Open Deals */}
+            <StatCard
+              title="Open Deals"
+              value={summary?.open_opportunities_count ?? 0}
+              action={
+                <Link
+                  href="/app/opportunities"
+                  className="text-xs text-[var(--color-primary-600)] hover:underline inline-flex items-center gap-1 font-medium focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] rounded-[var(--radius-xs)]"
+                >
+                  <span>View pipeline board</span>
+                  <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                </Link>
+              }
+            />
 
-            {/* Active Accounts */}
-            <Card className="p-5 space-y-2">
-              <div className="flex items-center justify-between text-xs text-[var(--color-fg-muted)]">
-                <span className="font-medium">Active Accounts</span>
-                <Building className="h-4 w-4 text-[var(--color-primary-500)]" aria-hidden="true" />
-              </div>
-              <div className="text-2xl font-bold tracking-tight text-[var(--color-fg-default)]">
-                {summary?.active_accounts_count ?? 0}
-              </div>
-              <Link
-                href="/app/accounts"
-                className="text-[11px] text-[var(--color-primary-600)] hover:underline inline-flex items-center gap-1 font-medium focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] rounded-[var(--radius-xs)]"
-              >
-                <span>Manage customer accounts</span>
-                <ArrowRight className="h-3 w-3" aria-hidden="true" />
-              </Link>
-            </Card>
+            {/* 3. Active Accounts */}
+            <StatCard
+              title="Active Accounts"
+              value={summary?.active_accounts_count ?? 0}
+              action={
+                <Link
+                  href="/app/accounts"
+                  className="text-xs text-[var(--color-primary-600)] hover:underline inline-flex items-center gap-1 font-medium focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] rounded-[var(--radius-xs)]"
+                >
+                  <span>Manage customer accounts</span>
+                  <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                </Link>
+              }
+            />
 
-            {/* Overdue Action Items */}
-            <Card className="p-5 space-y-2">
-              <div className="flex items-center justify-between text-xs text-[var(--color-fg-muted)]">
-                <span className="font-medium">Overdue Tasks</span>
-                <AlertTriangle
-                  className={`h-4 w-4 ${(summary?.overdue_tasks_count || 0) > 0 ? "text-[var(--color-danger-500)]" : "text-[var(--color-fg-muted)]"}`}
-                  aria-hidden="true"
-                />
-              </div>
-              <div
-                className={`text-2xl font-bold tracking-tight ${(summary?.overdue_tasks_count || 0) > 0 ? "text-[var(--color-danger-fg)]" : "text-[var(--color-fg-default)]"}`}
-              >
-                {summary?.overdue_tasks_count ?? 0}
-              </div>
-              <Link
-                href="/app/tasks"
-                className="text-[11px] text-[var(--color-primary-600)] hover:underline inline-flex items-center gap-1 font-medium focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] rounded-[var(--radius-xs)]"
-              >
-                <span>Review follow-up items</span>
-                <ArrowRight className="h-3 w-3" aria-hidden="true" />
-              </Link>
-            </Card>
+            {/* 4. Overdue Tasks */}
+            <StatCard
+              title="Overdue Tasks"
+              value={summary?.overdue_tasks_count ?? 0}
+              valueClassName={(summary?.overdue_tasks_count || 0) > 0 ? "text-[var(--color-danger-fg)]" : undefined}
+              action={
+                <Link
+                  href="/app/tasks"
+                  className="text-xs text-[var(--color-primary-600)] hover:underline inline-flex items-center gap-1 font-medium focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] rounded-[var(--radius-xs)]"
+                >
+                  <span>Review follow-up items</span>
+                  <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                </Link>
+              }
+            />
           </div>
         )}
 
-        {/* Phase Indicators */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Link
-            href="/app/rfqs"
-            className="rounded-[var(--radius-xl)] border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] hover:bg-[var(--color-bg-subtle)] transition-colors p-4 flex items-center justify-between focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)]"
+        {/* Work Queues Section */}
+        <section aria-labelledby="work-queues-heading" className="space-y-3">
+          <h2
+            id="work-queues-heading"
+            className="text-base font-semibold leading-[22px] text-[var(--color-fg-default)]"
           >
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-warning-bg)] text-[var(--color-warning-fg)] border border-[var(--color-warning-border)]">
-                <FileSpreadsheet className="h-5 w-5" aria-hidden="true" />
-              </div>
-              <div>
-                <span className="text-xs font-semibold text-[var(--color-fg-default)] block">RFQ Review Queue</span>
-                <span className="text-[11px] text-[var(--color-fg-muted)]">
-                  {summary?.open_rfq_review_lines ?? 0} lines requiring review
-                </span>
-              </div>
-            </div>
-            <Badge variant="warning" emphasis="subtle">
-              Active in Phase 3
-            </Badge>
-          </Link>
+            Work queues
+          </h2>
 
-          <Link
-            href="/app/quotes"
-            className="rounded-[var(--radius-xl)] border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] hover:bg-[var(--color-bg-subtle)] transition-colors p-4 flex items-center justify-between focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)]"
+          <div
+            data-slot="work-queues-grid"
+            className="grid grid-cols-1 md:grid-cols-2 gap-4"
           >
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-info-bg)] text-[var(--color-info-fg)] border border-[var(--color-info-border)]">
-                <FileText className="h-5 w-5" aria-hidden="true" />
+            {/* RFQ Review Queue */}
+            <div
+              data-slot="work-queues-card"
+              className="min-h-[76px] rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 flex items-center justify-between gap-4 transition-colors"
+            >
+              <div className="flex items-center gap-4 min-w-0 flex-1">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-lg)] border border-[var(--color-primary-200)] bg-[var(--color-primary-50)] text-[var(--color-primary-600)] p-2.5">
+                  <FileSpreadsheet className="h-5 w-5 shrink-0" aria-hidden="true" />
+                </div>
+                <div className="min-w-0 flex-1 flex flex-col justify-center gap-1">
+                  <span className="text-sm font-semibold leading-5 text-[var(--color-fg-default)] truncate">
+                    RFQ Review Queue
+                  </span>
+                  <span className="text-sm font-medium leading-5 text-[var(--color-fg-muted)]">
+                    {summary?.open_rfq_review_lines ?? 0} {(summary?.open_rfq_review_lines ?? 0) === 1 ? "line needs" : "lines need"} review
+                  </span>
+                </div>
               </div>
-              <div>
-                <span className="text-xs font-semibold text-[var(--color-fg-default)] block">Quotations & Pricing</span>
-                <span className="text-[11px] text-[var(--color-fg-muted)]">
-                  {summary?.draft_quotes_count ?? 0} active quote drafts
-                </span>
-              </div>
+              <Button
+                href="/app/rfqs"
+                variant="outline"
+                size="sm"
+                rightIcon={<ArrowRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />}
+                className="shrink-0"
+              >
+                Review RFQs
+              </Button>
             </div>
-            <Badge variant="info" emphasis="subtle">
-              Active in Phase 4
-            </Badge>
-          </Link>
-        </div>
+
+            {/* Quotations & Pricing */}
+            <div
+              data-slot="work-queues-card"
+              className="min-h-[76px] rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-4 flex items-center justify-between gap-4 transition-colors"
+            >
+              <div className="flex items-center gap-4 min-w-0 flex-1">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-lg)] border border-[var(--color-info-border)] bg-[var(--color-info-bg)] text-[var(--color-info-fg)] p-2.5">
+                  <FileText className="h-5 w-5 shrink-0" aria-hidden="true" />
+                </div>
+                <div className="min-w-0 flex-1 flex flex-col justify-center gap-1">
+                  <span className="text-sm font-semibold leading-5 text-[var(--color-fg-default)] truncate">
+                    Quotations & Pricing
+                  </span>
+                  <span className="text-sm font-medium leading-5 text-[var(--color-fg-muted)]">
+                    {summary?.draft_quotes_count ?? 0} active {(summary?.draft_quotes_count ?? 0) === 1 ? "draft" : "drafts"}
+                  </span>
+                </div>
+              </div>
+              <Button
+                href="/app/quotes"
+                variant="outline"
+                size="sm"
+                rightIcon={<ArrowRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />}
+                className="shrink-0"
+              >
+                View quotations
+              </Button>
+            </div>
+          </div>
+        </section>
 
         {/* Main Section: Chart & Attention Queue */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Stage Distribution Chart (7 cols) */}
-          <Card className="lg:col-span-7 p-5 space-y-4">
-            <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] pb-3">
+          <Card className="lg:col-span-7 p-5 border-[var(--color-border-default)]">
+            <div className="flex items-start justify-between gap-4 mb-5">
               <div>
-                <h2 className="text-sm font-semibold text-[var(--color-fg-default)]">Opportunity Stage Distribution</h2>
-                <p className="text-xs text-[var(--color-fg-muted)]">Weighted pipeline across active qualification stages</p>
+                <h2 className="text-base font-medium leading-[22px] text-[var(--color-fg-default)]">
+                  Opportunity Stage Distribution
+                </h2>
+                <p className="text-[13px] font-medium leading-[18px] text-[var(--color-fg-muted)] mt-0.5">
+                  Deal count and total value by stage, including closed outcomes.
+                </p>
               </div>
-              <Link
-                href="/app/opportunities"
-                className="text-xs text-[var(--color-primary-600)] hover:underline font-medium focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] rounded-[var(--radius-xs)]"
-              >
+              <Button href="/app/opportunities" variant="outline" size="sm" className="shrink-0">
                 View All
-              </Link>
+              </Button>
             </div>
 
             {summary ? (
@@ -190,18 +196,24 @@ export default function DashboardPage() {
           </Card>
 
           {/* Attention Queue (5 cols) */}
-          <Card className="lg:col-span-5 p-5 space-y-4">
-            <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] pb-3">
+          <Card className="lg:col-span-5 p-5 border-[var(--color-border-default)]">
+            <div className="flex items-start justify-between gap-4 mb-5">
               <div>
-                <h2 className="text-sm font-semibold text-[var(--color-fg-default)]">Attention Required</h2>
-                <p className="text-xs text-[var(--color-fg-muted)]">Overdue tasks & closing deals</p>
+                <h2 className="text-base font-medium leading-[22px] text-[var(--color-fg-default)]">
+                  Attention Required
+                </h2>
+                <p className="text-[13px] font-medium leading-[18px] text-[var(--color-fg-muted)] mt-0.5">
+                  Overdue tasks & closing deals
+                </p>
               </div>
-              <Link
-                href="/app/tasks"
-                className="text-xs text-[var(--color-primary-600)] hover:underline font-medium focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] rounded-[var(--radius-xs)]"
+              <Button
+                variant="outline"
+                size="sm"
+                className="shrink-0"
+                onClick={() => setIsAttentionSheetOpen(true)}
               >
-                Tasks
-              </Link>
+                View all
+              </Button>
             </div>
 
             {attentionLoading ? (
@@ -211,67 +223,14 @@ export default function DashboardPage() {
                 <Skeleton className="h-14 w-full rounded-[var(--radius-md)]" />
               </div>
             ) : (
-              <AttentionQueue items={attentionItems || []} />
+              <AttentionQueue
+                items={attentionItems || []}
+                isSheetOpen={isAttentionSheetOpen}
+                onSheetOpenChange={setIsAttentionSheetOpen}
+              />
             )}
           </Card>
         </div>
-
-        {/* User Session Profile Card */}
-        <Card className="p-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-[var(--color-border-subtle)] pb-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-primary-50)] text-[var(--color-primary-600)] border border-[var(--color-primary-100)]">
-                <ShieldCheck className="h-5 w-5" aria-hidden="true" />
-              </div>
-              <div>
-                <h2 className="text-base font-semibold text-[var(--color-fg-default)]">
-                  Active Session: {user?.display_name}
-                </h2>
-                <p className="text-xs text-[var(--color-fg-muted)]">{user?.email}</p>
-              </div>
-            </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge variant="accent" emphasis="subtle">
-                Role: {user?.role || "sales_rep"}
-              </Badge>
-              <Badge variant="success" emphasis="subtle">
-                Session Verified
-              </Badge>
-            </div>
-          </div>
-
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-            <div className="rounded-[var(--radius-md)] bg-[var(--color-bg-subtle)] border border-[var(--color-border-subtle)] p-3.5 space-y-1.5">
-              <div className="flex items-center gap-1.5 font-semibold text-[var(--color-fg-default)]">
-                <Building className="h-4 w-4 text-[var(--color-fg-muted)]" aria-hidden="true" />
-                <span>Organization Context</span>
-              </div>
-              <p className="text-[var(--color-fg-muted)]">
-                Tenant: <strong className="text-[var(--color-fg-default)]">{user?.organization.name}</strong> ({user?.organization.slug})
-              </p>
-              <p className="text-[var(--color-fg-muted)]">
-                Currency: <strong className="text-[var(--color-fg-default)]">{user?.organization.currency}</strong> | Timezone: <strong className="text-[var(--color-fg-default)]">{user?.organization.timezone}</strong>
-              </p>
-            </div>
-
-            <div className="rounded-[var(--radius-md)] bg-[var(--color-bg-subtle)] border border-[var(--color-border-subtle)] p-3.5 space-y-1.5">
-              <div className="flex items-center gap-1.5 font-semibold text-[var(--color-fg-default)]">
-                <Key className="h-4 w-4 text-[var(--color-fg-muted)]" aria-hidden="true" />
-                <span>Granted Permissions ({user?.permissions.length || 0})</span>
-              </div>
-              <div className="flex flex-wrap gap-1 mt-1">
-                {user?.permissions.map((perm) => (
-                  <span
-                    key={perm}
-                    className="rounded-[var(--radius-xs)] bg-[var(--color-bg-surface)] border border-[var(--color-border-subtle)] px-1.5 py-0.5 font-mono text-[10px] text-[var(--color-fg-default)]"
-                  >
-                    {perm}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </Card>
       </div>
     </PageContainer>
   );
