@@ -8,38 +8,37 @@ import {
   CheckCircle2,
   AlertTriangle,
   AlertCircle,
-  HelpCircle,
   Download,
   RefreshCw,
   Search,
-  ExternalLink,
   ChevronRight,
   RotateCcw,
   Check,
-  X,
   FileCheck2,
   ShieldAlert,
   ArrowRight,
-  Info,
   Clock,
   Sparkles,
+  ArrowLeft,
 } from "lucide-react";
 import { toast } from "sonner";
 import { PageContainer } from "@/components/layout/page-container";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { StatusBadge } from "@/components/ui/status-badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { ErrorState } from "@/components/data-display/error-state";
-import { EmptyState } from "@/components/data-display/empty-state";
-import { MoneyText } from "@/components/data-display/money-text";
-import { DateTimeText } from "@/components/data-display/date-time-text";
 import {
+  Button,
+  Input,
+  Badge,
+  Card,
   Sheet,
   SheetPopup,
+  SheetHeader,
   SheetTitle,
   SheetDescription,
-} from "@/components/ui/sheet";
+  SheetBody,
+} from "@/components/sakani";
+import { LoadingSkeleton } from "@/components/data-display/loading-skeleton";
+import { ErrorState } from "@/components/data-display/error-state";
+import { MoneyText } from "@/components/data-display/money-text";
+import { DateTimeText } from "@/components/data-display/date-time-text";
 import { useAuth } from "@/hooks/use-auth";
 import { useCatalogProducts } from "@/features/catalog/api";
 import {
@@ -58,7 +57,8 @@ export default function RFQReviewStudioPage() {
   const router = useRouter();
   const params = useParams();
   const rfqId = (params?.rfqId as string) || "";
-  const { user, role } = useAuth();
+  const { role, hasPermission } = useAuth();
+  const canSeeCost = hasPermission("catalog:cost");
 
   // Queries
   const {
@@ -76,8 +76,8 @@ export default function RFQReviewStudioPage() {
 
   const {
     data: linesData,
-    isLoading: linesLoading,
-    refetch: refetchLines,
+    isLoading: _linesLoading,
+    refetch: _refetchLines,
   } = useRFQLines(rfqId, {
     match_status: filterStatus === "all" ? undefined : filterStatus,
     page,
@@ -280,10 +280,8 @@ export default function RFQReviewStudioPage() {
   if (rfqLoading) {
     return (
       <PageContainer>
-        <div className="space-y-4 max-w-5xl">
-          <Skeleton className="h-10 w-64" />
-          <Skeleton className="h-24 w-full rounded-lg" />
-          <Skeleton className="h-96 w-full rounded-lg" />
+        <div className="space-y-4 max-w-5xl py-8">
+          <LoadingSkeleton rows={6} />
         </div>
       </PageContainer>
     );
@@ -316,38 +314,48 @@ export default function RFQReviewStudioPage() {
   return (
     <PageContainer>
       {/* Studio Header Bar */}
-      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 border-b pb-4">
+      <div className="mb-4">
+        <Link
+          href="/app/rfqs"
+          className="inline-flex items-center gap-1.5 text-xs text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] rounded-[var(--radius-xs)]"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          <span>Back to RFQs</span>
+        </Link>
+      </div>
+
+      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 border-b border-[var(--color-border-subtle)] pb-4">
         <div>
-          <div className="flex items-center gap-2.5">
-            <span className="font-mono text-xs font-semibold px-2 py-0.5 bg-muted rounded border">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <span className="font-mono text-xs font-semibold px-2 py-0.5 bg-[var(--color-bg-subtle)] text-[var(--color-fg-default)] rounded border border-[var(--color-border-subtle)]">
               {rfq.rfq_number}
             </span>
-            <h1 className="text-xl font-bold tracking-tight text-foreground">{rfq.title}</h1>
-            <span className="text-xs text-muted-foreground font-mono">v{rfq.version}</span>
+            <h1 className="text-xl font-bold tracking-tight text-[var(--color-fg-default)]">{rfq.title}</h1>
+            <span className="text-xs text-[var(--color-fg-muted)] font-mono">v{rfq.version}</span>
             {rfq.status === "ready_to_quote" ? (
-              <StatusBadge variant="success" label="Ready to Quote" />
+              <Badge variant="success" emphasis="subtle">Ready to Quote</Badge>
             ) : rfq.status === "needs_review" ? (
-              <StatusBadge variant="warning" label="Needs Review" />
+              <Badge variant="warning" emphasis="subtle">Needs Review</Badge>
             ) : rfq.status === "quoted" ? (
-              <StatusBadge variant="info" label="Quoted" />
+              <Badge variant="info" emphasis="subtle">Quoted</Badge>
             ) : (
-              <StatusBadge variant="neutral" label={rfq.status} />
+              <Badge variant="neutral" emphasis="subtle">{rfq.status}</Badge>
             )}
           </div>
 
-          <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-3 mt-1.5 text-xs text-[var(--color-fg-muted)]">
             <span>
-              Customer: <strong className="text-foreground">{rfq.account_name}</strong>
+              Customer: <strong className="text-[var(--color-fg-default)]">{rfq.account_name}</strong>
             </span>
             <span>•</span>
             <span>
-              Opportunity: <strong className="text-foreground">{rfq.opportunity_name}</strong>
+              Opportunity: <strong className="text-[var(--color-fg-default)]">{rfq.opportunity_name}</strong>
             </span>
             {rfq.customer_reference && (
               <>
                 <span>•</span>
                 <span>
-                  Ref: <strong className="text-foreground">{rfq.customer_reference}</strong>
+                  Ref: <strong className="text-[var(--color-fg-default)]">{rfq.customer_reference}</strong>
                 </span>
               </>
             )}
@@ -355,7 +363,7 @@ export default function RFQReviewStudioPage() {
         </div>
 
         {/* Header Action Buttons */}
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           <Button
             variant="outline"
             size="sm"
@@ -363,7 +371,7 @@ export default function RFQReviewStudioPage() {
             className="flex items-center gap-1.5 text-xs"
           >
             <Download className="w-3.5 h-3.5" />
-            Export CSV
+            <span>Export CSV</span>
           </Button>
 
           {(role === "catalog_manager" || role === "admin") && (
@@ -379,7 +387,7 @@ export default function RFQReviewStudioPage() {
               className="flex items-center gap-1.5 text-xs"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${rematchMutation.isPending ? "animate-spin" : ""}`} />
-              Rematch
+              <span>Rematch</span>
             </Button>
           )}
 
@@ -389,18 +397,19 @@ export default function RFQReviewStudioPage() {
               size="sm"
               onClick={handleCreateQuote}
               disabled={!rfq.is_ready_to_quote || createQuoteMutation.isPending || rfq.status === "quoted"}
-              className="flex items-center gap-1.5 text-xs bg-emerald-600 hover:bg-emerald-700 text-white disabled:opacity-50"
+              className="flex items-center gap-1.5 text-xs bg-[var(--color-success-600)] hover:bg-[var(--color-success-700)] text-white disabled:opacity-50"
             >
               <FileCheck2 className="w-4 h-4" />
-              {rfq.status === "quoted" ? "Converted to Quote" : "Create Quotation"}
+              <span>{rfq.status === "quoted" ? "Converted to Quote" : "Create Quotation"}</span>
             </Button>
 
             {!rfq.is_ready_to_quote && rfq.status !== "quoted" && rfq.blocking_reasons && (
-              <div className="absolute right-0 top-full mt-2 w-72 p-3 bg-popover text-popover-foreground text-xs rounded-lg shadow-lg border border-border hidden group-hover:block z-50">
-                <div className="font-semibold text-rose-600 mb-1 flex items-center gap-1">
-                  <ShieldAlert className="w-3.5 h-3.5" /> Quotation Gate Blocked
+              <div className="absolute right-0 top-full mt-2 w-72 p-3 bg-[var(--color-bg-surface)] text-[var(--color-fg-default)] text-xs rounded-[var(--radius-lg)] shadow-lg border border-[var(--color-border-subtle)] hidden group-hover:block z-50">
+                <div className="font-semibold text-[var(--color-danger-700)] mb-1 flex items-center gap-1.5">
+                  <ShieldAlert className="w-4 h-4" />
+                  <span>Quotation Gate Blocked</span>
                 </div>
-                <ul className="list-disc pl-4 space-y-1 text-muted-foreground">
+                <ul className="list-disc pl-4 space-y-1 text-[var(--color-fg-muted)]">
                   {rfq.blocking_reasons.map((r, i) => (
                     <li key={i}>{r}</li>
                   ))}
@@ -412,18 +421,20 @@ export default function RFQReviewStudioPage() {
       </div>
 
       {/* Progress Strip */}
-      <div className="flex items-center justify-between text-xs py-3 border-b bg-muted/20 px-4 rounded-md mt-3">
-        <div className="flex items-center gap-1.5 text-emerald-600 font-semibold">
-          <CheckCircle2 className="w-4 h-4" /> 1. Imported ({rfq.source_filename})
+      <div className="flex flex-wrap items-center justify-between text-xs py-3 border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] px-4 rounded-[var(--radius-md)] mt-3 gap-2">
+        <div className="flex items-center gap-1.5 text-[var(--color-success-700)] font-semibold">
+          <CheckCircle2 className="w-4 h-4" />
+          <span>1. Imported ({rfq.source_filename})</span>
         </div>
-        <ChevronRight className="w-4 h-4 text-muted-foreground/60" />
-        <div className="flex items-center gap-1.5 text-emerald-600 font-semibold">
-          <CheckCircle2 className="w-4 h-4" /> 2. Normalized ({rfq.total_lines} lines)
+        <ChevronRight className="w-4 h-4 text-[var(--color-fg-muted)]" />
+        <div className="flex items-center gap-1.5 text-[var(--color-success-700)] font-semibold">
+          <CheckCircle2 className="w-4 h-4" />
+          <span>2. Normalized ({rfq.total_lines} lines)</span>
         </div>
-        <ChevronRight className="w-4 h-4 text-muted-foreground/60" />
+        <ChevronRight className="w-4 h-4 text-[var(--color-fg-muted)]" />
         <div
           className={`flex items-center gap-1.5 font-semibold ${
-            rfq.resolved_lines_count === rfq.total_lines ? "text-emerald-600" : "text-amber-600"
+            rfq.resolved_lines_count === rfq.total_lines ? "text-[var(--color-success-700)]" : "text-[var(--color-warning-700)]"
           }`}
         >
           {rfq.resolved_lines_count === rfq.total_lines ? (
@@ -431,65 +442,64 @@ export default function RFQReviewStudioPage() {
           ) : (
             <AlertTriangle className="w-4 h-4" />
           )}
-          3. Review Studio ({rfq.resolved_lines_count}/{rfq.total_lines} resolved)
+          <span>3. Review Studio ({rfq.resolved_lines_count}/{rfq.total_lines} resolved)</span>
         </div>
-        <ChevronRight className="w-4 h-4 text-muted-foreground/60" />
+        <ChevronRight className="w-4 h-4 text-[var(--color-fg-muted)]" />
         <div
           className={`flex items-center gap-1.5 font-semibold ${
-            rfq.is_ready_to_quote ? "text-emerald-600" : "text-muted-foreground"
+            rfq.is_ready_to_quote ? "text-[var(--color-success-700)]" : "text-[var(--color-fg-muted)]"
           }`}
         >
-          {rfq.is_ready_to_quote ? <CheckCircle2 className="w-4 h-4" /> : <Clock className="w-4 h-4" />}
-          4. Ready to Quote
+          {rfq.is_ready_to_quote ? <CheckCircle2 className="w-4 h-4 text-[var(--color-success-700)]" /> : <Clock className="w-4 h-4" />}
+          <span>4. Ready to Quote</span>
         </div>
       </div>
 
       {/* Metrics Banner */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-4">
-        <div className="p-3 bg-card rounded-lg border text-xs">
-          <span className="text-muted-foreground font-medium">Total Lines</span>
-          <div className="text-lg font-bold text-foreground mt-0.5">{rfq.total_lines}</div>
-        </div>
-        <div className="p-3 bg-card rounded-lg border text-xs">
-          <span className="text-muted-foreground font-medium">Resolved / Matched</span>
-          <div className="text-lg font-bold text-emerald-600 mt-0.5">
+        <Card className="p-3 text-xs">
+          <span className="text-[var(--color-fg-muted)] font-medium">Total Lines</span>
+          <div className="text-lg font-bold text-[var(--color-fg-default)] mt-0.5">{rfq.total_lines}</div>
+        </Card>
+        <Card className="p-3 text-xs">
+          <span className="text-[var(--color-fg-muted)] font-medium">Resolved / Matched</span>
+          <div className="text-lg font-bold text-[var(--color-success-700)] mt-0.5">
             {rfq.resolved_lines_count}
           </div>
-        </div>
-        <div className="p-3 bg-card rounded-lg border text-xs">
-          <span className="text-muted-foreground font-medium">Exact Matches</span>
-          <div className="text-lg font-bold text-blue-600 mt-0.5">
+        </Card>
+        <Card className="p-3 text-xs">
+          <span className="text-[var(--color-fg-muted)] font-medium">Exact Matches</span>
+          <div className="text-lg font-bold text-[var(--color-primary-700)] mt-0.5">
             {rfq.exact_matches_count}
           </div>
-        </div>
-        <div className="p-3 bg-card rounded-lg border text-xs">
-          <span className="text-muted-foreground font-medium">Needs Review</span>
-          <div className="text-lg font-bold text-amber-600 mt-0.5">
+        </Card>
+        <Card className="p-3 text-xs">
+          <span className="text-[var(--color-fg-muted)] font-medium">Needs Review</span>
+          <div className="text-lg font-bold text-[var(--color-warning-700)] mt-0.5">
             {rfq.needs_review_lines_count}
           </div>
-        </div>
-        <div className="p-3 bg-card rounded-lg border text-xs">
-          <span className="text-muted-foreground font-medium">Invalid Lines</span>
-          <div className="text-lg font-bold text-rose-600 mt-0.5">
+        </Card>
+        <Card className="p-3 text-xs">
+          <span className="text-[var(--color-fg-muted)] font-medium">Invalid Lines</span>
+          <div className="text-lg font-bold text-[var(--color-danger-700)] mt-0.5">
             {rfq.invalid_lines_count}
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* Toolbar & Filter */}
-      <div className="flex flex-col sm:flex-row gap-3 items-center justify-between mt-6">
+      <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between mt-6">
         <div className="relative w-full sm:w-80">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search description, spec, SKU..."
             value={lineSearch}
             onChange={(e) => setLineSearch(e.target.value)}
-            className="pl-9 h-9 text-xs"
+            leadingIcon={<Search className="h-4 w-4 text-[var(--color-fg-muted)]" />}
           />
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto justify-end">
-          <div className="flex items-center gap-1 bg-muted/60 p-1 rounded-md text-xs">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
+          <div className="flex items-center gap-1 bg-[var(--color-bg-subtle)] border border-[var(--color-border-subtle)] p-1 rounded-[var(--radius-md)] text-xs">
             {[
               { id: "all", label: "All" },
               { id: "needs_review", label: "Needs Review" },
@@ -499,14 +509,15 @@ export default function RFQReviewStudioPage() {
             ].map((tab) => (
               <button
                 key={tab.id}
+                type="button"
                 onClick={() => {
                   setFilterStatus(tab.id);
                   setPage(1);
                 }}
-                className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
+                className={`px-2.5 py-1 rounded-[var(--radius-sm)] text-xs font-medium transition-colors cursor-pointer ${
                   filterStatus === tab.id
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "bg-[var(--color-bg-surface)] text-[var(--color-fg-default)] shadow-xs font-semibold"
+                    : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
                 }`}
               >
                 {tab.label}
@@ -521,20 +532,20 @@ export default function RFQReviewStudioPage() {
               variant="outline"
               onClick={handleBulkAccept}
               disabled={bulkAcceptMutation.isPending}
-              className="text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border-emerald-300"
+              className="text-xs font-semibold text-[var(--color-success-700)] bg-[var(--color-success-50)] hover:bg-[var(--color-success-100)] border-[var(--color-success-300)]"
             >
-              <Sparkles className="w-3.5 h-3.5 mr-1 text-emerald-600" />
-              Bulk Accept Exact ({exactEligibleCount})
+              <Sparkles className="w-3.5 h-3.5 mr-1 text-[var(--color-success-600)]" />
+              <span>Bulk Accept Exact ({exactEligibleCount})</span>
             </Button>
           )}
         </div>
       </div>
 
       {/* Main Review Table */}
-      <div className="mt-4 rounded-lg border bg-card overflow-hidden shadow-sm">
+      <div className="mt-4 rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] overflow-hidden shadow-2xs">
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-left">
-            <thead className="bg-muted/50 text-muted-foreground border-b uppercase font-semibold">
+            <thead className="bg-[var(--color-bg-subtle)] text-[var(--color-fg-muted)] border-b border-[var(--color-border-subtle)] uppercase font-semibold">
               <tr>
                 <th className="px-3.5 py-2.5 w-12 text-center">#</th>
                 <th className="px-3.5 py-2.5">Raw / Normalized Description</th>
@@ -545,10 +556,10 @@ export default function RFQReviewStudioPage() {
                 <th className="px-3.5 py-2.5 text-right">Inspect</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border">
+            <tbody className="divide-y divide-[var(--color-border-subtle)]">
               {filteredLines.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="text-center py-8 text-muted-foreground">
+                  <td colSpan={7} className="text-center py-8 text-[var(--color-fg-muted)]">
                     No line items match your current filter.
                   </td>
                 </tr>
@@ -563,68 +574,68 @@ export default function RFQReviewStudioPage() {
                     <tr
                       key={line.id}
                       onClick={() => setSelectedLineId(line.id)}
-                      className={`hover:bg-muted/30 cursor-pointer transition-colors ${
-                        isSelected ? "bg-muted/40 font-medium" : ""
+                      className={`hover:bg-[var(--color-bg-subtle)]/60 cursor-pointer transition-colors ${
+                        isSelected ? "bg-[var(--color-bg-subtle)] font-medium" : ""
                       }`}
                     >
-                      <td className="px-3.5 py-3 text-center font-mono text-muted-foreground">
+                      <td className="px-3.5 py-3 text-center font-mono text-[var(--color-fg-muted)]">
                         {line.source_row_number}
                       </td>
 
                       <td className="px-3.5 py-3 max-w-xs">
-                        <div className="font-semibold text-foreground truncate">
+                        <div className="font-semibold text-[var(--color-fg-default)] truncate">
                           {line.raw_description}
                         </div>
-                        <div className="text-[11px] text-muted-foreground/80 font-mono truncate">
+                        <div className="text-[11px] text-[var(--color-fg-muted)] font-mono truncate mt-0.5">
                           norm: {line.normalized_description || "—"}
                         </div>
                       </td>
 
                       <td className="px-3.5 py-3 text-center whitespace-nowrap font-mono">
                         {line.parsed_quantity ? (
-                          <span>
+                          <span className="text-[var(--color-fg-default)] font-semibold">
                             {line.parsed_quantity} {line.canonical_unit || ""}
                           </span>
                         ) : (
-                          <span className="text-rose-500 font-semibold">Invalid Qty</span>
+                          <span className="text-[var(--color-danger-700)] font-semibold">Invalid Qty</span>
                         )}
                       </td>
 
                       <td className="px-3.5 py-3 whitespace-nowrap">
                         {isMatched ? (
-                          <StatusBadge variant="success" label="Matched" />
+                          <Badge variant="success" emphasis="subtle">Matched</Badge>
                         ) : isExact ? (
-                          <StatusBadge variant="info" label="Exact Match" />
+                          <Badge variant="info" emphasis="subtle">Exact Match</Badge>
                         ) : isInvalid ? (
-                          <StatusBadge variant="destructive" label="Invalid" />
+                          <Badge variant="danger" emphasis="subtle">Invalid</Badge>
                         ) : line.match_status === "unmatched" ? (
-                          <StatusBadge variant="neutral" label="Unmatched" />
+                          <Badge variant="neutral" emphasis="subtle">Unmatched</Badge>
                         ) : (
-                          <StatusBadge variant="warning" label="Needs Review" />
+                          <Badge variant="warning" emphasis="subtle">Needs Review</Badge>
                         )}
                       </td>
 
                       <td className="px-3.5 py-3 max-w-sm">
                         {line.selected_product ? (
                           <div>
-                            <span className="font-mono font-semibold text-foreground">
+                            <span className="font-mono font-semibold text-[var(--color-fg-default)]">
                               {line.selected_product.product_sku}
                             </span>
-                            <div className="text-[11px] text-muted-foreground truncate">
+                            <div className="text-[11px] text-[var(--color-fg-muted)] truncate mt-0.5">
                               {line.selected_product.product_name}
                             </div>
                           </div>
                         ) : line.top_candidate ? (
                           <div>
-                            <span className="font-mono text-muted-foreground">
+                            <span className="font-mono text-[var(--color-fg-muted)]">
                               {line.top_candidate.product_sku}
                             </span>
-                            <div className="text-[11px] text-muted-foreground truncate">
+                            <div className="text-[11px] text-[var(--color-fg-muted)] truncate mt-0.5">
                               {line.top_candidate.product_name}
                             </div>
                           </div>
                         ) : (
-                          <span className="text-muted-foreground italic text-[11px]">No candidate</span>
+                          <span className="text-[var(--color-fg-muted)] italic text-[11px]">No candidate</span>
                         )}
                       </td>
 
@@ -632,17 +643,17 @@ export default function RFQReviewStudioPage() {
                         {line.top_candidate ? (
                           <span
                             className={`font-semibold ${
-                              line.top_candidate.similarity_score >= 0.85
-                                ? "text-emerald-600"
+                              line.top_candidate.similarity_score >= 0.75
+                                ? "text-[var(--color-success-700)]"
                                 : line.top_candidate.similarity_score >= 0.6
-                                ? "text-amber-600"
-                                : "text-muted-foreground"
+                                ? "text-[var(--color-warning-700)]"
+                                : "text-[var(--color-fg-muted)]"
                             }`}
                           >
                             {(line.top_candidate.similarity_score * 100).toFixed(0)}%
                           </span>
                         ) : (
-                          "—"
+                          <span className="text-[var(--color-fg-muted)]">—</span>
                         )}
                       </td>
 
@@ -650,13 +661,14 @@ export default function RFQReviewStudioPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-7 text-xs px-2"
+                          className="h-7 text-xs px-2 gap-1 text-[var(--color-primary-700)]"
                           onClick={(e) => {
                             e.stopPropagation();
                             setSelectedLineId(line.id);
                           }}
                         >
-                          Review <ArrowRight className="w-3 h-3 ml-1" />
+                          <span>Review</span>
+                          <ArrowRight className="w-3 h-3 ml-1" />
                         </Button>
                       </td>
                     </tr>
@@ -668,306 +680,308 @@ export default function RFQReviewStudioPage() {
         </div>
       </div>
 
-      {/* Right Side Inspector Sheet */}
+      {/* Right Side Inspector Sheet (Base UI Sakani Sheet) */}
       <Sheet open={!!selectedLineId} onOpenChange={(open) => !open && setSelectedLineId(null)}>
-        <SheetPopup className="w-full sm:max-w-xl overflow-y-auto">
+        <SheetPopup size="lg" className="overflow-y-auto">
           {lineDetailLoading ? (
-            <div className="space-y-4 p-4">
-              <Skeleton className="h-6 w-32" />
-              <Skeleton className="h-20 w-full" />
-              <Skeleton className="h-32 w-full" />
+            <div className="space-y-4 p-6">
+              <LoadingSkeleton rows={5} />
             </div>
           ) : lineDetail ? (
-            <div className="space-y-6 pb-8">
+            <div className="flex flex-col h-full">
               {/* Sheet Header */}
-              <div>
+              <SheetHeader>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs font-bold px-2 py-0.5 bg-muted rounded border">
+                    <span className="font-mono text-xs font-bold px-2 py-0.5 bg-[var(--color-bg-subtle)] border border-[var(--color-border-subtle)] rounded text-[var(--color-fg-default)]">
                       Line #{lineDetail.source_row_number}
                     </span>
-                    <span className="text-xs text-muted-foreground font-mono">v{lineDetail.version}</span>
+                    <span className="text-xs text-[var(--color-fg-muted)] font-mono">v{lineDetail.version}</span>
                   </div>
                   {lineDetail.match_status === "matched" ? (
-                    <StatusBadge variant="success" label="Matched" />
+                    <Badge variant="success" emphasis="subtle">Matched</Badge>
                   ) : lineDetail.match_status === "exact_match" ? (
-                    <StatusBadge variant="info" label="Exact Match" />
+                    <Badge variant="info" emphasis="subtle">Exact Match</Badge>
                   ) : lineDetail.normalization_status === "invalid" ? (
-                    <StatusBadge variant="destructive" label="Invalid" />
+                    <Badge variant="danger" emphasis="subtle">Invalid</Badge>
                   ) : (
-                    <StatusBadge variant="warning" label={lineDetail.match_status} />
+                    <Badge variant="warning" emphasis="subtle">{lineDetail.match_status}</Badge>
                   )}
                 </div>
-                <SheetTitle className="text-base font-bold text-foreground text-left mt-2">
+                <SheetTitle className="text-base font-bold text-[var(--color-fg-default)] text-left mt-2">
                   {lineDetail.raw_description}
                 </SheetTitle>
-                <SheetDescription className="text-xs font-mono text-left">
+                <SheetDescription className="text-xs font-mono text-left text-[var(--color-fg-muted)]">
                   Normalized: {lineDetail.normalized_description || "None"}
                 </SheetDescription>
-              </div>
+              </SheetHeader>
 
-              {/* Raw & Normalization Info */}
-              <div className="p-3 bg-muted/30 rounded-lg border text-xs space-y-2">
-                <div className="font-semibold text-foreground flex items-center justify-between">
-                  <span>Parsed Quantity & Dimensions</span>
-                  <span className="font-mono text-muted-foreground">
-                    {lineDetail.parsed_quantity || "None"} {lineDetail.canonical_unit || ""}
-                  </span>
-                </div>
-                {lineDetail.specifications && Object.keys(lineDetail.specifications).length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {Object.entries(lineDetail.specifications).map(([k, v]) => (
-                      <span key={k} className="px-2 py-0.5 bg-background border rounded text-[11px] font-mono">
-                        {k}: <strong>{String(v)}</strong>
-                      </span>
-                    ))}
-                  </div>
-                )}
-                {Array.isArray(lineDetail.diagnostics?.issues) && (lineDetail.diagnostics.issues as any[]).length > 0 && (
-                  <div className="p-2 bg-rose-50 border border-rose-200 rounded text-rose-700 text-[11px] space-y-1">
-                    <strong className="block font-semibold">Validation Diagnostics:</strong>
-                    {(lineDetail.diagnostics.issues as any[]).map((iss: any, idx: number) => (
-                      <div key={idx} className="flex items-center gap-1">
-                        <AlertCircle className="w-3 h-3 text-rose-600" />
-                        <span>[{iss.code}] {iss.detail}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Current Resolution State */}
-              {lineDetail.selected_product && (
-                <div className="p-3 bg-emerald-50/50 rounded-lg border border-emerald-200 text-xs space-y-2">
-                  <div className="flex items-center justify-between font-semibold text-emerald-800">
-                    <span className="flex items-center gap-1">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                      Assigned Catalog Product
+              <SheetBody className="space-y-6">
+                {/* Raw & Normalization Info */}
+                <Card className="p-3 text-xs space-y-2">
+                  <div className="font-semibold text-[var(--color-fg-default)] flex items-center justify-between">
+                    <span>Parsed Quantity & Dimensions</span>
+                    <span className="font-mono text-[var(--color-fg-muted)] font-semibold">
+                      {lineDetail.parsed_quantity || "None"} {lineDetail.canonical_unit || ""}
                     </span>
-                    {rfq.status !== "quoted" && (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={handleRevertDecision}
-                        disabled={lineDecisionMutation.isPending}
-                        className="h-7 text-[11px] border-emerald-300 hover:bg-emerald-100"
-                      >
-                        <RotateCcw className="w-3 h-3 mr-1" /> Revert
-                      </Button>
-                    )}
                   </div>
-                  <div className="font-mono font-bold text-foreground">
-                    {lineDetail.selected_product.product_sku} — {lineDetail.selected_product.product_name}
-                  </div>
-                  <div className="flex items-center justify-between text-[11px] text-muted-foreground pt-1">
-                    <span>Base UOM: {lineDetail.selected_product.product_base_unit}</span>
-                    <span>
-                      Sell Price: <MoneyText amount={lineDetail.selected_product.sell_price} currency="INR" />
-                    </span>
-                    {lineDetail.selected_product.unit_cost !== null && (
-                      <span className="font-semibold text-foreground">
-                        Cost: <MoneyText amount={lineDetail.selected_product.unit_cost} currency="INR" />
-                      </span>
-                    )}
-                  </div>
-                  {lineDetail.resolution_reason_code && (
-                    <div className="text-[11px] text-muted-foreground">
-                      Reason: <em>{lineDetail.resolution_reason_code}</em> • {lineDetail.resolution_notes || ""}
+                  {lineDetail.specifications && Object.keys(lineDetail.specifications).length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {Object.entries(lineDetail.specifications).map(([k, v]) => (
+                        <span key={k} className="px-2 py-0.5 bg-[var(--color-bg-subtle)] border border-[var(--color-border-subtle)] rounded text-[11px] font-mono text-[var(--color-fg-default)]">
+                          {k}: <strong>{String(v)}</strong>
+                        </span>
+                      ))}
                     </div>
                   )}
-                </div>
-              )}
-
-              {/* Candidate Suggestions */}
-              {rfq.status !== "quoted" && lineDetail.candidates && lineDetail.candidates.length > 0 && (
-                <div className="space-y-3">
-                  <h3 className="text-xs font-semibold text-foreground uppercase tracking-wider">
-                    System Candidate Suggestions ({lineDetail.candidates.length})
-                  </h3>
-
-                  <div className="space-y-2">
-                    {lineDetail.candidates.map((cand) => (
-                      <div
-                        key={cand.id}
-                        className={`p-3 rounded-lg border text-xs transition-colors ${
-                          cand.rank === 1 ? "bg-muted/30 border-primary/30" : "bg-card"
-                        }`}
-                      >
-                        <div className="flex items-start justify-between gap-2">
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-mono font-bold text-foreground">
-                                {cand.product_sku}
-                              </span>
-                              <span className="text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
-                                {(cand.similarity_score * 100).toFixed(0)}% Match
-                              </span>
-                              <span className="text-[10px] text-muted-foreground font-mono uppercase">
-                                {cand.match_method}
-                              </span>
-                            </div>
-                            <div className="text-xs text-foreground mt-0.5">
-                              {cand.product_name}
-                            </div>
-                            <div className="flex items-center gap-3 text-[11px] text-muted-foreground mt-1">
-                              <span>UOM: {cand.product_base_unit}</span>
-                              <span>Price: <MoneyText amount={cand.sell_price} currency="INR" /></span>
-                              {cand.unit_cost !== null && (
-                                <span className="font-medium text-foreground">
-                                  Cost: <MoneyText amount={cand.unit_cost} currency="INR" />
-                                </span>
-                              )}
-                            </div>
-                          </div>
-
-                          <Button
-                            size="sm"
-                            onClick={() => handleAcceptSuggestion(cand)}
-                            disabled={lineDecisionMutation.isPending}
-                            className="h-8 text-xs font-medium"
-                          >
-                            <Check className="w-3.5 h-3.5 mr-1" />
-                            Accept
-                          </Button>
-                        </div>
-
-                        {cand.flags && cand.flags.length > 0 && (
-                          <div className="mt-2 flex flex-wrap gap-1">
-                            {cand.flags.map((flag, idx) => (
-                              <span
-                                key={idx}
-                                className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-mono"
-                              >
-                                {flag}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Manual Product Selector */}
-              {rfq.status !== "quoted" && (
-                <div className="p-3 bg-muted/20 rounded-lg border space-y-3">
-                  <h3 className="text-xs font-semibold text-foreground">
-                    Manual Product Lookup / Override
-                  </h3>
-                  <div className="relative">
-                    <Search className="absolute left-2.5 top-2 h-3.5 w-3.5 text-muted-foreground" />
-                    <Input
-                      placeholder="Search catalog by SKU or keyword..."
-                      value={productSearch}
-                      onChange={(e) => setProductSearch(e.target.value)}
-                      className="pl-8 h-8 text-xs"
-                    />
-                  </div>
-
-                  {catalogResults?.items && catalogResults.items.length > 0 && (
-                    <div
-                      tabIndex={0}
-                      role="region"
-                      aria-label="Catalog search results"
-                      className="max-h-36 overflow-y-auto space-y-1 border rounded p-1 bg-background text-xs"
-                    >
-                      {catalogResults.items.map((prod) => (
-                        <div
-                          key={prod.id}
-                          onClick={() => setManualSelectedProductId(prod.id)}
-                          className={`p-1.5 rounded cursor-pointer transition-colors flex items-center justify-between ${
-                            manualSelectedProductId === prod.id
-                              ? "bg-primary text-primary-foreground font-semibold"
-                              : "hover:bg-muted"
-                          }`}
-                        >
-                          <div>
-                            <span className="font-mono">{prod.sku}</span> — {prod.name}
-                          </div>
-                          <span>{prod.base_unit}</span>
+                  {Array.isArray(lineDetail.diagnostics?.issues) && (lineDetail.diagnostics.issues as any[]).length > 0 && (
+                    <div className="p-2.5 bg-[var(--color-danger-50)] border border-[var(--color-danger-200)] rounded-[var(--radius-sm)] text-[var(--color-danger-700)] text-[11px] space-y-1">
+                      <strong className="block font-semibold">Validation Diagnostics:</strong>
+                      {(lineDetail.diagnostics.issues as any[]).map((iss: any, idx: number) => (
+                        <div key={idx} className="flex items-center gap-1.5">
+                          <AlertCircle className="w-3.5 h-3.5 text-[var(--color-danger-600)] shrink-0" />
+                          <span>[{iss.code}] {iss.detail}</span>
                         </div>
                       ))}
                     </div>
                   )}
+                </Card>
 
-                  {manualSelectedProductId && (
-                    <div className="space-y-2 pt-1 border-t text-xs">
-                      <div className="grid grid-cols-2 gap-2">
-                        <div>
-                          <label className="text-[11px] text-muted-foreground font-medium">Reason Code</label>
-                          <select
-                            value={manualReasonCode}
-                            onChange={(e) => setManualReasonCode(e.target.value)}
-                            className="w-full h-8 px-2 text-xs bg-background border rounded"
-                          >
-                            <option value="MANUAL_OVERRIDE">Manual Override</option>
-                            <option value="CUSTOMER_REQUEST">Customer Requested Specific Brand</option>
-                            <option value="EQUIVALENT_SUBSTITUTE">Equivalent Substitute</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className="text-[11px] text-muted-foreground font-medium">Notes</label>
-                          <Input
-                            placeholder="Optional notes..."
-                            value={manualNotes}
-                            onChange={(e) => setManualNotes(e.target.value)}
-                            className="h-8 text-xs"
-                          />
-                        </div>
+                {/* Current Resolution State */}
+                {lineDetail.selected_product && (
+                  <Card className="p-3 bg-[var(--color-success-50)]/40 border-[var(--color-success-200)] text-xs space-y-2">
+                    <div className="flex items-center justify-between font-semibold text-[var(--color-success-800)]">
+                      <span className="flex items-center gap-1.5">
+                        <CheckCircle2 className="w-4 h-4 text-[var(--color-success-600)]" />
+                        <span>Assigned Catalog Product</span>
+                      </span>
+                      {rfq.status !== "quoted" && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={handleRevertDecision}
+                          disabled={lineDecisionMutation.isPending}
+                          className="h-7 text-[11px] border-[var(--color-success-300)] hover:bg-[var(--color-success-100)]"
+                        >
+                          <RotateCcw className="w-3 h-3 mr-1" />
+                          <span>Revert</span>
+                        </Button>
+                      )}
+                    </div>
+                    <div className="font-mono font-bold text-[var(--color-fg-default)]">
+                      {lineDetail.selected_product.product_sku} — {lineDetail.selected_product.product_name}
+                    </div>
+                    <div className="flex items-center justify-between text-[11px] text-[var(--color-fg-muted)] pt-1 border-t border-[var(--color-border-subtle)]">
+                      <span>Base UOM: {lineDetail.selected_product.product_base_unit}</span>
+                      <span>
+                        Sell Price: <MoneyText amount={lineDetail.selected_product.sell_price} currency="INR" />
+                      </span>
+                      {canSeeCost && lineDetail.selected_product.unit_cost !== null && (
+                        <span className="font-semibold text-[var(--color-fg-default)]">
+                          Cost: <MoneyText amount={lineDetail.selected_product.unit_cost} currency="INR" />
+                        </span>
+                      )}
+                    </div>
+                    {lineDetail.resolution_reason_code && (
+                      <div className="text-[11px] text-[var(--color-fg-muted)]">
+                        Reason: <em>{lineDetail.resolution_reason_code}</em> {lineDetail.resolution_notes ? `• ${lineDetail.resolution_notes}` : ""}
                       </div>
+                    )}
+                  </Card>
+                )}
+
+                {/* System Candidate Suggestions */}
+                {rfq.status !== "quoted" && lineDetail.candidates && lineDetail.candidates.length > 0 && (
+                  <div className="space-y-3">
+                    <h3 className="text-xs font-semibold text-[var(--color-fg-default)] uppercase tracking-wider">
+                      System Candidate Suggestions ({lineDetail.candidates.length})
+                    </h3>
+
+                    <div className="space-y-2.5">
+                      {lineDetail.candidates.map((cand) => (
+                        <Card
+                          key={cand.id}
+                          className={`p-3 text-xs transition-colors ${
+                            cand.rank === 1 ? "bg-[var(--color-bg-subtle)] border-[var(--color-primary-300)]" : ""
+                          }`}
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="space-y-1">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className="font-mono font-bold text-[var(--color-fg-default)]">
+                                  {cand.product_sku}
+                                </span>
+                                <Badge
+                                  variant={cand.similarity_score >= 0.75 ? "success" : cand.similarity_score >= 0.60 ? "warning" : "neutral"}
+                                  emphasis="subtle"
+                                >
+                                  {(cand.similarity_score * 100).toFixed(0)}% Match
+                                </Badge>
+                                <span className="text-[10px] text-[var(--color-fg-muted)] font-mono uppercase">
+                                  {cand.match_method}
+                                </span>
+                              </div>
+                              <div className="text-xs text-[var(--color-fg-default)] font-medium">
+                                {cand.product_name}
+                              </div>
+                              <div className="flex flex-wrap items-center gap-3 text-[11px] text-[var(--color-fg-muted)] pt-0.5">
+                                <span>UOM: {cand.product_base_unit}</span>
+                                <span>Price: <MoneyText amount={cand.sell_price} currency="INR" /></span>
+                                {canSeeCost && cand.unit_cost !== null && (
+                                  <span className="font-medium text-[var(--color-fg-default)]">
+                                    Cost: <MoneyText amount={cand.unit_cost} currency="INR" />
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+
+                            <Button
+                              size="sm"
+                              onClick={() => handleAcceptSuggestion(cand)}
+                              disabled={lineDecisionMutation.isPending}
+                              className="h-8 text-xs font-medium shrink-0"
+                            >
+                              <Check className="w-3.5 h-3.5 mr-1" />
+                              <span>Accept</span>
+                            </Button>
+                          </div>
+
+                          {cand.flags && cand.flags.length > 0 && (
+                            <div className="mt-2 flex flex-wrap gap-1">
+                              {cand.flags.map((flag, idx) => (
+                                <span
+                                  key={idx}
+                                  className="px-1.5 py-0.5 rounded bg-[var(--color-warning-50)] text-[var(--color-warning-800)] border border-[var(--color-warning-200)] text-[10px] font-mono"
+                                >
+                                  {flag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Manual Product Selector */}
+                {rfq.status !== "quoted" && (
+                  <Card className="p-3.5 space-y-3">
+                    <h3 className="text-xs font-semibold text-[var(--color-fg-default)]">
+                      Manual Product Lookup / Override
+                    </h3>
+                    <div className="relative">
+                      <Input
+                        placeholder="Search catalog by SKU or keyword..."
+                        value={productSearch}
+                        onChange={(e) => setProductSearch(e.target.value)}
+                        leadingIcon={<Search className="h-3.5 w-3.5 text-[var(--color-fg-muted)]" />}
+                      />
+                    </div>
+
+                    {catalogResults?.items && catalogResults.items.length > 0 && (
+                      <div
+                        tabIndex={0}
+                        role="region"
+                        aria-label="Catalog search results"
+                        className="max-h-36 overflow-y-auto space-y-1 border border-[var(--color-border-subtle)] rounded-[var(--radius-sm)] p-1 bg-[var(--color-bg-surface)] text-xs"
+                      >
+                        {catalogResults.items.map((prod) => (
+                          <div
+                            key={prod.id}
+                            onClick={() => setManualSelectedProductId(prod.id)}
+                            className={`p-1.5 rounded-[var(--radius-xs)] cursor-pointer transition-colors flex items-center justify-between ${
+                              manualSelectedProductId === prod.id
+                                ? "bg-[var(--color-primary-600)] text-white font-semibold"
+                                : "hover:bg-[var(--color-bg-subtle)] text-[var(--color-fg-default)]"
+                            }`}
+                          >
+                            <div>
+                              <span className="font-mono">{prod.sku}</span> — {prod.name}
+                            </div>
+                            <span className="font-mono text-xs">{prod.base_unit}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {manualSelectedProductId && (
+                      <div className="space-y-2.5 pt-2 border-t border-[var(--color-border-subtle)] text-xs">
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <label className="text-[11px] text-[var(--color-fg-muted)] font-medium block mb-1">Reason Code</label>
+                            <select
+                              value={manualReasonCode}
+                              onChange={(e) => setManualReasonCode(e.target.value)}
+                              className="w-full h-8 px-2 text-xs bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)] text-[var(--color-fg-default)]"
+                            >
+                              <option value="MANUAL_OVERRIDE">Manual Override</option>
+                              <option value="CUSTOMER_REQUEST">Customer Requested Specific Brand</option>
+                              <option value="EQUIVALENT_SUBSTITUTE">Equivalent Substitute</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="text-[11px] text-[var(--color-fg-muted)] font-medium block mb-1">Notes</label>
+                            <Input
+                              placeholder="Optional notes..."
+                              value={manualNotes}
+                              onChange={(e) => setManualNotes(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                        <Button
+                          size="sm"
+                          onClick={handleManualProductConfirm}
+                          disabled={lineDecisionMutation.isPending}
+                          className="w-full h-8 text-xs font-semibold"
+                        >
+                          Confirm Manual Assignment
+                        </Button>
+                      </div>
+                    )}
+
+                    <div className="pt-2 border-t border-[var(--color-border-subtle)] flex justify-end">
                       <Button
                         size="sm"
-                        onClick={handleManualProductConfirm}
+                        variant="ghost"
+                        onClick={handleMarkUnmatched}
                         disabled={lineDecisionMutation.isPending}
-                        className="w-full h-8 text-xs font-semibold"
+                        className="text-xs text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] h-7"
                       >
-                        Confirm Manual Assignment
+                        Mark as Unmatched Item
                       </Button>
                     </div>
-                  )}
+                  </Card>
+                )}
 
-                  <div className="pt-2 border-t flex justify-end">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={handleMarkUnmatched}
-                      disabled={lineDecisionMutation.isPending}
-                      className="text-xs text-muted-foreground hover:text-foreground h-7"
-                    >
-                      Mark as Unmatched Item
-                    </Button>
-                  </div>
-                </div>
-              )}
-
-              {/* Decision History Audit Log */}
-              {lineDetail.decision_history && lineDetail.decision_history.length > 0 && (
-                <div className="space-y-2 pt-2 border-t">
-                  <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider">
-                    Decision Audit Trail ({lineDetail.decision_history.length})
-                  </h4>
-                  <div className="space-y-2">
-                    {lineDetail.decision_history.map((dh) => (
-                      <div key={dh.id} className="p-2 rounded bg-muted/20 border text-[11px] space-y-1">
-                        <div className="flex items-center justify-between text-muted-foreground">
-                          <span className="font-semibold text-foreground">{dh.actor_name}</span>
-                          <DateTimeText value={dh.created_at} />
-                        </div>
-                        <div className="font-mono text-foreground">
-                          Action: <strong>{dh.decision_type}</strong> • Status: {dh.previous_match_status} →{" "}
-                          {dh.new_match_status}
-                        </div>
-                        {dh.reason_code && (
-                          <div className="text-muted-foreground">
-                            Reason: <em>{dh.reason_code}</em> {dh.reason_notes ? `— "${dh.reason_notes}"` : ""}
+                {/* Decision History Audit Log */}
+                {lineDetail.decision_history && lineDetail.decision_history.length > 0 && (
+                  <div className="space-y-2 pt-2 border-t border-[var(--color-border-subtle)]">
+                    <h4 className="text-xs font-semibold text-[var(--color-fg-default)] uppercase tracking-wider">
+                      Decision Audit Trail ({lineDetail.decision_history.length})
+                    </h4>
+                    <div className="space-y-2">
+                      {lineDetail.decision_history.map((dh) => (
+                        <Card key={dh.id} className="p-2.5 text-[11px] space-y-1">
+                          <div className="flex items-center justify-between text-[var(--color-fg-muted)]">
+                            <span className="font-semibold text-[var(--color-fg-default)]">{dh.actor_name}</span>
+                            <DateTimeText value={dh.created_at} />
                           </div>
-                        )}
-                      </div>
-                    ))}
+                          <div className="font-mono text-[var(--color-fg-default)]">
+                            Action: <strong>{dh.decision_type}</strong> • Status: {dh.previous_match_status} →{" "}
+                            {dh.new_match_status}
+                          </div>
+                          {dh.reason_code && (
+                            <div className="text-[var(--color-fg-muted)]">
+                              Reason: <em>{dh.reason_code}</em> {dh.reason_notes ? `— "${dh.reason_notes}"` : ""}
+                            </div>
+                          )}
+                        </Card>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </SheetBody>
             </div>
           ) : null}
         </SheetPopup>

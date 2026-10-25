@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-10-25T11:28:16.649Z",
+  "rfqId": "5cd5beb5-5f7d-4a7d-af00-5bc8829c3833",
+  "rfqNumber": "RFQ-2026-0001",
+  "rfqTitle": "Turnaround Piping & Valves Batch A",
+  "axeResults": {
+    "rfq-studio-desktop": 0,
+    "rfq-drawer-desktop": 0
+  },
+  "screenshots": [
+    "rfq-studio-desktop-1440x900.png",
+    "rfq-studio-tablet-1024x768.png",
+    "rfq-studio-mobile-390x844.png",
+    "rfq-drawer-desktop-1440x900.png",
+    "rfq-drawer-tablet-1024x768.png",
+    "rfq-drawer-mobile-390x844.png"
+  ]
+}
