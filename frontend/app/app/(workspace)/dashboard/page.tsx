@@ -16,6 +16,9 @@ import { formatMoney } from "@/lib/formatters/formatters";
 import { useDashboardSummary, useDashboardAttention } from "@/features/dashboard/api";
 import { StageChart } from "@/features/dashboard/components/stage-chart";
 import { AttentionQueue } from "@/features/dashboard/components/attention-queue";
+import { RFQMatchHealthChart } from "@/features/dashboard/components/rfq-match-health-chart";
+import { QuoteLifecycleChart } from "@/features/dashboard/components/quote-lifecycle-chart";
+import { TaskDueLoadChart } from "@/features/dashboard/components/task-due-load-chart";
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -231,6 +234,47 @@ export default function DashboardPage() {
             )}
           </Card>
         </div>
+
+        {/* Section 5: Operational Analytics */}
+        <section aria-labelledby="operational-analytics-heading" className="space-y-3 pt-2">
+          <div>
+            <h2
+              id="operational-analytics-heading"
+              className="text-base font-semibold leading-[22px] text-[var(--color-fg-default)]"
+            >
+              Operational Analytics
+            </h2>
+            <p className="text-[13px] font-medium leading-[18px] text-[var(--color-fg-muted)] mt-0.5">
+              RFQ resolution, quotation governance, and upcoming work.
+            </p>
+          </div>
+
+          <div
+            data-slot="operational-analytics-grid"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch"
+          >
+            {/* Chart A: RFQ Match Health */}
+            {summaryLoading ? (
+              <Skeleton className="h-[310px] w-full rounded-[var(--radius-xl)]" />
+            ) : (
+              <RFQMatchHealthChart data={summary?.rfq_match_health} />
+            )}
+
+            {/* Chart B: Quotation Lifecycle */}
+            {summaryLoading ? (
+              <Skeleton className="h-[310px] w-full rounded-[var(--radius-xl)]" />
+            ) : (
+              <QuoteLifecycleChart data={summary?.quote_lifecycle} />
+            )}
+
+            {/* Chart C: Task Due-Date Load */}
+            {summaryLoading ? (
+              <Skeleton className="h-[310px] w-full rounded-[var(--radius-xl)]" />
+            ) : (
+              <TaskDueLoadChart data={summary?.task_due_load} />
+            )}
+          </div>
+        </section>
       </div>
     </PageContainer>
   );

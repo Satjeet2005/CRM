@@ -14,6 +14,54 @@ class StageDistributionItem(BaseModel):
     total_value: Decimal
 
 
+class RFQMatchHealthItem(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    status: str
+    label: str
+    count: int
+    percentage: float
+
+
+class RFQMatchHealthSummary(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    total_lines: int
+    reviewed_lines: int
+    categories: list[RFQMatchHealthItem]
+
+
+class QuoteLifecycleItem(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    status: str
+    label: str
+    count: int
+
+
+class QuoteLifecycleSummary(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    total_quotes: int
+    categories: list[QuoteLifecycleItem]
+
+
+class TaskDueLoadItem(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    bucket: str
+    label: str
+    count: int
+    is_urgent: bool
+
+
+class TaskDueLoadSummary(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    total_open_tasks: int
+    categories: list[TaskDueLoadItem]
+
+
 class DashboardSummaryResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -31,6 +79,11 @@ class DashboardSummaryResponse(BaseModel):
     total_quote_value: Optional[Decimal] = None
     date_from: Optional[date] = None
     date_to: Optional[date] = None
+
+    # Operational Analytics Aggregates
+    rfq_match_health: Optional[RFQMatchHealthSummary] = None
+    quote_lifecycle: Optional[QuoteLifecycleSummary] = None
+    task_due_load: Optional[TaskDueLoadSummary] = None
 
 
 class AttentionItemResponse(BaseModel):

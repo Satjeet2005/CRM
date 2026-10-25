@@ -56,6 +56,14 @@ This matrix documents a screen-by-screen comparative audit between the canonical
 - **Middle Charts & Bottom Activity Audit**:
   - **Charts Row (Middle)**: 3-column equal grid (`threeCol`, height 334px) containing BarChart (Revenue), LineChart (Customer Growth), and DonutChart (Sales Channel with centered value and custom LegendRow).
   - **Recent Orders & Activity Row (Bottom)**: 2:1 column split (`ordersActivityRow`, height 412px). 2-column Recent Orders table with status badges (`Active`, `Failed`, `Pending`), 1-column Activity feed with avatar groups and segmented text.
+- **Operational Analytics Expansion (Section 5 — Fully Conformed)**:
+  - **Figma References**: Donut Chart with Text (node `1290:22116`), Horizontal Bar Chart (node `1290:21238`).
+  - **Layout**: 3-column balanced grid (`grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4`) positioned beneath Stage Distribution & Attention Required.
+  - **Chart A (RFQ Match Health)**: Recharts Donut (`117` total lines center metric) displaying exact partition of RFQ line match status (`Exact Match`: 20, `Partially Matched`: 66, `Needs Review`: 28, `Unmatched`: 3). Accessible legend + tabular alternative toggle.
+  - **Chart B (Quotation Lifecycle)**: Horizontal progress bars for quote governance (`Draft`: 1, `In Review / Pending`: 1, `Approved`: 2, `Rejected`: 0, `Expired`: 0; total 4). Tabular toggle.
+  - **Chart C (Task Due-Date Load)**: Horizontal urgency bars binned by `Asia/Kolkata` date boundaries (`Overdue`: 4, `Due Today`: 1, `Next 7 Days`: 6, `Later`: 0; total 11 open tasks). Exact match with overdue tasks KPI (`4`). Tabular toggle.
+  - **Stage Chart Color Mapping**: Polished stage colors across chart and breakdown table (`lead` = blue, `qualified` = teal, `solutioning` = saffron, `proposal` = purple, `negotiation` = gold, `won` = green, `lost` = red).
+  - **Accessibility**: 0 Axe-core violations across Desktop Light, Desktop Dark, Tablet, and Mobile viewports. Verified via automated test suite.
 
 ### 3.2 Accounts Directory (`/app/accounts` — Tier 2: Layout Reference)
 - **Sakani Layout Reference**: Sakani `/customers` provides the component reference for table styling and `Panel` headers, but is **not** an exact screen equivalent.

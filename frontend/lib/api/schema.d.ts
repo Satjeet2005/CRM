@@ -33,7 +33,7 @@ export interface paths {
         };
         /**
          * Readiness
-         * @description Readiness probe verifying database connectivity.
+         * @description Readiness probe verifying database connectivity and migration synchronization.
          */
         get: operations["readiness_health_ready_get"];
         put?: never;
@@ -1773,6 +1773,9 @@ export interface components {
             date_from?: string | null;
             /** Date To */
             date_to?: string | null;
+            rfq_match_health?: components["schemas"]["RFQMatchHealthSummary"] | null;
+            quote_lifecycle?: components["schemas"]["QuoteLifecycleSummary"] | null;
+            task_due_load?: components["schemas"]["TaskDueLoadSummary"] | null;
         };
         /** DecisionHistoryItem */
         DecisionHistoryItem: {
@@ -2533,6 +2536,22 @@ export interface components {
             /** Lines */
             lines: components["schemas"]["QuoteDraftLineUpdateInput"][];
         };
+        /** QuoteLifecycleItem */
+        QuoteLifecycleItem: {
+            /** Status */
+            status: string;
+            /** Label */
+            label: string;
+            /** Count */
+            count: number;
+        };
+        /** QuoteLifecycleSummary */
+        QuoteLifecycleSummary: {
+            /** Total Quotes */
+            total_quotes: number;
+            /** Categories */
+            categories: components["schemas"]["QuoteLifecycleItem"][];
+        };
         /** QuoteListItemResponse */
         QuoteListItemResponse: {
             /**
@@ -2994,6 +3013,26 @@ export interface components {
              */
             updated_at: string;
         };
+        /** RFQMatchHealthItem */
+        RFQMatchHealthItem: {
+            /** Status */
+            status: string;
+            /** Label */
+            label: string;
+            /** Count */
+            count: number;
+            /** Percentage */
+            percentage: number;
+        };
+        /** RFQMatchHealthSummary */
+        RFQMatchHealthSummary: {
+            /** Total Lines */
+            total_lines: number;
+            /** Reviewed Lines */
+            reviewed_lines: number;
+            /** Categories */
+            categories: components["schemas"]["RFQMatchHealthItem"][];
+        };
         /** RFQRematchRequest */
         RFQRematchRequest: {
             /**
@@ -3129,6 +3168,24 @@ export interface components {
              * @enum {string}
              */
             priority: "low" | "normal" | "high";
+        };
+        /** TaskDueLoadItem */
+        TaskDueLoadItem: {
+            /** Bucket */
+            bucket: string;
+            /** Label */
+            label: string;
+            /** Count */
+            count: number;
+            /** Is Urgent */
+            is_urgent: boolean;
+        };
+        /** TaskDueLoadSummary */
+        TaskDueLoadSummary: {
+            /** Total Open Tasks */
+            total_open_tasks: number;
+            /** Categories */
+            categories: components["schemas"]["TaskDueLoadItem"][];
         };
         /** TaskResponse */
         TaskResponse: {

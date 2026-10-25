@@ -4,6 +4,9 @@ import type { components } from "@/lib/api/schema";
 
 export type DashboardSummary = components["schemas"]["DashboardSummaryResponse"];
 export type AttentionItem = components["schemas"]["AttentionItemResponse"];
+export type RFQMatchHealthSummary = components["schemas"]["RFQMatchHealthSummary"];
+export type QuoteLifecycleSummary = components["schemas"]["QuoteLifecycleSummary"];
+export type TaskDueLoadSummary = components["schemas"]["TaskDueLoadSummary"];
 
 export function useDashboardSummary(params?: { from_date?: string; to_date?: string }) {
   const queryParams = new URLSearchParams();

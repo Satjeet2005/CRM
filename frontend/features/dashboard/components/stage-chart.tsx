@@ -9,9 +9,20 @@ import {
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
+  Cell,
 } from "recharts";
 import { formatMoney } from "@/lib/formatters/formatters";
 import type { DashboardSummary } from "../api";
+
+export const STAGE_COLOR_MAP: Record<string, string> = {
+  lead: "var(--color-chart-2)",
+  qualified: "var(--color-chart-3)",
+  solutioning: "var(--color-chart-1)",
+  proposal: "var(--color-chart-4)",
+  negotiation: "var(--color-chart-5)",
+  won: "var(--color-chart-6)",
+  lost: "var(--color-danger-fg)",
+};
 
 interface StageChartProps {
   distribution: DashboardSummary["stage_distribution"];
@@ -114,10 +125,16 @@ export function StageChart({ distribution }: StageChartProps) {
                 />
                 <Bar
                   dataKey="value"
-                  fill="var(--color-chart-2)"
                   radius={[0, 6, 6, 0]}
                   maxBarSize={20}
-                />
+                >
+                  {chartData.map((entry) => (
+                    <Cell
+                      key={`cell-v-${entry.stageKey}`}
+                      fill={STAGE_COLOR_MAP[entry.stageKey] || "var(--color-chart-2)"}
+                    />
+                  ))}
+                </Bar>
               </BarChart>
             ) : (
               <BarChart
@@ -164,10 +181,16 @@ export function StageChart({ distribution }: StageChartProps) {
                 />
                 <Bar
                   dataKey="value"
-                  fill="var(--color-chart-2)"
                   radius={[6, 6, 0, 0]}
                   maxBarSize={40}
-                />
+                >
+                  {chartData.map((entry) => (
+                    <Cell
+                      key={`cell-h-${entry.stageKey}`}
+                      fill={STAGE_COLOR_MAP[entry.stageKey] || "var(--color-chart-2)"}
+                    />
+                  ))}
+                </Bar>
               </BarChart>
             )}
           </ResponsiveContainer>
@@ -211,7 +234,14 @@ export function StageChart({ distribution }: StageChartProps) {
               {chartData.map((item) => (
                 <tr key={item.stageKey} className="transition-colors">
                   <td className="py-2 text-[13px] font-medium leading-[18px] text-[var(--color-fg-default)]">
-                    {item.stage}
+                    <span className="inline-flex items-center gap-2">
+                      <span
+                        className="h-2 w-2 rounded-full shrink-0"
+                        style={{ backgroundColor: STAGE_COLOR_MAP[item.stageKey] || "var(--color-chart-2)" }}
+                        aria-hidden="true"
+                      />
+                      <span>{item.stage}</span>
+                    </span>
                   </td>
                   <td className="py-2 text-right pr-3 text-[13px] font-medium leading-[18px] text-[var(--color-fg-default)] tabular-nums">
                     {item.count}

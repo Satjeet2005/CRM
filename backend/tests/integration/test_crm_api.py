@@ -441,6 +441,31 @@ def test_dashboard_metrics_and_attention_contract(client: TestClient):
     assert "phase_4" in data["quotes_availability"] or data["quotes_availability"] == "available"
     assert data["rfq_availability"] == "available"
 
+    # Verify Operational Analytics Aggregates
+    assert "rfq_match_health" in data and data["rfq_match_health"] is not None
+    rfq_health = data["rfq_match_health"]
+    assert "total_lines" in rfq_health
+    assert "categories" in rfq_health
+    assert sum(c["count"] for c in rfq_health["categories"]) == rfq_health["total_lines"]
+    rfq_statuses = {c["status"] for c in rfq_health["categories"]}
+    assert rfq_statuses == {"exact_match", "matched", "needs_review", "unmatched"}
+
+    assert "quote_lifecycle" in data and data["quote_lifecycle"] is not None
+    quote_life = data["quote_lifecycle"]
+    assert "total_quotes" in quote_life
+    assert "categories" in quote_life
+    assert sum(c["count"] for c in quote_life["categories"]) == quote_life["total_quotes"]
+    quote_statuses = {c["status"] for c in quote_life["categories"]}
+    assert quote_statuses == {"draft", "pending_approval", "approved", "rejected", "expired"}
+
+    assert "task_due_load" in data and data["task_due_load"] is not None
+    task_load = data["task_due_load"]
+    assert "total_open_tasks" in task_load
+    assert "categories" in task_load
+    assert sum(c["count"] for c in task_load["categories"]) == task_load["total_open_tasks"]
+    task_buckets = {c["bucket"]: c["count"] for c in task_load["categories"]}
+    assert task_buckets["overdue"] == data["overdue_tasks_count"]
+
     # 2. Attention Queue
     resp_att = client.get("/api/v1/dashboard/attention", headers=headers)
     assert resp_att.status_code == 200

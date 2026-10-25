@@ -72,6 +72,18 @@ This document catalogs canonical **Sakani UI** components, their verified contra
 - **Card Hierarchy**: 14px 2-line title link, 13px account name with 14px building icon, tabular value and date row, 1px top divider, 32px Next outline button and Mark Lost destructive action.
 - **Drop Target State**: 2px dashed primary border (`border-2 border-dashed border-[var(--color-primary-400)]`), subtle lane tint, accessible drop target indicator.
 
+### 1.8 Dashboard Operational Analytics Charts
+- **Components**:
+  - `frontend/features/dashboard/components/rfq-match-health-chart.tsx` (`RFQMatchHealthChart`)
+  - `frontend/features/dashboard/components/quote-lifecycle-chart.tsx` (`QuoteLifecycleChart`)
+  - `frontend/features/dashboard/components/task-due-load-chart.tsx` (`TaskDueLoadChart`)
+  - `frontend/features/dashboard/components/stage-chart.tsx` (`OpportunityStageChart`)
+- **Figma References**: Donut Chart with Text (`1290:22116`), Horizontal Bar Chart (`1290:21238`).
+- **RFQ Match Health**: Recharts `PieChart` with `innerRadius={62}`, `outerRadius={84}`, centered metric overlay (`24px` bold count + `10px` muted uppercase label), semantic color palette (`--color-chart-2`, `--color-chart-1`, `--color-chart-4`, `--color-danger-fg`), interactive tooltips, custom legend, and WCAG 2.5.3 compliant tabular toggle (`Table` / `Chart`).
+- **Quotation Lifecycle**: Horizontal relative progress bars mapping draft, pending approval, approved, rejected, and expired states with zero-count neutral badges, share percentages, and tabular toggle.
+- **Task Due-Date Load**: Horizontal urgency bars mapping overdue, due today, next 7 days, and later open tasks binned by tenant timezone (`Asia/Kolkata`) with semantic danger/warning colors, exact alignment with overdue KPI, and tabular toggle.
+- **Stage Distribution Polish**: Synchronized `STAGE_COLOR_MAP` across bar chart and breakdown table (`lead` = blue, `qualified` = teal, `solutioning` = saffron, `proposal` = purple, `negotiation` = gold, `won` = green, `lost` = red).
+
 ---
 
 ## 2. Documented Application Block Components

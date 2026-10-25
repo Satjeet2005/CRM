@@ -38,7 +38,7 @@
           "Health"
         ],
         "summary": "Readiness",
-        "description": "Readiness probe verifying database connectivity.",
+        "description": "Readiness probe verifying database connectivity and migration synchronization.",
         "operationId": "readiness_health_ready_get",
         "responses": {
           "200": {
@@ -6858,6 +6858,36 @@
               }
             ],
             "title": "Date To"
+          },
+          "rfq_match_health": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RFQMatchHealthSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "quote_lifecycle": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/QuoteLifecycleSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "task_due_load": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TaskDueLoadSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "type": "object",
@@ -9037,6 +9067,50 @@
         ],
         "title": "QuoteDraftUpdateRequest"
       },
+      "QuoteLifecycleItem": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "label",
+          "count"
+        ],
+        "title": "QuoteLifecycleItem"
+      },
+      "QuoteLifecycleSummary": {
+        "properties": {
+          "total_quotes": {
+            "type": "integer",
+            "title": "Total Quotes"
+          },
+          "categories": {
+            "items": {
+              "$ref": "#/components/schemas/QuoteLifecycleItem"
+            },
+            "type": "array",
+            "title": "Categories"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_quotes",
+          "categories"
+        ],
+        "title": "QuoteLifecycleSummary"
+      },
       "QuoteListItemResponse": {
         "properties": {
           "id": {
@@ -10346,6 +10420,60 @@
         ],
         "title": "RFQLineResponse"
       },
+      "RFQMatchHealthItem": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "percentage": {
+            "type": "number",
+            "title": "Percentage"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "label",
+          "count",
+          "percentage"
+        ],
+        "title": "RFQMatchHealthItem"
+      },
+      "RFQMatchHealthSummary": {
+        "properties": {
+          "total_lines": {
+            "type": "integer",
+            "title": "Total Lines"
+          },
+          "reviewed_lines": {
+            "type": "integer",
+            "title": "Reviewed Lines"
+          },
+          "categories": {
+            "items": {
+              "$ref": "#/components/schemas/RFQMatchHealthItem"
+            },
+            "type": "array",
+            "title": "Categories"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_lines",
+          "reviewed_lines",
+          "categories"
+        ],
+        "title": "RFQMatchHealthSummary"
+      },
       "RFQRematchRequest": {
         "properties": {
           "clear_manual_decisions": {
@@ -10664,6 +10792,55 @@
           "title"
         ],
         "title": "TaskCreate"
+      },
+      "TaskDueLoadItem": {
+        "properties": {
+          "bucket": {
+            "type": "string",
+            "title": "Bucket"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "is_urgent": {
+            "type": "boolean",
+            "title": "Is Urgent"
+          }
+        },
+        "type": "object",
+        "required": [
+          "bucket",
+          "label",
+          "count",
+          "is_urgent"
+        ],
+        "title": "TaskDueLoadItem"
+      },
+      "TaskDueLoadSummary": {
+        "properties": {
+          "total_open_tasks": {
+            "type": "integer",
+            "title": "Total Open Tasks"
+          },
+          "categories": {
+            "items": {
+              "$ref": "#/components/schemas/TaskDueLoadItem"
+            },
+            "type": "array",
+            "title": "Categories"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_open_tasks",
+          "categories"
+        ],
+        "title": "TaskDueLoadSummary"
       },
       "TaskResponse": {
         "properties": {

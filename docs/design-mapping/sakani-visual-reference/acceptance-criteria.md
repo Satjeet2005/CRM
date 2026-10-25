@@ -187,6 +187,37 @@ To ensure that the visual-conformance pass is executed with objective rigor, all
   - 0 Axe-core violations across Desktop Light, Desktop Dark, Tablet, and Mobile across all 3 settings routes.
   - All 76 Vitest unit tests and 9 Playwright CRM E2E tests passing.
 
+### 2.8 Dashboard Operational Analytics Conformance (Figma 1290:22116, 1290:21238)
+- [x] **Section Placement & Hierarchy**:
+  - Positioned immediately beneath Opportunity Stage Distribution and Attention Required row.
+  - Section header: Geist Sans 16px / 22px weight 600 title (`Operational Analytics`), 13px / 18px muted subtitle (`RFQ resolution, quotation governance, and upcoming work.`).
+  - Balanced 3-column desktop layout (`grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4`), tablet 2-column wrapping, and mobile single-column stacking.
+- [x] **Chart A — RFQ Match Health (Figma Donut Chart with Text 1290:22116)**:
+  - Recharts Donut (`PieChart`, `Pie`, `Cell`, `Tooltip`) with inner radius 62px, outer radius 84px, and centered total metric typography (`117` in 24px bold, `Total Lines` in 10px muted uppercase).
+  - Exact tenant partitioning: `Exact Match` (20, 17.1%), `Partially Matched` (66, 56.4%), `Needs Review` (28, 23.9%), `Unmatched` (3, 2.6%). Sums exactly to 117 RFQ lines.
+  - Saffron/chart token palette: `--color-chart-2` (green/saffron), `--color-chart-1` (saffron), `--color-chart-4` (amber), `--color-danger-fg` (red).
+  - Accessible legend with color swatches, counts, and percentages.
+  - Tabular alternative toggle conforming to WCAG 2.5.3 (`aria-label="{showTable ? 'Switch to Chart view' : 'Switch to Table view'}"`).
+- [x] **Chart B — Quotation Lifecycle (Figma Horizontal Bar Chart 1290:21238)**:
+  - Horizontal progress bar composition: `Draft` (1), `In Review / Pending` (1), `Approved` (2), `Rejected` (0), `Expired` (0). Sums exactly to 4 tenant quotes.
+  - Proportional bar widths calculated relative to total quotes.
+  - Neutral badge pill for zero-count states (`None`) preventing visual ambiguity.
+  - Tabular view toggle with complete column metadata.
+- [x] **Chart C — Task Due-Date Load (Horizontal Urgency Bar Chart)**:
+  - Urgency distribution based on organization timezone (`Asia/Kolkata`): `Overdue` (4), `Due Today` (1), `Next 7 Days` (6), `Later` (0). Sums exactly to 11 open tasks.
+  - `Overdue` count (4) matches executive KPI `overdue_tasks_count = 4` with 100% mathematical consistency.
+  - Semantic warning/danger tokens: Overdue (`--color-danger-fg`), Due Today (`--color-warning-fg`), Next 7 Days (`--color-chart-1`), Later (`--color-fg-muted`).
+  - Tabular view toggle with count and share breakdown.
+- [x] **Stage Chart Color Mapping Polish**:
+  - Polished `STAGE_COLOR_MAP` across Opportunity Stage Distribution chart and breakdown table: `lead` (chart-2 / blue), `qualified` (chart-3 / teal), `solutioning` (chart-1 / saffron), `proposal` (chart-4 / purple), `negotiation` (chart-5 / gold), `won` (chart-6 / green), `lost` (danger red).
+  - Synchronized table row color dot indicators matching bar chart `<Cell>` fills.
+- [x] **Data Integrity & Pipeline Movement Deferral**:
+  - 100% authentic database aggregations; zero hardcoded fake deltas or randomized values.
+  - Deferral of optional `Pipeline Movement` chart documented: authoritative database contains only 4 historical stage change activity events without a point-in-time snapshot ledger, preventing reliable monthly trend derivation.
+- [x] **Accessibility & Verification**:
+  - 0 Axe-core violations across Desktop Light, Desktop Dark, Tablet, and Mobile.
+  - 10/10 component unit tests passing; 86/86 full Vitest suite passing; 7/7 backend integration tests passing; 9/9 Playwright CRM E2E tests passing.
+
 ### 2.6 General Interactive Component States
 For every interactive component across all routes:
 - [ ] **Resting State**: Clean typography, correct padding, and visible boundary borders.
