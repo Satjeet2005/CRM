@@ -3,11 +3,9 @@
 import * as React from "react";
 import Link from "next/link";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Users, Star, Mail, Phone, Edit, Archive } from "lucide-react";
+import { Star, Mail, Phone, Edit, Archive } from "lucide-react";
 import { DataTable } from "@/components/data-display/data-table";
-import { StatusBadge } from "@/components/ui/status-badge";
-import { Button } from "@/components/ui/button";
-import { InitialsAvatar } from "@/components/data-display/initials-avatar";
+import { Badge, Button, Avatar } from "@/components/sakani";
 import type { Contact } from "../api";
 
 interface ContactTableProps {
@@ -23,10 +21,10 @@ interface ContactTableProps {
 
 export function ContactTable({
   data,
-  total,
-  page,
-  pageSize,
-  onPageChange,
+  total: _total,
+  page: _page,
+  pageSize: _pageSize,
+  onPageChange: _onPageChange,
   onEdit,
   onArchive,
   isLoading,
@@ -40,17 +38,20 @@ export function ContactTable({
         const fullName = `${c.first_name} ${c.last_name}`;
         return (
           <div className="flex items-center gap-2.5">
-            <InitialsAvatar name={fullName} size="sm" />
+            <Avatar
+              size="sm"
+              initials={`${c.first_name[0] ?? ""}${c.last_name ? c.last_name[0] : ""}`}
+            />
             <div className="flex flex-col">
-              <span className="font-medium text-[var(--foreground)] flex items-center gap-1.5">
+              <span className="font-medium text-[var(--color-fg-default)] flex items-center gap-1.5">
                 {fullName}
                 {c.is_primary && (
-                  <span className="inline-flex items-center gap-0.5 rounded bg-[var(--primary-soft)] px-1 py-0.2 text-[9px] font-semibold text-[var(--primary)]">
-                    <Star className="h-2.5 w-2.5 fill-current" /> Primary
-                  </span>
+                  <Badge variant="accent" emphasis="subtle" leftIcon={<Star className="h-2.5 w-2.5 fill-current" />}>
+                    Primary
+                  </Badge>
                 )}
               </span>
-              <span className="text-xs text-[var(--muted-foreground)]">{c.job_title || "Team Member"}</span>
+              <span className="text-xs text-[var(--color-fg-muted)]">{c.job_title || "Team Member"}</span>
             </div>
           </div>
         );
@@ -64,7 +65,7 @@ export function ContactTable({
         return (
           <Link
             href={`/app/accounts/${c.account_id}`}
-            className="text-xs font-medium text-[var(--primary)] hover:underline"
+            className="text-xs font-semibold text-[var(--color-primary-600)] hover:underline focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] rounded-[var(--radius-xs)]"
           >
             {c.account_name || "View Account"}
           </Link>
@@ -76,13 +77,13 @@ export function ContactTable({
       header: "Email",
       cell: ({ row }) => {
         const email = row.original.email;
-        if (!email) return <span className="text-xs text-[var(--muted-foreground)]">—</span>;
+        if (!email) return <span className="text-xs text-[var(--color-fg-muted)]">—</span>;
         return (
           <a
             href={`mailto:${email}`}
-            className="text-xs text-[var(--foreground)] hover:text-[var(--primary)] flex items-center gap-1"
+            className="text-xs text-[var(--color-fg-default)] hover:text-[var(--color-primary-600)] hover:underline flex items-center gap-1.5 focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] rounded-[var(--radius-xs)]"
           >
-            <Mail className="h-3 w-3 text-[var(--muted-foreground)]" />
+            <Mail className="h-3 w-3 text-[var(--color-fg-muted)]" />
             <span>{email}</span>
           </a>
         );
@@ -93,10 +94,10 @@ export function ContactTable({
       header: "Phone",
       cell: ({ row }) => {
         const phone = row.original.phone;
-        if (!phone) return <span className="text-xs text-[var(--muted-foreground)]">—</span>;
+        if (!phone) return <span className="text-xs text-[var(--color-fg-muted)]">—</span>;
         return (
-          <span className="text-xs text-[var(--foreground)] flex items-center gap-1">
-            <Phone className="h-3 w-3 text-[var(--muted-foreground)]" />
+          <span className="text-xs text-[var(--color-fg-default)] flex items-center gap-1.5">
+            <Phone className="h-3 w-3 text-[var(--color-fg-muted)]" />
             <span>{phone}</span>
           </span>
         );
@@ -105,12 +106,17 @@ export function ContactTable({
     {
       accessorKey: "status",
       header: "Status",
-      cell: ({ row }) => (
-        <StatusBadge
-          label={row.original.status}
-          variant={row.original.status === "active" ? "success" : "neutral"}
-        />
-      ),
+      cell: ({ row }) => {
+        const status = row.original.status;
+        return (
+          <Badge
+            variant={status === "active" ? "success" : "neutral"}
+            emphasis="subtle"
+          >
+            {status}
+          </Badge>
+        );
+      },
     },
     {
       id: "actions",
@@ -119,7 +125,13 @@ export function ContactTable({
         const c = row.original;
         return (
           <div className="flex items-center gap-1">
-            <Button variant="ghost" size="sm" onClick={() => onEdit(c)} title="Edit contact">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onEdit(c)}
+              title="Edit contact"
+              aria-label={`Edit ${c.first_name} ${c.last_name}`}
+            >
               <Edit className="h-3.5 w-3.5" />
             </Button>
             {c.status === "active" && (
@@ -128,7 +140,8 @@ export function ContactTable({
                 size="sm"
                 onClick={() => onArchive(c)}
                 title="Archive contact"
-                className="text-[var(--danger)] hover:bg-[var(--danger-soft)]"
+                aria-label={`Archive ${c.first_name} ${c.last_name}`}
+                className="text-[var(--color-danger-600)] hover:bg-[var(--color-danger-50)]"
               >
                 <Archive className="h-3.5 w-3.5" />
               </Button>
@@ -145,6 +158,7 @@ export function ContactTable({
       data={data}
       isLoading={isLoading}
       emptyTitle="No contacts found."
+      emptyDescription="No procurement agents or contacts match the search criteria."
     />
   );
 }

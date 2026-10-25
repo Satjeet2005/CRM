@@ -14,3 +14,4 @@ export * from "./alert";
 export * from "./avatar";
 export * from "./select";
 export * from "./activity-feed";
+export * from "./tabs";

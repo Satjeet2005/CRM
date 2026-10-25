@@ -7,15 +7,13 @@ import {
   CheckCircle2,
   Circle,
   AlertTriangle,
-  RotateCcw,
   Edit,
   Building2,
   Briefcase,
 } from "lucide-react";
 import { toast } from "sonner";
 import { DataTable } from "@/components/data-display/data-table";
-import { StatusBadge } from "@/components/ui/status-badge";
-import { Button } from "@/components/ui/button";
+import { Badge, Button } from "@/components/sakani";
 import { formatDate } from "@/lib/formatters/formatters";
 import { useCompleteTask, useReopenTask, type Task } from "../api";
 
@@ -31,10 +29,10 @@ interface TaskTableProps {
 
 export function TaskTable({
   data,
-  total,
-  page,
-  pageSize,
-  onPageChange,
+  total: _total,
+  page: _page,
+  pageSize: _pageSize,
+  onPageChange: _onPageChange,
   onEdit,
   isLoading,
 }: TaskTableProps) {
@@ -92,13 +90,14 @@ export function TaskTable({
         const isDone = t.status === "completed";
         return (
           <button
+            type="button"
             onClick={() => handleToggleComplete(t)}
-            className="flex items-center justify-center p-1 text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors"
+            className="flex items-center justify-center p-1 text-[var(--color-fg-muted)] hover:text-[var(--color-primary-600)] transition-colors focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] rounded-[var(--radius-xs)] cursor-pointer"
             title={isDone ? "Reopen task" : "Mark as completed"}
             aria-label={isDone ? `Reopen task: ${t.title}` : `Mark as completed: ${t.title}`}
           >
             {isDone ? (
-              <CheckCircle2 className="h-4 w-4 text-[var(--success)]" />
+              <CheckCircle2 className="h-4 w-4 text-[var(--color-success-600)]" />
             ) : (
               <Circle className="h-4 w-4" />
             )}
@@ -115,14 +114,16 @@ export function TaskTable({
         return (
           <div className="flex flex-col">
             <span
-              className={`font-medium text-xs text-[var(--foreground)] ${
-                isDone ? "line-through text-[var(--muted-foreground)]" : ""
+              className={`font-semibold text-xs ${
+                isDone
+                  ? "line-through text-[var(--color-fg-muted)] opacity-60"
+                  : "text-[var(--color-fg-default)]"
               }`}
             >
               {t.title}
             </span>
             {t.description && (
-              <span className="text-[11px] text-[var(--muted-foreground)] line-clamp-1">
+              <span className="text-[11px] text-[var(--color-fg-muted)] line-clamp-1 mt-0.5">
                 {t.description}
               </span>
             )}
@@ -136,8 +137,12 @@ export function TaskTable({
       cell: ({ row }) => {
         const priority = row.original.priority;
         const variant =
-          priority === "high" ? "destructive" : priority === "normal" ? "info" : "neutral";
-        return <StatusBadge label={priority} variant={variant} />;
+          priority === "high" ? "danger" : priority === "normal" ? "info" : "neutral";
+        return (
+          <Badge variant={variant} emphasis="subtle">
+            {priority}
+          </Badge>
+        );
       },
     },
     {
@@ -145,17 +150,17 @@ export function TaskTable({
       header: "Due Date",
       cell: ({ row }) => {
         const t = row.original;
-        if (!t.due_date) return <span className="text-xs text-[var(--muted-foreground)]">—</span>;
+        if (!t.due_date) return <span className="text-xs text-[var(--color-fg-muted)]">—</span>;
 
         return (
           <div className="flex items-center gap-1.5 text-xs">
             {t.is_overdue && (
-              <span className="inline-flex items-center gap-1 font-semibold text-[var(--danger)]">
+              <span className="inline-flex items-center gap-1 font-semibold text-[var(--color-danger-600)]">
                 <AlertTriangle className="h-3 w-3" />
                 Overdue:
               </span>
             )}
-            <span className={t.is_overdue ? "font-semibold text-[var(--danger)]" : "text-[var(--muted-foreground)]"}>
+            <span className={t.is_overdue ? "font-semibold text-[var(--color-danger-600)]" : "text-[var(--color-fg-muted)]"}>
               {formatDate(t.due_date)}
             </span>
           </div>
@@ -167,13 +172,13 @@ export function TaskTable({
       header: "Related Account",
       cell: ({ row }) => {
         const t = row.original;
-        if (!t.account_id) return <span className="text-xs text-[var(--muted-foreground)]">—</span>;
+        if (!t.account_id) return <span className="text-xs text-[var(--color-fg-muted)]">—</span>;
         return (
           <Link
             href={`/app/accounts/${t.account_id}`}
-            className="text-xs text-[var(--primary)] hover:underline flex items-center gap-1"
+            className="text-xs font-semibold text-[var(--color-primary-600)] hover:underline inline-flex items-center gap-1 focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] rounded-[var(--radius-xs)]"
           >
-            <Building2 className="h-3 w-3 text-[var(--muted-foreground)]" />
+            <Building2 className="h-3.5 w-3.5 text-[var(--color-fg-muted)]" />
             <span>{t.account_name}</span>
           </Link>
         );
@@ -184,13 +189,13 @@ export function TaskTable({
       header: "Related Deal",
       cell: ({ row }) => {
         const t = row.original;
-        if (!t.opportunity_id) return <span className="text-xs text-[var(--muted-foreground)]">—</span>;
+        if (!t.opportunity_id) return <span className="text-xs text-[var(--color-fg-muted)]">—</span>;
         return (
           <Link
             href={`/app/opportunities/${t.opportunity_id}`}
-            className="text-xs text-[var(--primary)] hover:underline flex items-center gap-1"
+            className="text-xs font-semibold text-[var(--color-primary-600)] hover:underline inline-flex items-center gap-1 focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] rounded-[var(--radius-xs)]"
           >
-            <Briefcase className="h-3 w-3 text-[var(--muted-foreground)]" />
+            <Briefcase className="h-3.5 w-3.5 text-[var(--color-fg-muted)]" />
             <span className="truncate max-w-[140px]">{t.opportunity_name}</span>
           </Link>
         );
@@ -200,7 +205,7 @@ export function TaskTable({
       accessorKey: "assignee_name",
       header: "Assignee",
       cell: ({ row }) => (
-        <span className="text-xs text-[var(--muted-foreground)]">
+        <span className="text-xs text-[var(--color-fg-muted)]">
           {row.original.assignee_name || "Unassigned"}
         </span>
       ),
@@ -212,7 +217,13 @@ export function TaskTable({
         const t = row.original;
         return (
           <div className="flex items-center gap-1">
-            <Button variant="ghost" size="sm" onClick={() => onEdit(t)} title="Edit task">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onEdit(t)}
+              title="Edit task"
+              aria-label={`Edit task: ${t.title}`}
+            >
               <Edit className="h-3.5 w-3.5" />
             </Button>
           </div>
@@ -227,6 +238,7 @@ export function TaskTable({
       data={data}
       isLoading={isLoading}
       emptyTitle="No tasks found."
+      emptyDescription="No operational action items or commitments match this filter."
     />
   );
 }

@@ -1,17 +1,16 @@
 "use client";
 
 import * as React from "react";
-import { Plus, Search, CheckSquare, AlertTriangle, Clock } from "lucide-react";
+import { Plus, Search, CheckSquare, AlertTriangle, Clock, ListChecks } from "lucide-react";
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button, Input, Select, Tabs } from "@/components/sakani";
 import { useTasks, type Task } from "@/features/tasks/api";
 import { TaskTable } from "@/features/tasks/components/task-table";
 import { TaskDialog } from "@/features/tasks/components/task-form";
 
 export default function TasksPage() {
-  const [tab, setTab] = React.useState<"all" | "open" | "overdue" | "completed">("open");
+  const [tab, setTab] = React.useState<string>("open");
   const [search, setSearch] = React.useState("");
   const [debouncedSearch, setDebouncedSearch] = React.useState("");
   const [priority, setPriority] = React.useState("all");
@@ -48,6 +47,29 @@ export default function TasksPage() {
     setDialogOpen(true);
   };
 
+  const tabItems = [
+    {
+      value: "open",
+      label: "Pending & Open",
+      icon: <Clock className="h-4 w-4" />,
+    },
+    {
+      value: "overdue",
+      label: "Overdue",
+      icon: <AlertTriangle className="h-4 w-4 text-[var(--color-danger-600)]" />,
+    },
+    {
+      value: "completed",
+      label: "Completed",
+      icon: <CheckSquare className="h-4 w-4 text-[var(--color-success-600)]" />,
+    },
+    {
+      value: "all",
+      label: "All Tasks",
+      icon: <ListChecks className="h-4 w-4" />,
+    },
+  ];
+
   return (
     <PageContainer>
       <PageHeader
@@ -63,93 +85,45 @@ export default function TasksPage() {
       />
 
       {/* Tabs */}
-      <div className="mt-6 border-b border-[var(--border)] flex items-center gap-6 text-sm font-medium">
-        <button
-          onClick={() => {
-            setTab("open");
+      <div className="mt-6">
+        <Tabs
+          items={tabItems}
+          value={tab}
+          onChange={(newTab) => {
+            setTab(newTab);
             setPage(1);
           }}
-          className={`pb-3 flex items-center gap-2 border-b-2 transition-colors ${
-            tab === "open"
-              ? "border-[var(--primary)] text-[var(--primary)]"
-              : "border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
-          }`}
-        >
-          <Clock className="h-4 w-4" />
-          <span>Pending & Open</span>
-        </button>
-
-        <button
-          onClick={() => {
-            setTab("overdue");
-            setPage(1);
-          }}
-          className={`pb-3 flex items-center gap-2 border-b-2 transition-colors ${
-            tab === "overdue"
-              ? "border-[var(--danger)] text-[var(--danger)]"
-              : "border-transparent text-[var(--muted-foreground)] hover:text-[var(--danger)]"
-          }`}
-        >
-          <AlertTriangle className="h-4 w-4" />
-          <span>Overdue</span>
-        </button>
-
-        <button
-          onClick={() => {
-            setTab("completed");
-            setPage(1);
-          }}
-          className={`pb-3 flex items-center gap-2 border-b-2 transition-colors ${
-            tab === "completed"
-              ? "border-[var(--primary)] text-[var(--primary)]"
-              : "border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
-          }`}
-        >
-          <CheckSquare className="h-4 w-4" />
-          <span>Completed</span>
-        </button>
-
-        <button
-          onClick={() => {
-            setTab("all");
-            setPage(1);
-          }}
-          className={`pb-3 flex items-center gap-2 border-b-2 transition-colors ${
-            tab === "all"
-              ? "border-[var(--primary)] text-[var(--primary)]"
-              : "border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
-          }`}
-        >
-          <span>All Tasks</span>
-        </button>
+        />
       </div>
 
       {/* Search & Filters */}
       <div className="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-[var(--muted-foreground)]" />
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search action items..."
-            className="pl-9"
+            leadingIcon={<Search className="h-4 w-4 text-[var(--color-fg-muted)]" />}
           />
         </div>
 
-        <select
-          value={priority}
-          aria-label="Filter by task priority"
-          onChange={(e) => {
-            setPriority(e.target.value);
-            setPage(1);
-          }}
-          className="rounded-[var(--radius-md)] border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-xs text-[var(--foreground)] focus:border-[var(--ring)] focus:outline-none"
-        >
-          <option value="all">All Priorities</option>
-          <option value="high">High</option>
-          <option value="normal">Normal</option>
-          <option value="low">Low</option>
-        </select>
+        <div className="w-40">
+          <Select
+            value={priority}
+            aria-label="Filter by task priority"
+            onChange={(val) => {
+              setPriority(val);
+              setPage(1);
+            }}
+            size="sm"
+            options={[
+              { label: "All Priorities", value: "all" },
+              { label: "High", value: "high" },
+              { label: "Normal", value: "normal" },
+              { label: "Low", value: "low" },
+            ]}
+          />
+        </div>
       </div>
 
       {/* Tasks Table */}

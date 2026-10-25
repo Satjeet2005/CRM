@@ -1,11 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { Plus, Search, Users } from "lucide-react";
+import { Search } from "lucide-react";
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Input, Select } from "@/components/sakani";
 import { ConfirmDialog } from "@/components/forms/confirm-dialog";
 import { toast } from "sonner";
 import { useContacts, useArchiveContact, type Contact } from "@/features/contacts/api";
@@ -72,43 +71,48 @@ export default function ContactsPage() {
       {/* Filter and Search Bar */}
       <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-[var(--muted-foreground)]" />
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by first/last name, job title, email, phone..."
-            className="pl-9"
+            leadingIcon={<Search className="h-4 w-4 text-[var(--color-fg-muted)]" />}
           />
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <select
-            value={isPrimary}
-            aria-label="Filter by primary contact status"
-            onChange={(e) => {
-              setIsPrimary(e.target.value);
-              setPage(1);
-            }}
-            className="rounded-[var(--radius-md)] border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-xs text-[var(--foreground)] focus:border-[var(--ring)] focus:outline-none"
-          >
-            <option value="all">All Contacts</option>
-            <option value="true">Primary Only</option>
-            <option value="false">Non-Primary Only</option>
-          </select>
+          <div className="w-36">
+            <Select
+              value={isPrimary}
+              aria-label="Filter by primary contact status"
+              onChange={(val) => {
+                setIsPrimary(val);
+                setPage(1);
+              }}
+              size="sm"
+              options={[
+                { label: "All Contacts", value: "all" },
+                { label: "Primary Only", value: "true" },
+                { label: "Non-Primary Only", value: "false" },
+              ]}
+            />
+          </div>
 
-          <select
-            value={status}
-            aria-label="Filter by status"
-            onChange={(e) => {
-              setStatus(e.target.value);
-              setPage(1);
-            }}
-            className="rounded-[var(--radius-md)] border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-xs text-[var(--foreground)] focus:border-[var(--ring)] focus:outline-none"
-          >
-            <option value="active">Active Only</option>
-            <option value="archived">Archived Only</option>
-            <option value="">All Statuses</option>
-          </select>
+          <div className="w-36">
+            <Select
+              value={status}
+              aria-label="Filter by status"
+              onChange={(val) => {
+                setStatus(val);
+                setPage(1);
+              }}
+              size="sm"
+              options={[
+                { label: "Active Only", value: "active" },
+                { label: "Archived Only", value: "archived" },
+                { label: "All Statuses", value: "" },
+              ]}
+            />
+          </div>
         </div>
       </div>
 

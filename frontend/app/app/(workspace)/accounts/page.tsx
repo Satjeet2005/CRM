@@ -1,16 +1,29 @@
 "use client";
 
 import * as React from "react";
-import { Plus, Search, Building2, Filter } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button, Input, Select } from "@/components/sakani";
 import { ConfirmDialog } from "@/components/forms/confirm-dialog";
 import { toast } from "sonner";
 import { useAccounts, useArchiveAccount, type Account } from "@/features/accounts/api";
 import { AccountTable } from "@/features/accounts/components/account-table";
 import { AccountDialog } from "@/features/accounts/components/account-form";
+
+const ACCOUNT_TYPE_OPTIONS = [
+  { label: "All Types", value: "all" },
+  { label: "Customer", value: "customer" },
+  { label: "Prospect", value: "prospect" },
+  { label: "Partner", value: "partner" },
+  { label: "Supplier", value: "supplier" },
+];
+
+const STATUS_OPTIONS = [
+  { label: "Active Only", value: "active" },
+  { label: "Archived Only", value: "archived" },
+  { label: "All Statuses", value: "" },
+];
 
 export default function AccountsPage() {
   const [search, setSearch] = React.useState("");
@@ -37,7 +50,7 @@ export default function AccountsPage() {
   const { data, isLoading } = useAccounts({
     search: debouncedSearch || undefined,
     account_type: accountType !== "all" ? accountType : undefined,
-    status,
+    status: status || undefined,
     page,
     page_size: pageSize,
   });
@@ -73,17 +86,17 @@ export default function AccountsPage() {
         description="Manage industrial B2B customer accounts, procurement leads, and relationships"
         breadcrumbs={[{ label: "Workspace", href: "/app/dashboard" }, { label: "Accounts" }]}
         actions={
-          <Button onClick={handleCreate} className="gap-1.5">
-            <Plus className="h-4 w-4" />
+          <Button onClick={handleCreate} variant="primary" className="gap-1.5 font-medium">
+            <Plus className="h-4 w-4" aria-hidden="true" />
             <span>New Account</span>
           </Button>
         }
       />
 
       {/* Filter and Search Bar */}
-      <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-[var(--color-border-subtle)] pb-4">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-[var(--muted-foreground)]" />
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-[var(--color-fg-muted)]" aria-hidden="true" />
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -92,36 +105,32 @@ export default function AccountsPage() {
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <select
-            value={accountType}
-            aria-label="Filter by account type"
-            onChange={(e) => {
-              setAccountType(e.target.value);
-              setPage(1);
-            }}
-            className="rounded-[var(--radius-md)] border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-xs text-[var(--foreground)] focus:border-[var(--ring)] focus:outline-none"
-          >
-            <option value="all">All Types</option>
-            <option value="customer">Customer</option>
-            <option value="prospect">Prospect</option>
-            <option value="partner">Partner</option>
-            <option value="supplier">Supplier</option>
-          </select>
+        <div className="flex flex-wrap items-center gap-2.5">
+          <div className="w-36">
+            <Select
+              value={accountType}
+              aria-label="Filter by account type"
+              onChange={(val) => {
+                setAccountType(val);
+                setPage(1);
+              }}
+              options={ACCOUNT_TYPE_OPTIONS}
+              size="sm"
+            />
+          </div>
 
-          <select
-            value={status}
-            aria-label="Filter by status"
-            onChange={(e) => {
-              setStatus(e.target.value);
-              setPage(1);
-            }}
-            className="rounded-[var(--radius-md)] border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-xs text-[var(--foreground)] focus:border-[var(--ring)] focus:outline-none"
-          >
-            <option value="active">Active Only</option>
-            <option value="archived">Archived Only</option>
-            <option value="">All Statuses</option>
-          </select>
+          <div className="w-36">
+            <Select
+              value={status}
+              aria-label="Filter by status"
+              onChange={(val) => {
+                setStatus(val);
+                setPage(1);
+              }}
+              options={STATUS_OPTIONS}
+              size="sm"
+            />
+          </div>
         </div>
       </div>
 

@@ -5,8 +5,7 @@ import Link from "next/link";
 import { type ColumnDef } from "@tanstack/react-table";
 import { Briefcase, ArrowRight, RotateCcw } from "lucide-react";
 import { DataTable } from "@/components/data-display/data-table";
-import { StatusBadge } from "@/components/ui/status-badge";
-import { Button } from "@/components/ui/button";
+import { Badge, Button } from "@/components/sakani";
 import { formatDate, formatMoney } from "@/lib/formatters/formatters";
 import type { Opportunity } from "../api";
 
@@ -33,10 +32,10 @@ const NEXT_STAGE_MAP: Record<string, string | null> = {
 
 export function OpportunityTable({
   data,
-  total,
-  page,
-  pageSize,
-  onPageChange,
+  total: _total,
+  page: _page,
+  pageSize: _pageSize,
+  onPageChange: _onPageChange,
   onStageTransition,
   onReopen,
   isLoading,
@@ -51,12 +50,12 @@ export function OpportunityTable({
           <div className="flex flex-col">
             <Link
               href={`/app/opportunities/${opp.id}`}
-              className="font-medium text-sm text-[var(--primary)] hover:underline flex items-center gap-1.5"
+              className="font-semibold text-xs text-[var(--color-primary-600)] hover:underline inline-flex items-center gap-1.5 focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] rounded-[var(--radius-xs)]"
             >
-              <Briefcase className="h-4 w-4 shrink-0 text-[var(--muted-foreground)]" />
+              <Briefcase className="h-4 w-4 shrink-0 text-[var(--color-fg-muted)]" aria-hidden="true" />
               <span>{opp.name}</span>
             </Link>
-            <span className="text-xs text-[var(--muted-foreground)]">
+            <span className="text-[11px] text-[var(--color-fg-muted)] pl-5.5">
               Account: {opp.account_name || "—"}
             </span>
           </div>
@@ -72,11 +71,15 @@ export function OpportunityTable({
           stage === "won"
             ? "success"
             : stage === "lost"
-            ? "destructive"
+            ? "danger"
             : stage === "negotiation" || stage === "proposal"
             ? "warning"
             : "info";
-        return <StatusBadge label={stage} variant={variant} />;
+        return (
+          <Badge variant={variant} emphasis="subtle">
+            {stage}
+          </Badge>
+        );
       },
     },
     {
@@ -85,7 +88,7 @@ export function OpportunityTable({
       cell: ({ row }) => {
         const opp = row.original;
         return (
-          <span className="font-semibold text-xs text-[var(--foreground)]">
+          <span className="font-semibold text-xs text-[var(--color-fg-default)]">
             {formatMoney(opp.estimated_value, opp.currency_code)}
           </span>
         );
@@ -97,7 +100,7 @@ export function OpportunityTable({
       cell: ({ row }) => {
         const prob = row.original.probability_percent;
         return (
-          <span className="text-xs font-mono text-[var(--muted-foreground)]">
+          <span className="text-xs font-mono text-[var(--color-fg-muted)]">
             {prob ? `${Number(prob).toFixed(0)}%` : "—"}
           </span>
         );
@@ -107,7 +110,7 @@ export function OpportunityTable({
       accessorKey: "expected_close_date",
       header: "Target Close",
       cell: ({ row }) => (
-        <span className="text-xs text-[var(--muted-foreground)]">
+        <span className="text-xs text-[var(--color-fg-muted)]">
           {formatDate(row.original.expected_close_date)}
         </span>
       ),
@@ -116,7 +119,7 @@ export function OpportunityTable({
       accessorKey: "owner_name",
       header: "Owner",
       cell: ({ row }) => (
-        <span className="text-xs text-[var(--muted-foreground)]">
+        <span className="text-xs text-[var(--color-fg-muted)]">
           {row.original.owner_name || "Unassigned"}
         </span>
       ),
@@ -159,7 +162,7 @@ export function OpportunityTable({
               variant="ghost"
               size="sm"
               onClick={() => onStageTransition(opp, "lost")}
-              className="text-xs text-[var(--danger)] hover:bg-[var(--danger-soft)]"
+              className="text-xs text-[var(--color-danger-600)] hover:bg-[var(--color-danger-50)]"
             >
               Lost
             </Button>
@@ -175,6 +178,7 @@ export function OpportunityTable({
       data={data}
       isLoading={isLoading}
       emptyTitle="No opportunities found."
+      emptyDescription="No pipeline deals or quotes match the filter criteria."
     />
   );
 }

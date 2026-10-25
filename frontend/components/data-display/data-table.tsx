@@ -11,10 +11,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/sakani";
 import { EmptyState } from "@/components/data-display/empty-state";
 import { LoadingSkeleton } from "@/components/data-display/loading-skeleton";
-import { cn } from "@/lib/utils";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -62,10 +61,10 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <div className="overflow-hidden rounded-[var(--radius-md)] border border-[var(--border)] bg-[var(--surface)] shadow-2xs">
+      <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] shadow-xs">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-[var(--foreground)]">
-            <thead className="border-b border-[var(--border)] bg-[var(--surface-muted)] text-xs font-medium text-[var(--muted-foreground)]">
+          <table className="w-full text-left text-xs text-[var(--color-fg-default)]">
+            <thead className="border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] text-[11px] font-semibold tracking-wider uppercase text-[var(--color-fg-muted)]">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
@@ -81,12 +80,12 @@ export function DataTable<TData, TValue>({
                         {header.isPlaceholder ? null : canSort ? (
                           <button
                             type="button"
-                            className="flex items-center gap-1.5 font-medium hover:text-[var(--foreground)] focus-visible:outline-2 focus-visible:outline-[var(--primary)] cursor-pointer"
+                            className="flex items-center gap-1.5 font-semibold text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] rounded-[var(--radius-xs)] cursor-pointer"
                             onClick={header.column.getToggleSortingHandler()}
                           >
                             {flexRender(header.column.columnDef.header, header.getContext())}
-                            {isSorted === "asc" && <ChevronUp className="h-3.5 w-3.5" />}
-                            {isSorted === "desc" && <ChevronDown className="h-3.5 w-3.5" />}
+                            {isSorted === "asc" && <ChevronUp className="h-3.5 w-3.5 text-[var(--color-primary-500)]" aria-hidden="true" />}
+                            {isSorted === "desc" && <ChevronDown className="h-3.5 w-3.5 text-[var(--color-primary-500)]" aria-hidden="true" />}
                           </button>
                         ) : (
                           flexRender(header.column.columnDef.header, header.getContext())
@@ -97,14 +96,14 @@ export function DataTable<TData, TValue>({
                 </tr>
               ))}
             </thead>
-            <tbody className="divide-y divide-[var(--border)]">
+            <tbody className="divide-y divide-[var(--color-border-subtle)]">
               {table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  className="transition-colors hover:bg-[var(--surface-muted)]/50"
+                  className="transition-colors hover:bg-[var(--color-bg-subtle)]/70"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id} className="px-4 py-3.5 text-sm">
+                    <td key={cell.id} className="px-4 py-3 text-xs">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   ))}
@@ -117,7 +116,7 @@ export function DataTable<TData, TValue>({
 
       {/* Pagination controls */}
       {table.getPageCount() > 1 && (
-        <div className="flex items-center justify-between px-2 text-sm text-[var(--muted-foreground)]">
+        <div className="flex items-center justify-between px-2 text-xs text-[var(--color-fg-muted)]">
           <div>
             Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()} (
             {data.length} total)
@@ -130,7 +129,7 @@ export function DataTable<TData, TValue>({
               disabled={!table.getCanPreviousPage()}
               aria-label="Previous page"
             >
-              <ChevronLeft className="h-4 w-4 mr-1" />
+              <ChevronLeft className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
               Previous
             </Button>
             <Button
@@ -141,7 +140,7 @@ export function DataTable<TData, TValue>({
               aria-label="Next page"
             >
               Next
-              <ChevronRight className="h-4 w-4 ml-1" />
+              <ChevronRight className="h-3.5 w-3.5 ml-1" aria-hidden="true" />
             </Button>
           </div>
         </div>

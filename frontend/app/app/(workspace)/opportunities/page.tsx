@@ -1,11 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { Plus, Search, LayoutGrid, ListFilter, RotateCcw } from "lucide-react";
+import { Plus, Search, LayoutGrid, ListFilter } from "lucide-react";
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button, Input, Select } from "@/components/sakani";
 import { useOpportunities, type Opportunity } from "@/features/opportunities/api";
 import { OpportunityTable } from "@/features/opportunities/components/opportunity-table";
 import { PipelineBoard } from "@/features/opportunities/components/pipeline-board";
@@ -58,29 +57,31 @@ export default function OpportunitiesPage() {
         breadcrumbs={[{ label: "Workspace", href: "/app/dashboard" }, { label: "Opportunities" }]}
         actions={
           <div className="flex items-center gap-2">
-            <div className="flex rounded-[var(--radius-md)] border border-[var(--border)] bg-[var(--surface-muted)] p-0.5">
+            <div className="flex rounded-[var(--radius-md)] border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-0.5" role="group" aria-label="View mode">
               <button
+                type="button"
                 onClick={() => setViewMode("pipeline")}
-                className={`flex items-center gap-1 rounded-[var(--radius-sm)] px-2.5 py-1 text-xs font-medium transition-colors ${
+                className={`flex items-center gap-1.5 rounded-[var(--radius-sm)] px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
                   viewMode === "pipeline"
-                    ? "bg-[var(--surface)] text-[var(--foreground)] shadow-2xs"
-                    : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                    ? "bg-[var(--color-bg-surface)] text-[var(--color-fg-default)] shadow-2xs font-semibold"
+                    : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
                 }`}
                 title="Pipeline Kanban view"
               >
-                <LayoutGrid className="h-3.5 w-3.5" />
+                <LayoutGrid className="h-3.5 w-3.5" aria-hidden="true" />
                 <span>Pipeline</span>
               </button>
               <button
+                type="button"
                 onClick={() => setViewMode("table")}
-                className={`flex items-center gap-1 rounded-[var(--radius-sm)] px-2.5 py-1 text-xs font-medium transition-colors ${
+                className={`flex items-center gap-1.5 rounded-[var(--radius-sm)] px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
                   viewMode === "table"
-                    ? "bg-[var(--surface)] text-[var(--foreground)] shadow-2xs"
-                    : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                    ? "bg-[var(--color-bg-surface)] text-[var(--color-fg-default)] shadow-2xs font-semibold"
+                    : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
                 }`}
                 title="Table List view"
               >
-                <ListFilter className="h-3.5 w-3.5" />
+                <ListFilter className="h-3.5 w-3.5" aria-hidden="true" />
                 <span>Table</span>
               </button>
             </div>
@@ -96,34 +97,36 @@ export default function OpportunitiesPage() {
       {/* Search & Stage Filter */}
       <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-[var(--muted-foreground)]" />
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search deals by title..."
-            className="pl-9"
+            leadingIcon={<Search className="h-4 w-4 text-[var(--color-fg-muted)]" />}
           />
         </div>
 
         {viewMode === "table" && (
-          <select
-            value={stageFilter}
-            aria-label="Filter by deal stage"
-            onChange={(e) => {
-              setStageFilter(e.target.value);
-              setPage(1);
-            }}
-            className="rounded-[var(--radius-md)] border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-xs text-[var(--foreground)] focus:border-[var(--ring)] focus:outline-none"
-          >
-            <option value="all">All Stages</option>
-            <option value="lead">Lead</option>
-            <option value="qualified">Qualified</option>
-            <option value="solutioning">Solutioning</option>
-            <option value="proposal">Proposal</option>
-            <option value="negotiation">Negotiation</option>
-            <option value="won">Closed Won</option>
-            <option value="lost">Closed Lost</option>
-          </select>
+          <div className="w-40">
+            <Select
+              value={stageFilter}
+              aria-label="Filter by deal stage"
+              onChange={(val) => {
+                setStageFilter(val);
+                setPage(1);
+              }}
+              size="sm"
+              options={[
+                { label: "All Stages", value: "all" },
+                { label: "Lead", value: "lead" },
+                { label: "Qualified", value: "qualified" },
+                { label: "Solutioning", value: "solutioning" },
+                { label: "Proposal", value: "proposal" },
+                { label: "Negotiation", value: "negotiation" },
+                { label: "Closed Won", value: "won" },
+                { label: "Closed Lost", value: "lost" },
+              ]}
+            />
+          </div>
         )}
       </div>
 
