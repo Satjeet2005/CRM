@@ -11,6 +11,11 @@ import {
   SheetTrigger,
   SheetPopup,
   SheetTitle,
+  Alert,
+  Avatar,
+  Select,
+  ActivityFeed,
+  ActivityFeedHighlight,
 } from "@/components/sakani";
 
 describe("Sakani UI Primitives for ForgeFlow", () => {
@@ -128,6 +133,72 @@ describe("Sakani UI Primitives for ForgeFlow", () => {
       );
       expect(screen.getByText("Calculation Trace Inspector")).toBeInTheDocument();
       expect(screen.getByText("5-level trace tree")).toBeInTheDocument();
+    });
+  });
+
+  describe("Alert Primitive", () => {
+    it("renders danger alert with title and description", () => {
+      render(
+        <Alert
+          color="danger"
+          title="Invalid Credentials"
+          description="Please check your email and password"
+        />
+      );
+      expect(screen.getByRole("alert")).toBeInTheDocument();
+      expect(screen.getByText("Invalid Credentials")).toBeInTheDocument();
+      expect(screen.getByText("Please check your email and password")).toBeInTheDocument();
+    });
+  });
+
+  describe("Avatar Primitive", () => {
+    it("renders initials fallback when no image source is provided", () => {
+      render(<Avatar initials="SS" alt="Sarah Sales" />);
+      expect(screen.getByText("SS")).toBeInTheDocument();
+    });
+  });
+
+  describe("Select Primitive", () => {
+    it("renders accessible options and handles change", async () => {
+      const handleChange = vi.fn();
+      render(
+        <Select
+          label="Filter by Entity"
+          options={[
+            { label: "All Entities", value: "all" },
+            { label: "Accounts", value: "account" },
+          ]}
+          onChange={handleChange}
+        />
+      );
+      const select = screen.getByRole("combobox", { name: /filter by entity/i });
+      expect(select).toBeInTheDocument();
+      await userEvent.selectOptions(select, "account");
+      expect(handleChange).toHaveBeenCalledWith("account");
+    });
+  });
+
+  describe("ActivityFeed Primitive", () => {
+    it("renders timeline items with actor, description, and timestamp", () => {
+      render(
+        <ActivityFeed
+          items={[
+            {
+              id: "1",
+              actor: "Sarah Sales",
+              description: (
+                <>
+                  created opportunity <ActivityFeedHighlight>Piping Contract</ActivityFeedHighlight>
+                </>
+              ),
+              timestamp: "10 minutes ago",
+            },
+          ]}
+        />
+      );
+      expect(screen.getByText("Sarah Sales")).toBeInTheDocument();
+      expect(screen.getByText("Piping Contract")).toBeInTheDocument();
+      expect(screen.getByText("10 minutes ago")).toBeInTheDocument();
     });
   });
 });

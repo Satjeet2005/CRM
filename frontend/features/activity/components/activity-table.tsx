@@ -1,11 +1,10 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import { type ColumnDef } from "@tanstack/react-table";
-import { History, User } from "lucide-react";
+import { User } from "lucide-react";
 import { DataTable } from "@/components/data-display/data-table";
-import { StatusBadge } from "@/components/ui/status-badge";
+import { Badge } from "@/components/sakani";
 import { formatDateTime } from "@/lib/formatters/formatters";
 import type { Activity } from "../api";
 
@@ -14,13 +13,21 @@ interface ActivityTableProps {
   isLoading?: boolean;
 }
 
+function getBadgeVariant(eventType: string): "neutral" | "accent" | "success" | "warning" | "danger" | "info" {
+  if (eventType.includes("archive") || eventType.includes("lost")) return "danger";
+  if (eventType.includes("won") || eventType.includes("completed")) return "success";
+  if (eventType.includes("reopened") || eventType.includes("pending")) return "warning";
+  if (eventType.includes("create")) return "accent";
+  return "info";
+}
+
 export function ActivityTable({ data, isLoading }: ActivityTableProps) {
   const columns: ColumnDef<Activity>[] = [
     {
       accessorKey: "occurred_at",
       header: "Timestamp",
       cell: ({ row }) => (
-        <span className="text-xs font-mono text-[var(--muted-foreground)]">
+        <span className="text-xs font-mono text-[var(--color-fg-muted)]">
           {formatDateTime(row.original.occurred_at)}
         </span>
       ),
@@ -29,8 +36,8 @@ export function ActivityTable({ data, isLoading }: ActivityTableProps) {
       accessorKey: "actor_name",
       header: "Actor",
       cell: ({ row }) => (
-        <span className="text-xs font-medium text-[var(--foreground)] flex items-center gap-1.5">
-          <User className="h-3.5 w-3.5 text-[var(--muted-foreground)]" />
+        <span className="text-xs font-medium text-[var(--color-fg-default)] flex items-center gap-1.5">
+          <User className="h-3.5 w-3.5 text-[var(--color-fg-muted)]" aria-hidden="true" />
           <span>{row.original.actor_name || "System"}</span>
         </span>
       ),
@@ -39,7 +46,7 @@ export function ActivityTable({ data, isLoading }: ActivityTableProps) {
       accessorKey: "entity_type",
       header: "Entity",
       cell: ({ row }) => (
-        <span className="font-mono text-xs uppercase px-1.5 py-0.5 rounded bg-[var(--surface-muted)] text-[var(--foreground)]">
+        <span className="font-mono text-xs uppercase px-1.5 py-0.5 rounded-[var(--radius-xs)] bg-[var(--color-bg-subtle)] border border-[var(--color-border-subtle)] text-[var(--color-fg-muted)]">
           {row.original.entity_type}
         </span>
       ),
@@ -49,20 +56,18 @@ export function ActivityTable({ data, isLoading }: ActivityTableProps) {
       header: "Action Event",
       cell: ({ row }) => {
         const ev = row.original.event_type;
-        const variant =
-          ev.includes("archive") || ev.includes("lost")
-            ? "destructive"
-            : ev.includes("won") || ev.includes("completed")
-            ? "success"
-            : "info";
-        return <StatusBadge label={ev} variant={variant} />;
+        return (
+          <Badge variant={getBadgeVariant(ev)} emphasis="subtle">
+            {ev.replace(/_/g, " ")}
+          </Badge>
+        );
       },
     },
     {
       accessorKey: "summary",
       header: "Summary Description",
       cell: ({ row }) => (
-        <span className="text-xs text-[var(--foreground)] font-medium">
+        <span className="text-xs text-[var(--color-fg-default)] font-medium">
           {row.original.summary}
         </span>
       ),
