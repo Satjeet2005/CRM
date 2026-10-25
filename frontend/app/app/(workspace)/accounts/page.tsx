@@ -86,22 +86,22 @@ export default function AccountsPage() {
         description="Manage industrial B2B customer accounts, procurement leads, and relationships"
         breadcrumbs={[{ label: "Workspace", href: "/app/dashboard" }, { label: "Accounts" }]}
         actions={
-          <Button onClick={handleCreate} variant="primary" className="gap-1.5 font-medium">
+          <Button onClick={handleCreate} variant="primary" className="h-9 gap-1.5 font-medium">
             <Plus className="h-4 w-4" aria-hidden="true" />
             <span>New Account</span>
           </Button>
         }
       />
 
-      {/* Filter and Search Bar */}
+      {/* Filter and Search Bar (Data Table + Toolbar 684:17474) */}
       <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-[var(--color-border-subtle)] pb-4">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-[var(--color-fg-muted)]" aria-hidden="true" />
+          <Search className="absolute left-2.5 top-2 h-4 w-4 text-[var(--color-fg-muted)]" aria-hidden="true" />
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by name, legal name, email, phone..."
-            className="pl-9"
+            className="pl-8.5 h-8 text-xs"
           />
         </div>
 
