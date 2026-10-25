@@ -153,7 +153,6 @@ export const NAVIGATION_REGISTRY: NavItem[] = [
     icon: Settings,
     section: "Administration",
     phase: 2,
-    enabled: false, // Phase 2 Seam
-    requiredPermission: "settings:manage",
+    enabled: true,
   },
 ];

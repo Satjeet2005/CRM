@@ -1,0 +1,103 @@
+{
+  "timestamp": "2026-10-25T19:02:10.715Z",
+  "axeResults": {
+    "expanded": {
+      "violationsCount": 0,
+      "violations": []
+    },
+    "collapsed": {
+      "violationsCount": 0,
+      "violations": []
+    },
+    "tablet": {
+      "violationsCount": 0,
+      "violations": []
+    },
+    "mobile": {
+      "violationsCount": 0,
+      "violations": []
+    }
+  },
+  "measurements": {
+    "expanded": {
+      "sidebarWidth": 248,
+      "sidebarBackground": "rgb(250, 250, 249)",
+      "borderRight": "1px solid rgb(231, 229, 225)",
+      "headerHeight": 64,
+      "groupLabels": [
+        {
+          "text": "Workspace",
+          "height": 28,
+          "paddingTop": "8px",
+          "paddingBottom": "4px",
+          "fontSize": "11px",
+          "lineHeight": "16.5px",
+          "fontWeight": "600",
+          "letterSpacing": "0.44px",
+          "color": "rgb(112, 106, 99)"
+        },
+        {
+          "text": "Quoting",
+          "height": 28,
+          "paddingTop": "8px",
+          "paddingBottom": "4px",
+          "fontSize": "11px",
+          "lineHeight": "16.5px",
+          "fontWeight": "600",
+          "letterSpacing": "0.44px",
+          "color": "rgb(112, 106, 99)"
+        },
+        {
+          "text": "Administration",
+          "height": 28,
+          "paddingTop": "8px",
+          "paddingBottom": "4px",
+          "fontSize": "11px",
+          "lineHeight": "16.5px",
+          "fontWeight": "600",
+          "letterSpacing": "0.44px",
+          "color": "rgb(112, 106, 99)"
+        }
+      ],
+      "activeItem": {
+        "text": "Overview",
+        "height": 32,
+        "backgroundColor": "rgb(255, 255, 255)",
+        "color": "rgb(20, 20, 20)",
+        "borderRadius": "8px",
+        "paddingLeft": "12px",
+        "paddingRight": "12px",
+        "hasIndicator": true,
+        "indicatorWidth": 3,
+        "indicatorHeight": 20,
+        "indicatorColor": "rgb(255, 71, 0)"
+      },
+      "inactiveItem": {
+        "text": "Accounts",
+        "height": 32,
+        "color": "rgb(112, 106, 99)"
+      },
+      "settingsNavigable": true,
+      "settingsHref": "/app/settings",
+      "hasP2Badge": false,
+      "collapseBtn": {
+        "width": 223,
+        "height": 32
+      }
+    },
+    "collapsed": {
+      "sidebarWidth": 64,
+      "activeItemWidth": 32,
+      "activeItemHeight": 32,
+      "hasActiveIndicator": true,
+      "totalNavItems": 9
+    },
+    "drawerClosesOnNav": true
+  },
+  "screenshots": [
+    "sidebar-desktop-expanded-1440x900.png",
+    "sidebar-desktop-collapsed-1440x900.png",
+    "sidebar-tablet-1024x768.png",
+    "sidebar-mobile-drawer-390x844.png"
+  ]
+}
