@@ -51,22 +51,22 @@ export default function TasksPage() {
     {
       value: "open",
       label: "Pending & Open",
-      icon: <Clock className="h-4 w-4" />,
+      icon: <Clock className="h-4 w-4" aria-hidden="true" />,
     },
     {
       value: "overdue",
       label: "Overdue",
-      icon: <AlertTriangle className="h-4 w-4 text-[var(--color-danger-600)]" />,
+      icon: <AlertTriangle className="h-4 w-4" aria-hidden="true" />,
     },
     {
       value: "completed",
       label: "Completed",
-      icon: <CheckSquare className="h-4 w-4 text-[var(--color-success-600)]" />,
+      icon: <CheckSquare className="h-4 w-4" aria-hidden="true" />,
     },
     {
       value: "all",
       label: "All Tasks",
-      icon: <ListChecks className="h-4 w-4" />,
+      icon: <ListChecks className="h-4 w-4" aria-hidden="true" />,
     },
   ];
 
@@ -96,14 +96,15 @@ export default function TasksPage() {
         />
       </div>
 
-      {/* Search & Filters */}
+      {/* Search & Filters (Toolbar) */}
       <div className="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         <div className="relative flex-1 max-w-md">
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search action items..."
-            leadingIcon={<Search className="h-4 w-4 text-[var(--color-fg-muted)]" />}
+            leadingIcon={<Search className="h-4 w-4 text-[var(--color-fg-muted)]" aria-hidden="true" />}
+            className="h-8 text-xs"
           />
         </div>
 
@@ -126,7 +127,7 @@ export default function TasksPage() {
         </div>
       </div>
 
-      {/* Tasks Table */}
+      {/* Tasks Table with 16px gap (mt-4) */}
       <div className="mt-4">
         <TaskTable
           data={data?.items || []}

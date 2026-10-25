@@ -1,0 +1,149 @@
+{
+  "timestamp": "2026-10-25T18:20:04.676Z",
+  "axeResults": {
+    "desktop": {
+      "violationsCount": 0,
+      "violations": []
+    },
+    "dark": {
+      "violationsCount": 0,
+      "violations": []
+    },
+    "tablet": {
+      "violationsCount": 0,
+      "violations": []
+    },
+    "mobile": {
+      "violationsCount": 0,
+      "violations": []
+    }
+  },
+  "measurements": {
+    "desktop": {
+      "tabs": {
+        "count": 4,
+        "activeTab": {
+          "text": "Pending & Open",
+          "fontSize": "13px",
+          "fontWeight": "500",
+          "color": "rgb(212, 56, 0)",
+          "hasSaffronUnderline": true
+        },
+        "inactiveTab": {
+          "fontSize": "13px",
+          "fontWeight": "500",
+          "color": "rgb(112, 106, 99)"
+        }
+      },
+      "toolbar": {
+        "searchInputHeight": 32,
+        "searchFontSize": "12px",
+        "prioritySelectHeight": 32
+      },
+      "outerShell": {
+        "borderRadius": "4px",
+        "border": "1px solid rgb(231, 229, 225)"
+      },
+      "tableHeader": {
+        "height": 44,
+        "fontFamily": "geistSans, \"geistSans Fallback\"",
+        "fontSize": "11px",
+        "fontWeight": "600",
+        "color": "rgb(112, 106, 99)",
+        "letterSpacing": "0.44px",
+        "headers": [
+          {
+            "text": "Completion",
+            "textAlign": "center"
+          },
+          {
+            "text": "Action Item",
+            "textAlign": "left"
+          },
+          {
+            "text": "Priority",
+            "textAlign": "left"
+          },
+          {
+            "text": "Due Date",
+            "textAlign": "left"
+          },
+          {
+            "text": "Related Account",
+            "textAlign": "left"
+          },
+          {
+            "text": "Related Deal",
+            "textAlign": "left"
+          },
+          {
+            "text": "Assignee",
+            "textAlign": "left"
+          },
+          {
+            "text": "Actions",
+            "textAlign": "center"
+          }
+        ]
+      },
+      "bodyRow": {
+        "height": 91,
+        "padding": "10px 10px 10px 10px"
+      },
+      "completionControl": {
+        "targetWidth": 32,
+        "targetHeight": 32,
+        "ariaLabel": "Mark task Send Revised Flange Specs to Bharat Petrochem as completed"
+      },
+      "actionItemCell": {
+        "titleFontSize": "13px",
+        "titleFontWeight": "600",
+        "titleColor": "rgb(20, 20, 20)",
+        "descFontSize": "12px",
+        "descFontWeight": "500",
+        "descColor": "rgb(112, 106, 99)"
+      },
+      "priorityBadge": {
+        "text": "High",
+        "height": 20,
+        "backgroundColor": "rgb(255, 251, 240)",
+        "color": "rgb(181, 71, 8)",
+        "borderRadius": "9999px"
+      },
+      "dueDatePresentation": {
+        "hasOverdueBadge": true,
+        "overdueBadgeText": "Overdue",
+        "overdueBadgeHeight": 20,
+        "overdueBadgeBg": "rgb(254, 243, 242)",
+        "overdueBadgeColor": "rgb(180, 35, 24)",
+        "dateFontSize": "13px",
+        "dateColor": "rgb(20, 20, 20)"
+      },
+      "relatedLinks": {
+        "accountLinkColor": "rgb(20, 20, 20)",
+        "accountIconWidth": 16,
+        "accountIconHeight": 16,
+        "dealLinkColor": "rgb(20, 20, 20)",
+        "dealIconWidth": 16,
+        "dealIconHeight": 16
+      },
+      "assigneeText": {
+        "fontSize": "13px",
+        "fontWeight": "500",
+        "color": "rgb(112, 106, 99)"
+      },
+      "actionsControl": {
+        "targetWidth": 32,
+        "targetHeight": 32,
+        "ariaLabel": "Edit task Send Revised Flange Specs to Bharat Petrochem"
+      }
+    }
+  },
+  "screenshots": [
+    "tasks-table-desktop-1440x900.png",
+    "tasks-table-page-desktop-1440x900.png",
+    "tasks-table-dark-desktop-1440x900.png",
+    "tasks-table-tablet-1024x768.png",
+    "tasks-table-mobile-390x844.png"
+  ]
+}
