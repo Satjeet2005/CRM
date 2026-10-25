@@ -1,11 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { Plus, Search, Boxes, ShieldAlert } from "lucide-react";
+import { Plus, Search, ShieldAlert } from "lucide-react";
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button, Input, Select } from "@/components/sakani";
 import { useAuth } from "@/hooks/use-auth";
 import { useCatalogProducts, type CatalogProduct } from "@/features/catalog/api";
 import { CatalogTable } from "@/features/catalog/components/catalog-table";
@@ -13,7 +12,7 @@ import { ProductDialog } from "@/features/catalog/components/product-form";
 import { AliasDialog } from "@/features/catalog/components/alias-dialog";
 
 export default function CatalogPage() {
-  const { hasPermission, user } = useAuth();
+  const { hasPermission } = useAuth();
   const canWrite = hasPermission("catalog:manage") || hasPermission("catalog:write");
   const canSeeCost = hasPermission("catalog:cost");
 
@@ -79,8 +78,8 @@ export default function CatalogPage() {
 
       {/* Role / Cost Visibility Notice */}
       {!canSeeCost && (
-        <div className="mt-4 rounded-[var(--radius-md)] border border-[var(--border)] bg-[var(--surface-muted)] p-3 text-xs text-[var(--muted-foreground)] flex items-center gap-2">
-          <ShieldAlert className="h-4 w-4 shrink-0 text-[var(--primary)]" />
+        <div className="mt-4 rounded-[var(--radius-md)] border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-3 text-xs text-[var(--color-fg-muted)] flex items-center gap-2.5">
+          <ShieldAlert className="h-4 w-4 shrink-0 text-[var(--color-primary-600)]" aria-hidden="true" />
           <span>
             Sales View Active: You are viewing customer-facing sell pricing. Internal margin costs and vendor acquisition rates are restricted to catalog managers.
           </span>
@@ -90,49 +89,54 @@ export default function CatalogPage() {
       {/* Filter and Search Bar */}
       <div className="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-[var(--muted-foreground)]" />
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by SKU, product name, or manufacturer..."
-            className="pl-9"
+            leadingIcon={<Search className="h-4 w-4 text-[var(--color-fg-muted)]" />}
           />
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <select
-            value={category}
-            aria-label="Filter by product category"
-            onChange={(e) => {
-              setCategory(e.target.value);
-              setPage(1);
-            }}
-            className="rounded-[var(--radius-md)] border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-xs text-[var(--foreground)] focus:border-[var(--ring)] focus:outline-none"
-          >
-            <option value="all">All Categories</option>
-            <option value="Motors & Drives">Motors & Drives</option>
-            <option value="Switchgear & Protection">Switchgear & Protection</option>
-            <option value="Pumps & Valves">Pumps & Valves</option>
-            <option value="Piping & Structural">Piping & Structural</option>
-            <option value="Automation & Sensors">Automation & Sensors</option>
-            <option value="Bearings & Power Transmission">Bearings & Transmission</option>
-          </select>
+          <div className="w-48">
+            <Select
+              value={category}
+              aria-label="Filter by product category"
+              onChange={(val) => {
+                setCategory(val);
+                setPage(1);
+              }}
+              size="sm"
+              options={[
+                { label: "All Categories", value: "all" },
+                { label: "Motors & Drives", value: "Motors & Drives" },
+                { label: "Switchgear & Protection", value: "Switchgear & Protection" },
+                { label: "Pumps & Valves", value: "Pumps & Valves" },
+                { label: "Piping & Structural", value: "Piping & Structural" },
+                { label: "Automation & Sensors", value: "Automation & Sensors" },
+                { label: "Bearings & Power Transmission", value: "Bearings & Power Transmission" },
+              ]}
+            />
+          </div>
 
-          <select
-            value={stockStatus}
-            aria-label="Filter by stock status"
-            onChange={(e) => {
-              setStockStatus(e.target.value);
-              setPage(1);
-            }}
-            className="rounded-[var(--radius-md)] border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-xs text-[var(--foreground)] focus:border-[var(--ring)] focus:outline-none"
-          >
-            <option value="all">All Stock Statuses</option>
-            <option value="in_stock">In Stock</option>
-            <option value="limited">Limited</option>
-            <option value="backorder">Backorder</option>
-            <option value="discontinued">Discontinued</option>
-          </select>
+          <div className="w-40">
+            <Select
+              value={stockStatus}
+              aria-label="Filter by stock status"
+              onChange={(val) => {
+                setStockStatus(val);
+                setPage(1);
+              }}
+              size="sm"
+              options={[
+                { label: "All Stock Statuses", value: "all" },
+                { label: "In Stock", value: "in_stock" },
+                { label: "Limited", value: "limited" },
+                { label: "Backorder", value: "backorder" },
+                { label: "Discontinued", value: "discontinued" },
+              ]}
+            />
+          </div>
         </div>
       </div>
 

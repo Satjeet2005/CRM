@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-10-25T10:55:14.086Z",
+  "axeResults": {
+    "catalog-desktop": 0,
+    "rfqs-desktop": 0,
+    "rfqs-new-desktop": 0
+  },
+  "screenshots": [
+    "catalog-desktop-1440x900.png",
+    "catalog-tablet-1024x768.png",
+    "catalog-mobile-390x844.png",
+    "rfqs-desktop-1440x900.png",
+    "rfqs-tablet-1024x768.png",
+    "rfqs-mobile-390x844.png",
+    "rfqs-new-desktop-1440x900.png",
+    "rfqs-new-tablet-1024x768.png",
+    "rfqs-new-mobile-390x844.png"
+  ]
+}
