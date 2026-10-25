@@ -1,0 +1,110 @@
+{
+  "timestamp": "2026-10-25T17:50:38.345Z",
+  "axeResults": {
+    "desktop": {
+      "violationsCount": 0,
+      "violations": []
+    },
+    "desktopDark": {
+      "violationsCount": 0,
+      "violations": []
+    },
+    "tablet": {
+      "violationsCount": 0,
+      "violations": []
+    },
+    "mobile": {
+      "violationsCount": 0,
+      "violations": []
+    }
+  },
+  "measurements": {
+    "desktop": {
+      "outerBorderRadius": "4px",
+      "outerBorder": "1px solid rgb(231, 229, 225)",
+      "theadRowHeight": 44,
+      "rowHeight": 47,
+      "headerFontFamily": "geistSans, \"geistSans Fallback\"",
+      "headerFontSize": "11px",
+      "headerFontWeight": "600",
+      "headerLetterSpacing": "0.44px",
+      "headerColor": "rgb(112, 106, 99)",
+      "headers": [
+        "Contact Name",
+        "Account",
+        "Email",
+        "Phone",
+        "Status",
+        "Actions"
+      ],
+      "tdPadding": "6px 10px 6px 10px",
+      "bodyFontSize": "13px",
+      "bodyFontWeight": "500",
+      "bodyLineHeight": "18px",
+      "avatar": {
+        "width": 24,
+        "height": 24,
+        "borderRadius": "9999px",
+        "backgroundColor": "rgb(245, 244, 242)"
+      },
+      "identity": {
+        "name": "HS",
+        "nameColor": "rgb(20, 20, 20)",
+        "nameFontSize": "10px",
+        "nameFontWeight": "600",
+        "title": "Commercial Head",
+        "titleColor": "rgb(112, 106, 99)",
+        "titleFontSize": "12px"
+      },
+      "primaryBadge": {
+        "text": "Primary",
+        "height": 18,
+        "fontSize": "10px",
+        "backgroundColor": "rgb(255, 243, 237)",
+        "color": "rgb(191, 50, 0)"
+      },
+      "accountLink": {
+        "text": "Titan Industrial Fasteners Ltd.",
+        "color": "rgb(20, 20, 20)",
+        "fontSize": "13px",
+        "fontWeight": "500"
+      },
+      "emailCell": {
+        "text": "harpreet.s@titanfasteners.example",
+        "iconColor": "rgb(168, 162, 155)",
+        "hasIcon": true
+      },
+      "phoneCell": {
+        "hasIcon": true
+      },
+      "statusBadge": {
+        "text": "Active",
+        "height": 20,
+        "fontSize": "12px",
+        "backgroundColor": "rgb(241, 254, 246)",
+        "color": "rgb(2, 122, 72)"
+      },
+      "actionButtons": {
+        "count": 2,
+        "editWidth": 32,
+        "editHeight": 32,
+        "editAria": "Edit contact Harpreet Singh",
+        "borderRadius": "4px"
+      }
+    },
+    "mobile": {
+      "cardWidth": 358,
+      "hasMobileCards": true,
+      "actionButtonCount": 2,
+      "bodyScrollWidth": 390,
+      "windowInnerWidth": 390,
+      "hasHorizontalOverflow": false
+    }
+  },
+  "screenshots": [
+    "contacts-table-desktop-1440x900.png",
+    "contacts-table-dark-desktop-1440x900.png",
+    "contacts-table-tablet-1024x768.png",
+    "contacts-table-mobile-390x844.png"
+  ]
+}

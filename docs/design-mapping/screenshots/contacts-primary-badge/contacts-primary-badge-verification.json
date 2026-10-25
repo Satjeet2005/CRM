@@ -1,0 +1,215 @@
+{
+  "timestamp": "2026-10-25T17:55:50.477Z",
+  "axeResults": {
+    "desktop": {
+      "violationsCount": 0,
+      "violations": []
+    },
+    "desktopDark": {
+      "violationsCount": 0,
+      "violations": []
+    },
+    "tablet": {
+      "violationsCount": 0,
+      "violations": []
+    },
+    "mobile": {
+      "violationsCount": 0,
+      "violations": []
+    }
+  },
+  "measurements": {
+    "desktop": {
+      "totalRows": 15,
+      "primaryRowsCount": 10,
+      "nonPrimaryRowsCount": 5,
+      "primaryRows": [
+        {
+          "rowIndex": 0,
+          "name": "HS",
+          "title": "Commercial Head",
+          "hasPrimaryBadge": true,
+          "badgeLeft": 461.15625,
+          "badgeRight": 539.15625,
+          "badgeWidth": 78,
+          "badgeHeight": 20,
+          "backgroundColor": "rgb(245, 244, 242)",
+          "textColor": "rgb(20, 20, 20)",
+          "fontSize": "12px",
+          "fontWeight": "500",
+          "starFill": "rgb(255, 71, 0)",
+          "starColor": "rgb(255, 71, 0)",
+          "starWidth": 12
+        },
+        {
+          "rowIndex": 1,
+          "name": "GV",
+          "title": "Technical Superintendent",
+          "hasPrimaryBadge": true,
+          "badgeLeft": 461.15625,
+          "badgeRight": 539.15625,
+          "badgeWidth": 78,
+          "badgeHeight": 20,
+          "backgroundColor": "rgb(245, 244, 242)",
+          "textColor": "rgb(20, 20, 20)",
+          "fontSize": "12px",
+          "fontWeight": "500",
+          "starFill": "rgb(255, 71, 0)",
+          "starColor": "rgb(255, 71, 0)",
+          "starWidth": 12
+        },
+        {
+          "rowIndex": 2,
+          "name": "MF",
+          "title": "Plant Manager",
+          "hasPrimaryBadge": true,
+          "badgeLeft": 461.15625,
+          "badgeRight": 539.15625,
+          "badgeWidth": 78,
+          "badgeHeight": 20,
+          "backgroundColor": "rgb(245, 244, 242)",
+          "textColor": "rgb(20, 20, 20)",
+          "fontSize": "12px",
+          "fontWeight": "500",
+          "starFill": "rgb(255, 71, 0)",
+          "starColor": "rgb(255, 71, 0)",
+          "starWidth": 12
+        },
+        {
+          "rowIndex": 3,
+          "name": "DR",
+          "title": "Sales Director",
+          "hasPrimaryBadge": true,
+          "badgeLeft": 461.15625,
+          "badgeRight": 539.15625,
+          "badgeWidth": 78,
+          "badgeHeight": 20,
+          "backgroundColor": "rgb(245, 244, 242)",
+          "textColor": "rgb(20, 20, 20)",
+          "fontSize": "12px",
+          "fontWeight": "500",
+          "starFill": "rgb(255, 71, 0)",
+          "starColor": "rgb(255, 71, 0)",
+          "starWidth": 12
+        },
+        {
+          "rowIndex": 4,
+          "name": "NR",
+          "title": "Head of Plant Engineering",
+          "hasPrimaryBadge": true,
+          "badgeLeft": 461.15625,
+          "badgeRight": 539.15625,
+          "badgeWidth": 78,
+          "badgeHeight": 20,
+          "backgroundColor": "rgb(245, 244, 242)",
+          "textColor": "rgb(20, 20, 20)",
+          "fontSize": "12px",
+          "fontWeight": "500",
+          "starFill": "rgb(255, 71, 0)",
+          "starColor": "rgb(255, 71, 0)",
+          "starWidth": 12
+        },
+        {
+          "rowIndex": 5,
+          "name": "AB",
+          "title": "Managing Director",
+          "hasPrimaryBadge": true,
+          "badgeLeft": 461.15625,
+          "badgeRight": 539.15625,
+          "badgeWidth": 78,
+          "badgeHeight": 20,
+          "backgroundColor": "rgb(245, 244, 242)",
+          "textColor": "rgb(20, 20, 20)",
+          "fontSize": "12px",
+          "fontWeight": "500",
+          "starFill": "rgb(255, 71, 0)",
+          "starColor": "rgb(255, 71, 0)",
+          "starWidth": 12
+        },
+        {
+          "rowIndex": 6,
+          "name": "SR",
+          "title": "VP Technical Partnerships",
+          "hasPrimaryBadge": true,
+          "badgeLeft": 461.15625,
+          "badgeRight": 539.15625,
+          "badgeWidth": 78,
+          "badgeHeight": 20,
+          "backgroundColor": "rgb(245, 244, 242)",
+          "textColor": "rgb(20, 20, 20)",
+          "fontSize": "12px",
+          "fontWeight": "500",
+          "starFill": "rgb(255, 71, 0)",
+          "starColor": "rgb(255, 71, 0)",
+          "starWidth": 12
+        },
+        {
+          "rowIndex": 7,
+          "name": "AP",
+          "title": "General Manager - Sourcing",
+          "hasPrimaryBadge": true,
+          "badgeLeft": 461.15625,
+          "badgeRight": 539.15625,
+          "badgeWidth": 78,
+          "badgeHeight": 20,
+          "backgroundColor": "rgb(245, 244, 242)",
+          "textColor": "rgb(20, 20, 20)",
+          "fontSize": "12px",
+          "fontWeight": "500",
+          "starFill": "rgb(255, 71, 0)",
+          "starColor": "rgb(255, 71, 0)",
+          "starWidth": 12
+        },
+        {
+          "rowIndex": 8,
+          "name": "PS",
+          "title": "Director of Supply Chain",
+          "hasPrimaryBadge": true,
+          "badgeLeft": 461.15625,
+          "badgeRight": 539.15625,
+          "badgeWidth": 78,
+          "badgeHeight": 20,
+          "backgroundColor": "rgb(245, 244, 242)",
+          "textColor": "rgb(20, 20, 20)",
+          "fontSize": "12px",
+          "fontWeight": "500",
+          "starFill": "rgb(255, 71, 0)",
+          "starColor": "rgb(255, 71, 0)",
+          "starWidth": 12
+        },
+        {
+          "rowIndex": 9,
+          "name": "RK",
+          "title": "Chief Procurement Officer",
+          "hasPrimaryBadge": true,
+          "badgeLeft": 461.15625,
+          "badgeRight": 539.15625,
+          "badgeWidth": 78,
+          "badgeHeight": 20,
+          "backgroundColor": "rgb(245, 244, 242)",
+          "textColor": "rgb(20, 20, 20)",
+          "fontSize": "12px",
+          "fontWeight": "500",
+          "starFill": "rgb(255, 71, 0)",
+          "starColor": "rgb(255, 71, 0)",
+          "starWidth": 12
+        }
+      ],
+      "firstNonPrimary": {
+        "rowIndex": 10,
+        "name": "SR",
+        "title": "Inventory Controller",
+        "hasPrimaryBadge": false,
+        "starWidth": null
+      },
+      "allBadgeRightsMatch": true
+    }
+  },
+  "screenshots": [
+    "contacts-primary-badge-desktop-1440x900.png",
+    "contacts-primary-badge-desktop-closeup.png",
+    "contacts-primary-badge-dark-desktop-1440x900.png",
+    "contacts-primary-badge-tablet-1024x768.png",
+    "contacts-primary-badge-mobile-390x844.png"
+  ]
+}
