@@ -11,6 +11,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -30,6 +31,7 @@ export interface ButtonProps
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   isLoading?: boolean;
+  href?: string;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -41,6 +43,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       rightIcon,
       isLoading = false,
       disabled,
+      href,
       className,
       children,
       ...props
@@ -63,11 +66,31 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     };
 
     const sizeStyles: Record<ButtonSize, string> = {
-      sm: "h-8 px-3 text-xs gap-1.5 rounded-[var(--radius-sm)]",
+      sm: "h-8 px-3 text-xs gap-1.5 rounded-[var(--radius-md)]",
       md: "h-10 px-4 text-sm gap-2 rounded-[var(--radius-md)]",
       lg: "h-11 px-5 text-base gap-2.5 rounded-[var(--radius-md)]",
       icon: "h-9 w-9 p-0 rounded-[var(--radius-md)]",
     };
+
+    if (href) {
+      return (
+        <Link
+          href={href}
+          className={cn(
+            "inline-flex items-center justify-center font-medium select-none cursor-pointer whitespace-nowrap",
+            "transition-all duration-150 ease-out active:scale-[0.98]",
+            "focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] focus-visible:outline-offset-2",
+            variantStyles[variant],
+            sizeStyles[size],
+            className
+          )}
+        >
+          {leftIcon && <span className="inline-flex shrink-0 items-center">{leftIcon}</span>}
+          {children}
+          {rightIcon && <span className="inline-flex shrink-0 items-center">{rightIcon}</span>}
+        </Link>
+      );
+    }
 
     return (
       <button

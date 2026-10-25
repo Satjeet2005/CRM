@@ -73,10 +73,10 @@ export function Tabs({
             disabled={tab.disabled}
             onClick={() => handleSelect(tab.value)}
             className={cn(
-              "relative inline-flex items-center justify-center gap-2 px-3.5 py-2.5 text-xs font-medium whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] rounded-t-[var(--radius-sm)] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40",
+              "relative inline-flex items-center justify-center gap-2 px-3.5 py-2.5 text-[13px] leading-[18px] font-medium whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-[var(--color-border-focus)] rounded-t-[var(--radius-sm)] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40",
               fill && "flex-1",
               isActive
-                ? "text-[var(--color-primary-600)] font-semibold"
+                ? "text-[var(--color-primary-600)] font-medium"
                 : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-subtle)]"
             )}
           >

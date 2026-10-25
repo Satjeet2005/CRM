@@ -1,9 +1,27 @@
 @import "tailwindcss";
 
+/* ── Canonical Geist Sans Variable Font Faces ───────────────────────────── */
+@font-face {
+  font-family: 'Geist Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('/fonts/geist/geist-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('/fonts/geist/geist-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
 @layer base {
   :root {
     /* ── Canonical Sakani Design Tokens (Upstream MIT License) ──────────────── */
-    /* Core Neutral Scale */
+    /* Core Neutral Scale (Warm Stone) */
     --color-neutral-50: #FAFAF9;
     --color-neutral-100: #F5F4F2;
     --color-neutral-200: #E7E5E1;
@@ -16,22 +34,31 @@
     --color-neutral-900: #141414;
     --color-neutral-950: #0F0E0C;
 
-    /* Hybrid Enterprise Indigo (D1 - Option B Sign-Off) */
-    --color-primary-50: #EEF2FF;
-    --color-primary-100: #E0E7FF;
-    --color-primary-200: #C7D2FE;
-    --color-primary-300: #A5B4FC;
-    --color-primary-400: #818CF8;
-    --color-primary-500: #4F46E5; /* 6.29:1 vs #FFFFFF, 6.02:1 vs #FAFAF9 — Passes WCAG AA */
-    --color-primary-600: #4338CA; /* Hover */
-    --color-primary-700: #3730A3;
-    --color-primary-800: #312E81;
-    --color-primary-900: #1E1B4B;
+    /* Canonical Sakani Saffron Primary Scale */
+    --color-primary-50: #FFF3ED;
+    --color-primary-100: #FFE4D4;
+    --color-primary-200: #FFC7A8;
+    --color-primary-300: #FFA170;
+    --color-primary-400: #FF7538;
+    --color-primary-500: #FF4700; /* Canonical Saffron Accent */
+    --color-primary-600: #D43800; /* Primary Hover & Accessible Text (4.8:1 contrast on white) */
+    --color-primary-700: #BF3200; /* Primary Active & Badge Text (5.1:1 contrast on #FFF3ED) */
+    --color-primary-800: #99290A;
+    --color-primary-900: #7D250D;
+    --color-primary-950: #431004;
+
+    /* Brand Intent Aliases */
+    --color-brand-default: var(--color-primary-500);
+    --color-brand-hover: var(--color-primary-600);
+    --color-brand-subtle: var(--color-primary-50);
+    --color-brand-fg: var(--color-primary-600);
 
     /* Semantic Status Scales (Canonical Upstream) */
     --color-success-50: #F1FEF6;
     --color-success-100: #D1FADF;
     --color-success-200: #A6F4C5;
+    --color-success-300: #6CE9A6;
+    --color-success-400: #32D583;
     --color-success-500: #12B76A;
     --color-success-600: #039855;
     --color-success-700: #027A48;
@@ -42,6 +69,8 @@
     --color-warning-50: #FFFBF0;
     --color-warning-100: #FEF0C7;
     --color-warning-200: #FEDF89;
+    --color-warning-300: #FEC84B;
+    --color-warning-400: #FDB022;
     --color-warning-500: #F79009;
     --color-warning-600: #DC6803;
     --color-warning-700: #B54708;
@@ -52,6 +81,8 @@
     --color-danger-50: #FEF3F2;
     --color-danger-100: #FEE4E2;
     --color-danger-200: #FECDCA;
+    --color-danger-300: #FDA29B;
+    --color-danger-400: #F97066;
     --color-danger-500: #F04438;
     --color-danger-600: #D92D20;
     --color-danger-700: #B42318;
@@ -62,6 +93,8 @@
     --color-info-50: #EFF8FF;
     --color-info-100: #D1E9FF;
     --color-info-200: #B2DDFF;
+    --color-info-300: #84CAFF;
+    --color-info-400: #53B1FD;
     --color-info-500: #2E90FA;
     --color-info-600: #1570EF;
     --color-info-700: #175CD3;
@@ -70,7 +103,7 @@
     --color-info-border: var(--color-info-200);
 
     /* Chart Data-Vis Tokens */
-    --color-chart-1: #4F46E5;
+    --color-chart-1: #FF4700;
     --color-chart-2: #5B92DD;
     --color-chart-3: #47A8A2;
     --color-chart-4: #9179D6;
@@ -85,15 +118,19 @@
     --color-bg-inverse: var(--color-neutral-900);
 
     --color-fg-default: var(--color-neutral-900);     /* 18.42:1 vs #FFFFFF, 17.64:1 vs #FAFAF9 */
-    --color-fg-muted: #706A63;                       /* 5.35:1 vs #FFFFFF, 5.12:1 vs #FAFAF9, 4.86:1 vs #F5F4F2 — Passes WCAG AA on all surfaces */
-    --color-fg-subtle: var(--color-neutral-400);      /* Decorative icons only */
+    --color-fg-muted: #706A63;                       /* 5.35:1 vs #FFFFFF, 5.12:1 vs #F5F4F2 (WCAG AA compliant) */
+    --color-fg-subtle: var(--color-neutral-400);      /* Decorative icons / timestamps */
     --color-fg-on-accent: #FFFFFF;
     --color-fg-on-inverse: var(--color-neutral-50);
 
     --color-border-subtle: var(--color-neutral-200);  /* #E7E5E1 */
     --color-border-default: var(--color-neutral-300); /* #DBDAD7 */
     --color-border-strong: var(--color-neutral-400);  /* #A8A29B */
-    --color-border-focus: var(--color-primary-500);
+    --color-border-focus: var(--color-primary-500);   /* #FF4700 */
+
+    /* Typography Family Tokens */
+    --font-sans: var(--font-geist-sans), "Geist Variable", "Geist", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
     /* Spacing Scale (Canonical Sakani Pixel-Named) */
     --space-0: 0px;
@@ -111,13 +148,19 @@
     --space-40: 40px;
     --space-48: 48px;
     --space-64: 64px;
+    --space-80: 80px;
+    --space-96: 96px;
 
     /* Radius Scale */
+    --radius-none: 0px;
+    --radius-2xs: 2px;
     --radius-xs: 4px;
     --radius-sm: 6px;
     --radius-md: 8px;
     --radius-lg: 12px;
     --radius-xl: 16px;
+    --radius-2xl: 24px;
+    --radius-3xl: 28px; /* Signature Sakani Page Top Corners */
     --radius-full: 9999px;
 
     /* Elevation Shadows (Canonical Upstream) */
@@ -126,6 +169,7 @@
     --shadow-md: 0 4px 8px -2px rgba(16, 15, 12, 0.10), 0 2px 4px -2px rgba(16, 15, 12, 0.06);
     --shadow-lg: 0 12px 16px -4px rgba(16, 15, 12, 0.08), 0 4px 6px -2px rgba(16, 15, 12, 0.03);
     --shadow-xl: 0 20px 24px -4px rgba(16, 15, 12, 0.10), 0 8px 8px -4px rgba(16, 15, 12, 0.03);
+    --shadow-2xl: 0 24px 48px -12px rgba(16, 15, 12, 0.18);
 
     /* Motion & Transitions */
     --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
@@ -156,9 +200,9 @@
     --destructive: var(--color-danger-700);
     --destructive-soft: var(--color-danger-50);
     --info: var(--color-info-700);
-    --sidebar: #FFFFFF;
-    --sidebar-foreground: var(--color-neutral-900);
-    --sidebar-muted: var(--color-neutral-500);
+    --sidebar: var(--color-bg-surface);
+    --sidebar-foreground: var(--color-fg-default);
+    --sidebar-muted: var(--color-fg-muted);
   }
 
   .dark {
@@ -179,6 +223,13 @@
     --color-border-default: var(--color-neutral-700);
     --color-border-strong: var(--color-neutral-600);
     --color-border-focus: var(--color-primary-400);
+
+    /* Accessible Primary Brand Scale for Dark Mode */
+    --color-primary-50: #2c0b02;
+    --color-primary-100: #431004;
+    --color-primary-500: #FF662E;
+    --color-primary-600: #FFA170;
+    --color-primary-700: #FFC7A8;
 
     --color-success-fg: var(--color-success-400);
     --color-success-bg: var(--color-neutral-950);
@@ -205,7 +256,7 @@
     --border: var(--color-border-subtle);
     --primary: var(--color-primary-400);
     --primary-hover: var(--color-primary-300);
-    --primary-soft: #1E1B4B;
+    --primary-soft: #431004;
     --success: var(--color-success-400);
     --success-soft: #052E16;
     --warning: var(--color-warning-400);
@@ -213,9 +264,9 @@
     --destructive: var(--color-danger-400);
     --destructive-soft: #450A0A;
     --info: var(--color-info-400);
-    --sidebar: #141414;
-    --sidebar-foreground: var(--color-neutral-50);
-    --sidebar-muted: var(--color-neutral-400);
+    --sidebar: var(--color-bg-surface);
+    --sidebar-foreground: var(--color-fg-default);
+    --sidebar-muted: var(--color-fg-muted);
   }
 }
 
@@ -245,13 +296,15 @@
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
   --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+  --radius-3xl: var(--radius-3xl);
   --radius-full: var(--radius-full);
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+  font-family: var(--font-sans);
   min-height: 100vh;
   margin: 0;
   padding: 0;
@@ -277,4 +330,27 @@ body {
 :focus-visible {
   outline: 2px solid var(--color-border-focus);
   outline-offset: 2px;
+}
+
+/* Sakani Kanban Subtle Scrollbar */
+.sakani-kanban-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-default) transparent;
+}
+
+.sakani-kanban-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.sakani-kanban-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sakani-kanban-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--color-border-default);
+  border-radius: var(--radius-full);
+}
+
+.sakani-kanban-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-border-strong);
 }

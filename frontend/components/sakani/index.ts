@@ -8,6 +8,7 @@
 export * from "./button";
 export * from "./badge";
 export * from "./card";
+export * from "./stat-card";
 export * from "./input";
 export * from "./sheet";
 export * from "./alert";

@@ -27,7 +27,7 @@ export function InitialsAvatar({
       role={isAriaHidden ? undefined : "img"}
       aria-label={isAriaHidden ? undefined : (name || "User Avatar")}
       className={cn(
-        "flex shrink-0 select-none items-center justify-center rounded-full bg-[var(--primary-soft)] font-medium text-[var(--primary)] border border-[var(--primary)]/20",
+        "flex shrink-0 select-none items-center justify-center rounded-full bg-[var(--color-primary-50)] font-medium text-[var(--color-primary-700)] border border-[var(--color-primary-500)]/20",
         sizeClasses[size],
         className
       )}

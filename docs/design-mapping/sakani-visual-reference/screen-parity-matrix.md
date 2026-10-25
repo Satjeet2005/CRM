@@ -31,30 +31,61 @@ This matrix documents a screen-by-screen comparative audit between the canonical
 ## 3. Core CRM Screens Audit
 
 ### 3.1 Dashboard (`/app/dashboard` — Tier 1: Direct Comparison)
-- **Sakani Reference**: [`sakani-dashboard-desktop-1440x900.png`](./screenshots/sakani-dashboard-desktop-1440x900.png)
-- **ForgeFlow Baseline**: [`forgeflow-dashboard-desktop-1440x900.png`](./screenshots/forgeflow-dashboard-desktop-1440x900.png)
-- **Detailed Gap Analysis**:
-  - **KPI Metrics Row**: 4 `StatCard`s with `title`, bold value, trending pill badge, and `description` ("vs last month"). Refine value typography to `32px` bold.
+- **Sakani Reference**: [`sakani-dashboard-desktop-1440x900.png`](./screenshots/sakani-dashboard-desktop-1440x900.png) (Visual Target)
+- **ForgeFlow Baseline**: [`forgeflow-dashboard-desktop-1440x900.png`](./screenshots/forgeflow-dashboard-desktop-1440x900.png) (Current Baseline)
+- **KPI / Stat-Card Visual Target Comparison & Anatomy**:
+  - **Visual Benchmark**: The Sakani CRM dashboard reference establishes the exact target geometry and typography:
+    - **Surface & Border**: Pure white surface (`var(--color-bg-surface)` / `#FFFFFF`) with a subtle 1px warm-neutral border (`var(--color-border-subtle)` / `#E7E5E1`) and soft elevation (`var(--shadow-xs)`).
+    - **Border Radius**: 16px (`--radius-xl: 16px`).
+    - **Card Height & Padding**: Compact, uniform height targeting ~110–112px at standard desktop reference (`1440×900`), with consistent internal padding (`var(--space-12)` / 12–16px). Cards must maintain identical height across the entire 4-card row.
+    - **Metric Label**: Muted 14px label (`text-sm font-medium leading-5 text-[var(--color-fg-muted)]`).
+    - **Metric Value**: Prominent 32px bold value with tight letter spacing (`text-[32px] font-bold tracking-tight text-[var(--color-fg-default)] leading-tight`).
+    - **Supporting Row**: Compact supporting row beneath the metric, aligned consistently across all cards (`flex items-center gap-1.5 text-xs text-[var(--color-fg-muted)]`).
+    - **No Top-Right Decorative Icons**: Omit top-right decorative icons (`TrendingUp`, `Briefcase`, `Building`, `AlertTriangle`), matching the clean Sakani minimal card pattern.
+    - **Row Value & Baseline Alignment**: Values and supporting rows must be vertically and horizontally aligned across all cards without vertical displacement.
+- **Preservation of ForgeFlow Semantics & Functionality**:
+  - **Metric 1 (Total Open Pipeline)**: Value formatted via `formatMoney(summary.open_pipeline_value, "INR")`, supporting row: `"Across {count} active opportunities"`.
+  - **Metric 2 (Open Deals)**: Value `summary.open_opportunities_count`, supporting row: interactive `"View pipeline board"` link to `/app/opportunities` with subtle arrow icon.
+  - **Metric 3 (Active Accounts)**: Value `summary.active_accounts_count`, supporting row: interactive `"Manage customer accounts"` link to `/app/accounts` with subtle arrow icon.
+  - **Metric 4 (Overdue Tasks)**: Value `summary.overdue_tasks_count`, supporting row: interactive link to `/app/tasks`. Uses semantic danger text (`var(--color-danger-fg)`) only when overdue tasks $> 0$.
+  - **Strict Policy on Data Integrity**: Do not fabricate percentage changes or fake historical comparisons. Trend pill badges are permitted only when genuine historical baseline data exists; otherwise, present authentic contextual text or navigation action links in the supporting-row slot.
+- **Implementation Sequence**:
+  - **Batch 2**: Refine the reusable `StatCard` component (`frontend/components/sakani/stat-card.tsx`), establishing the verified visual contract and test suite.
+  - **Batch 3**: Apply the refined `StatCard` to the dashboard route (`/app/dashboard`), verifying 4-column desktop composition, tablet 2×2 wrapping, and mobile stacking.
+  - **Verification**: Capture before/after screenshots at 1440×900, 1024×768, and 390×844; verify large currency amounts (e.g. `₹1,24,50,000`) do not clip or overflow.
+- **Middle Charts & Bottom Activity Audit**:
   - **Charts Row (Middle)**: 3-column equal grid (`threeCol`, height 334px) containing BarChart (Revenue), LineChart (Customer Growth), and DonutChart (Sales Channel with centered value and custom LegendRow).
   - **Recent Orders & Activity Row (Bottom)**: 2:1 column split (`ordersActivityRow`, height 412px). 2-column Recent Orders table with status badges (`Active`, `Failed`, `Pending`), 1-column Activity feed with avatar groups and segmented text.
 
 ### 3.2 Accounts Directory (`/app/accounts` — Tier 2: Layout Reference)
 - **Sakani Layout Reference**: Sakani `/customers` provides the component reference for table styling and `Panel` headers, but is **not** an exact screen equivalent.
-- **Reference Model**: Sakani **`DataTableBlock`** (Figma node `892:12401`).
-- **Gap Analysis**:
-  - Table typography: Account names use `14px` Medium with subtitle metadata in `12px` `--color-fg-muted`.
-  - Filters: Align segmented tier filters (`Strategic`, `Enterprise`, `Mid-Market`) to match Sakani `SegmentedControl` tokens.
-  - Actions: Add flush-right row action buttons with Sakani `IconButton` styling.
+- **Reference Model**: Sakani **`Table — Default`** (Figma node `45:259`), **`Table — Stacked Mobile`** (Figma node `1269:563`), and **`Data Table + Toolbar`** (Figma node `684:17474`).
+- **Implementation Status**: **Fully Conformed**
+  - **Desktop Header & Body**: 44px header height (`h-11`), 44px body rows (`h-11`), 10px horizontal padding (`px-2.5`), 4px container radius (`rounded-[var(--radius-xs)]`), Title Case headers, 20px status badges, 32px row action buttons.
+  - **Stacked Mobile Table**: Renders record cards below 768px with account name, status badge, 2-column detail grid, and 32px actions with zero horizontal overflow.
+  - **Toolbar**: 32px search input (`h-8`), 32px filters, 36px New Account button, 32px pagination footer with Previous/Next buttons.
+  - **Accessibility**: 0 Axe-core violations across Desktop Light, Desktop Dark, Tablet, and Mobile viewports.
 
 ### 3.3 Opportunities Pipeline (`/app/opportunities` — Tier 2: Layout Reference)
-- **Sakani Layout Reference**: Sakani `/sales` provides chart and metric patterns, but ForgeFlow's core pipeline is a **Kanban board with mandatory table switcher** (Decision D4).
-- **Reference Model**: Sakani **`KanbanBoardBlock`** (Figma node `915:20412`).
-- **Gap Analysis**:
-  - View Switcher: Ensure the segmented switch button matches Sakani's subtle border and shadow tokens.
-  - Kanban Cards: Cards adopt `12px` border radius (`--radius-lg`), `12px` internal padding, and subtle hover elevation (`--shadow-md`).
-  - Deal Values: Formatted with mono font (`--font-mono`) and bold styling.
+- **Sakani Layout Reference**: Sakani `/sales` provides chart and metric patterns; ForgeFlow's core pipeline is a **Kanban board with mandatory table switcher** (Decision D4).
+- **Reference Model**: Sakani **`Board Column — Default`** (Figma node `686:2`), **`Board Card — Default`** (Figma node `678:179`), **`Table — Default`** (Figma node `45:259`), and **`Data Table + Toolbar`** (Figma node `684:17474`).
+- **Implementation Status**: **Fully Conformed (Kanban & Table Views)**
+  - **Kanban Board**: 352px desktop column width (`w-[352px] min-w-[352px]`), 12px radius, 12px padding, 10px vertical card gap, warm canvas background (`#FAFAF9`), 16px inter-column spacing, 32px header with 8px dot/count, 328 × 149px cards, drag & drop with 2px dashed drop target styling (`2781:38110`), and subtle semantic scrollbar (`.sakani-kanban-scroll`).
+  - **Table View**: 44px Title Case headers (`Opportunity`, `Stage`, `Est. Value`, `Probability`, `Target Close`, `Owner`, `Actions`), content-driven row height (~52–63px) without clipping subtitle, right-aligned tabular numerals for value/probability, 20px semantic badges, 32px Advance/Mark lost/Reopen action controls with fixed-width alignment.
+  - **Accessibility**: 0 Axe-core violations across Desktop Light, Desktop Dark, Tablet, and Mobile in both Kanban and Table views.
 
-### 3.4 Activity Audit Timeline (`/app/activity` — Tier 2: Layout Reference)
+### 3.4 Tasks & Follow-ups (`/app/tasks` — Tier 2: Layout Reference)
+- **Reference Model**: Sakani **`Table — Default`** (Figma node `45:259`), **`Data Table + Toolbar`** (Figma node `684:17474`), **`Tabs`**, and **`Badge`** (Figma node `16:103`).
+- **Implementation Status**: **Fully Conformed**
+  - **Status Tabs & Toolbar**: Canonical saffron active underline, Geist Sans 13px / 18px weight 500, muted inactive tabs, 32px search input (`h-8 text-xs`), 32px priority selector (`Select size="sm"`), 16px vertical gap to table.
+  - **Table Shell & Typography**: 44px header height (`h-11`), `bg/canvas` (`#FAFAF9`), 1px bottom border `border/subtle` (`#E7E5E1`), Geist Sans 11px / 16px weight 600, `fg/muted` (`#78716A`), tracking 4%. Title Case headers: `Completion`, `Action Item`, `Priority`, `Due Date`, `Related Account`, `Related Deal`, `Assignee`, `Actions`.
+  - **Body Rows**: Content-driven row height (~60–90px) without clipping 2-line action-item titles/descriptions or related-record links; 1px `border/subtle` divider; no zebra stripes.
+  - **Priority & Overdue Independence**: High priority rendered as Warning/Subtle (`#FEF0C7` / `#B54708`), Normal/Low as Neutral/Subtle (`#F5F4F2` / `#78716A`). Overdue tasks receive a dedicated Danger/Subtle badge (`#FEE4E2` / `#B42318`) alongside readable date text in contrast-safe default foreground (`#141414`).
+  - **Related Record Links**: Contrast-safe `fg/default` (`#141414`) text, canonical saffron hover underline, 16px building/briefcase icons with 8px text gap. Generous 18% column widths allowing long names to wrap across two lines.
+  - **Completion & Row Actions**: Centered completion toggle with 32 × 32px hit target and accessible `Mark task {title} as completed` label; centered 32 × 32px edit ghost button with accessible `Edit task {title}` label; 10-second undo toast with backend version locking.
+  - **Accessibility**: 0 Axe-core violations across Desktop Light, Desktop Dark, Tablet, and Mobile. Stacked mobile cards for viewports $< 768px$ with 0 horizontal page overflow.
+
+### 3.5 Activity Audit Timeline (`/app/activity` — Tier 2: Layout Reference)
 - **Reference Model**: Sakani **`ActivityLogBlock`** (Figma node `872:14920`).
 - **Gap Analysis**:
   - Vertical timeline connecting line uses `--color-border-subtle` (`#E7E5E1`).
@@ -103,8 +134,10 @@ These workflows represent ForgeFlow's aerospace/industrial manufacturing domain.
 | **Activity** | Captured | Captured | Captured | Phase 2 Artifacts |
 | **Accounts** | Captured | Captured | Captured | Phase 3 Artifacts |
 | **Opportunities** | Captured | Captured | Captured | Phase 3 Artifacts |
+| **Tasks** | Captured | Captured | Captured | Phase 3 Artifacts (0 Axe Violations) |
 | **Catalog** | Captured | Captured | Captured | Phase 4 Artifacts |
 | **RFQ Review** | Captured | Captured | Captured | Phase 5 Artifacts |
 | **Quotes List & Studio** | Captured | Captured | Captured | Phase 6 Artifacts |
 | **Approvals Queue** | Captured | Captured | Captured | Phase 7 Artifacts |
 | **Export Studio** | Captured | Captured | Captured | Phase 8 Artifacts |
+| **Settings Area** | Captured | Captured | Captured | 0 Axe Violations (Overview, Org, Security) |
