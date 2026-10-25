@@ -1,0 +1,22 @@
+{
+  "timestamp": "2026-10-25T12:05:09.147Z",
+  "axeResults": {
+    "approvals-queue-desktop": 0,
+    "proposal-review-sheet-desktop": 0,
+    "proposal-reject-dialog": 0,
+    "proposal-approve-dialog": 0,
+    "proposal-maker-checker-sheet": 0
+  },
+  "screenshots": [
+    "approvals-queue-desktop-1440x900.png",
+    "approvals-queue-tablet-1024x768.png",
+    "approvals-queue-mobile-390x844.png",
+    "proposal-review-sheet-desktop-1440x900.png",
+    "proposal-review-sheet-tablet-1024x768.png",
+    "proposal-review-sheet-mobile-390x844.png",
+    "proposal-reject-dialog-desktop.png",
+    "proposal-approve-dialog-desktop.png",
+    "approvals-queue-sales-rep-notice-desktop.png",
+    "proposal-maker-checker-warning-desktop.png"
+  ]
+}

@@ -5,28 +5,20 @@ import Link from "next/link";
 import {
   ClipboardCheck,
   Search,
-  Filter,
-  CheckCircle2,
-  XCircle,
   AlertTriangle,
-  Clock,
   ArrowRight,
   ShieldAlert,
   ShieldCheck,
-  Layers,
-  FileText,
   User,
-  GitCommit,
-  RotateCw,
 } from "lucide-react";
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { StatusBadge } from "@/components/ui/status-badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/sakani/button";
+import { Input } from "@/components/sakani/input";
+import { Badge } from "@/components/sakani/badge";
 import { EmptyState } from "@/components/data-display/empty-state";
 import { ErrorState } from "@/components/data-display/error-state";
+import { LoadingSkeleton } from "@/components/data-display/loading-skeleton";
 import { DateTimeText } from "@/components/data-display/date-time-text";
 import { formatMoney } from "@/lib/formatters/formatters";
 import { useAuth } from "@/hooks/use-auth";
@@ -63,19 +55,19 @@ export default function ApprovalsPage() {
     switch (status) {
       case "pending_review":
       case "pending_approval":
-        return <StatusBadge variant="warning" label="Pending Review" />;
+        return <Badge variant="warning" emphasis="subtle">Pending Review</Badge>;
       case "approved":
-        return <StatusBadge variant="success" label="Approved" />;
+        return <Badge variant="success" emphasis="subtle">Approved</Badge>;
       case "rejected":
-        return <StatusBadge variant="destructive" label="Rejected" />;
+        return <Badge variant="danger" emphasis="subtle">Rejected</Badge>;
       case "committed":
-        return <StatusBadge variant="info" label="Committed" />;
+        return <Badge variant="info" emphasis="subtle">Committed</Badge>;
       case "stale":
-        return <StatusBadge variant="destructive" label="Stale" />;
+        return <Badge variant="danger" emphasis="subtle">Stale</Badge>;
       case "cancelled":
-        return <StatusBadge variant="neutral" label="Cancelled" />;
+        return <Badge variant="neutral" emphasis="subtle">Cancelled</Badge>;
       default:
-        return <StatusBadge variant="neutral" label={status} />;
+        return <Badge variant="neutral" emphasis="subtle">{status}</Badge>;
     }
   };
 
@@ -91,25 +83,25 @@ export default function ApprovalsPage() {
         <div
           role="region"
           aria-label="Permission Notice"
-          className="mb-6 flex items-start gap-3 rounded-[var(--radius-md)] border border-[var(--warning)]/30 bg-[var(--warning)]/10 p-4 text-sm text-[var(--foreground)]"
+          className="mb-6 flex items-start gap-3 rounded-[var(--radius-md)] border border-amber-200 bg-amber-50/80 p-4 text-xs text-[var(--color-fg-default)]"
         >
-          <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-[var(--warning)]" aria-hidden="true" />
+          <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" aria-hidden="true" />
           <div>
-            <p className="font-semibold text-[var(--warning)]">Read-Only View / Permission Notice</p>
-            <p className="mt-1 text-[var(--muted-foreground)]">
-              Commercial proposals and quote approvals require a <span className="font-medium text-[var(--foreground)]">Sales Manager</span> or <span className="font-medium text-[var(--foreground)]">Admin</span> role. As a sales representative or catalog manager, you may inspect changes but cannot approve or reject proposals.
+            <p className="font-semibold text-[var(--color-warning-700)]">Read-Only View / Permission Notice</p>
+            <p className="mt-1 text-[var(--color-fg-muted)] leading-relaxed">
+              Commercial proposals and quote approvals require a <span className="font-semibold text-[var(--color-fg-default)]">Sales Manager</span> or <span className="font-semibold text-[var(--color-fg-default)]">Admin</span> role. As a sales representative or catalog manager, you may inspect changes but cannot approve or reject proposals.
             </p>
           </div>
         </div>
       )}
 
       {/* Filter and Search Controls */}
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between bg-[var(--color-bg-surface)] p-3 rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)] shadow-2xs">
         {/* Status Filter Tabs */}
         <div
           role="tablist"
           aria-label="Approval status filters"
-          className="flex flex-wrap items-center gap-1.5 rounded-[var(--radius-md)] border border-[var(--border)] bg-[var(--surface-muted)] p-1 text-xs"
+          className="flex flex-wrap items-center gap-1.5 rounded-[var(--radius-md)] border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] p-1 text-xs"
         >
           {[
             { id: "pending", label: "Pending Review" },
@@ -122,15 +114,16 @@ export default function ApprovalsPage() {
               <button
                 key={tab.id}
                 role="tab"
+                type="button"
                 aria-selected={active}
                 onClick={() => {
                   setStatusFilter(tab.id);
                   setPage(1);
                 }}
-                className={`rounded-[var(--radius-sm)] px-3 py-1.5 font-medium transition-colors ${
+                className={`rounded-[var(--radius-sm)] px-3 py-1.5 font-medium transition-colors cursor-pointer ${
                   active
-                    ? "bg-[var(--surface)] text-[var(--foreground)] shadow-xs"
-                    : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                    ? "bg-[var(--color-bg-surface)] text-[var(--color-fg-default)] shadow-xs font-semibold"
+                    : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
                 }`}
               >
                 {tab.label}
@@ -142,14 +135,14 @@ export default function ApprovalsPage() {
         {/* Search Input */}
         <div className="relative w-full sm:w-72">
           <Search
-            className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted-foreground)]"
+            className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-fg-muted)] pointer-events-none"
             aria-hidden="true"
           />
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search quote, proposal, or author..."
-            className="pl-9 text-sm"
+            className="pl-9 h-9 text-xs"
             aria-label="Search approval queue"
           />
         </div>
@@ -157,10 +150,8 @@ export default function ApprovalsPage() {
 
       {/* Main Content Area */}
       {isLoading ? (
-        <div className="space-y-3" role="status" aria-label="Loading approval queue">
-          {[...Array(4)].map((_, i) => (
-            <Skeleton key={i} className="h-24 w-full rounded-[var(--radius-md)]" />
-          ))}
+        <div className="py-4 space-y-3" role="status" aria-label="Loading approval queue">
+          <LoadingSkeleton rows={5} />
         </div>
       ) : isError ? (
         <ErrorState
@@ -180,10 +171,10 @@ export default function ApprovalsPage() {
         />
       ) : (
         <div className="space-y-3">
-          <div className="overflow-hidden rounded-[var(--radius-md)] border border-[var(--border)] bg-[var(--surface)]">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm" aria-label="Approval queue table">
-                <thead className="border-b border-[var(--border)] bg-[var(--surface-muted)] text-xs font-semibold text-[var(--muted-foreground)]">
+          <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] shadow-2xs">
+            <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Approval queue table region">
+              <table className="w-full text-left text-xs" aria-label="Approval queue table">
+                <thead className="border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] text-[var(--color-fg-muted)] uppercase tracking-wider font-semibold">
                   <tr>
                     <th scope="col" className="px-4 py-3">Quote / Proposal</th>
                     <th scope="col" className="px-4 py-3">Proposer</th>
@@ -194,33 +185,33 @@ export default function ApprovalsPage() {
                     <th scope="col" className="px-4 py-3 text-right">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[var(--border)]">
+                <tbody className="divide-y divide-[var(--color-border-subtle)]">
                   {data?.items.map((item: ApprovalQueueItem) => {
                     const isOwnProposal = user?.id === item.proposer_user_id;
                     return (
                       <tr
                         key={item.id}
-                        className="transition-colors hover:bg-[var(--surface-muted)]/50"
+                        className="transition-colors hover:bg-[var(--color-bg-subtle)]/60"
                       >
                         {/* Quote & Title */}
                         <td className="px-4 py-3.5">
                           <div className="flex flex-col">
-                            <span className="font-semibold text-[var(--foreground)]">
+                            <span className="font-mono font-semibold text-[var(--color-primary-700)]">
                               {item.quote_number}
                             </span>
-                            <span className="mt-0.5 text-xs text-[var(--muted-foreground)] line-clamp-1 max-w-[280px]">
+                            <span className="mt-0.5 text-xs text-[var(--color-fg-muted)] line-clamp-1 max-w-[280px] font-medium">
                               {item.title}
                             </span>
                           </div>
                         </td>
 
                         {/* Proposer */}
-                        <td className="px-4 py-3.5 text-xs text-[var(--foreground)]">
+                        <td className="px-4 py-3.5 text-xs text-[var(--color-fg-default)]">
                           <div className="flex items-center gap-1.5">
-                            <User className="h-3.5 w-3.5 text-[var(--muted-foreground)]" aria-hidden="true" />
-                            <span>{item.proposer_name || "Unknown"}</span>
+                            <User className="h-3.5 w-3.5 text-[var(--color-fg-muted)]" aria-hidden="true" />
+                            <span className="font-medium">{item.proposer_name || "Unknown"}</span>
                             {isOwnProposal && (
-                              <span className="rounded bg-[var(--primary-soft)] px-1.5 py-0.2 text-[10px] font-medium text-[var(--primary)]">
+                              <span className="rounded-[var(--radius-xs)] bg-[var(--color-primary-50)] px-1.5 py-0.5 text-[10px] font-semibold text-[var(--color-primary-700)] border border-[var(--color-primary-200)]">
                                 You
                               </span>
                             )}
@@ -228,10 +219,10 @@ export default function ApprovalsPage() {
                         </td>
 
                         {/* Value */}
-                        <td className="px-4 py-3.5 font-mono text-xs font-medium text-[var(--foreground)]">
+                        <td className="px-4 py-3.5 font-mono text-xs font-bold text-[var(--color-fg-default)]">
                           {formatMoney(Number(item.total_value))}
                           {item.discount_percent !== null && Number(item.discount_percent) > 0 && (
-                            <span className="ml-1.5 text-[11px] font-normal text-[var(--muted-foreground)]">
+                            <span className="ml-1.5 text-[11px] font-normal text-[var(--color-fg-muted)]">
                               ({item.discount_percent}% off)
                             </span>
                           )}
@@ -244,23 +235,23 @@ export default function ApprovalsPage() {
                               {item.triggered_rules.map((rule, idx) => (
                                 <span
                                   key={idx}
-                                  className="inline-flex items-center gap-1 rounded bg-[var(--warning)]/15 px-2 py-0.5 text-[11px] font-medium text-[var(--warning)]"
+                                  className="inline-flex items-center gap-1 rounded-[var(--radius-sm)] bg-amber-50 border border-amber-200 px-2 py-0.5 text-[11px] font-semibold text-[var(--color-warning-700)]"
                                 >
-                                  <AlertTriangle className="h-3 w-3 shrink-0" aria-hidden="true" />
-                                  {rule}
+                                  <AlertTriangle className="h-3 w-3 shrink-0 text-amber-600" aria-hidden="true" />
+                                  <span>{rule}</span>
                                 </span>
                               ))}
                             </div>
                           ) : (
-                            <span className="inline-flex items-center gap-1 text-xs text-[var(--success)]">
-                              <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
-                              Within Policy
+                            <span className="inline-flex items-center gap-1 text-xs text-[var(--color-success-700)] font-medium">
+                              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" aria-hidden="true" />
+                              <span>Within Policy</span>
                             </span>
                           )}
                         </td>
 
                         {/* Submitted Age */}
-                        <td className="px-4 py-3.5 text-xs text-[var(--muted-foreground)] whitespace-nowrap">
+                        <td className="px-4 py-3.5 text-xs text-[var(--color-fg-muted)] whitespace-nowrap">
                           <DateTimeText value={item.pending_since} />
                         </td>
 
@@ -308,7 +299,7 @@ export default function ApprovalsPage() {
 
             {/* Pagination footer */}
             {data && data.pages > 1 && (
-              <div className="flex items-center justify-between border-t border-[var(--border)] px-4 py-3 text-xs text-[var(--muted-foreground)]">
+              <div className="flex items-center justify-between border-t border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)]/40 px-4 py-3 text-xs text-[var(--color-fg-muted)]">
                 <span>
                   Showing page {data.page} of {data.pages} ({data.total} total items)
                 </span>

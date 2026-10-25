@@ -5,15 +5,11 @@ import {
   GitPullRequest,
   Plus,
   ArrowRight,
-  ShieldCheck,
-  ShieldAlert,
-  Clock,
-  User,
-  AlertCircle,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { StatusBadge } from "@/components/ui/status-badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/sakani/button";
+import { Badge } from "@/components/sakani/badge";
+import { Card } from "@/components/sakani/card";
+import { LoadingSkeleton } from "@/components/data-display/loading-skeleton";
 import { DateTimeText } from "@/components/data-display/date-time-text";
 import { useQuoteProposals, type ProposalListItem } from "@/features/proposals/api";
 import type { QuoteDetail } from "@/features/quotes/api";
@@ -34,31 +30,31 @@ export function QuoteProposalsSection({ quote }: QuoteProposalsSectionProps) {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "pending_review":
-        return <StatusBadge variant="warning" label="Pending Review" />;
+        return <Badge variant="warning" emphasis="subtle">Pending Review</Badge>;
       case "approved":
-        return <StatusBadge variant="success" label="Approved" />;
+        return <Badge variant="success" emphasis="subtle">Approved</Badge>;
       case "rejected":
-        return <StatusBadge variant="destructive" label="Rejected" />;
+        return <Badge variant="danger" emphasis="subtle">Rejected</Badge>;
       case "committed":
-        return <StatusBadge variant="info" label="Committed" />;
+        return <Badge variant="info" emphasis="subtle">Committed</Badge>;
       case "stale":
-        return <StatusBadge variant="destructive" label="Stale" />;
+        return <Badge variant="danger" emphasis="subtle">Stale</Badge>;
       case "cancelled":
-        return <StatusBadge variant="neutral" label="Cancelled" />;
+        return <Badge variant="neutral" emphasis="subtle">Cancelled</Badge>;
       default:
-        return <StatusBadge variant="neutral" label={status} />;
+        return <Badge variant="neutral" emphasis="subtle">{status}</Badge>;
     }
   };
 
   return (
-    <div className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-2xs space-y-4">
-      <div className="flex items-center justify-between border-b border-[var(--border)] pb-3">
+    <Card className="p-5 space-y-4">
+      <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] pb-3">
         <div>
-          <h3 className="text-sm font-bold text-[var(--foreground)] flex items-center gap-2">
-            <GitPullRequest className="h-4 w-4 text-[var(--primary)]" aria-hidden="true" />
+          <h3 className="text-xs font-bold text-[var(--color-fg-default)] uppercase tracking-wider flex items-center gap-2">
+            <GitPullRequest className="h-4 w-4 text-[var(--color-primary-700)]" aria-hidden="true" />
             <span>Change Proposals ({proposals.length})</span>
           </h3>
-          <p className="text-xs text-[var(--muted-foreground)] mt-0.5">
+          <p className="text-xs text-[var(--color-fg-muted)] mt-0.5">
             Isolated review-before-write modifications against committed quotation revisions.
           </p>
         </div>
@@ -73,12 +69,11 @@ export function QuoteProposalsSection({ quote }: QuoteProposalsSectionProps) {
       </div>
 
       {isLoading ? (
-        <div className="space-y-2.5">
-          <Skeleton className="h-14 w-full" />
-          <Skeleton className="h-14 w-full" />
+        <div className="py-2 space-y-2.5">
+          <LoadingSkeleton rows={2} />
         </div>
       ) : proposals.length === 0 ? (
-        <div className="py-6 text-center text-xs text-[var(--muted-foreground)]">
+        <div className="py-6 text-center text-xs text-[var(--color-fg-muted)]">
           <p>No change proposals created for this quotation yet.</p>
           <p className="mt-1">
             Click &ldquo;New Proposal&rdquo; above to propose adjustments to discounts, quantities, prices, or payment terms.
@@ -89,16 +84,16 @@ export function QuoteProposalsSection({ quote }: QuoteProposalsSectionProps) {
           {proposals.map((prop: ProposalListItem) => (
             <div
               key={prop.id}
-              className="flex items-center justify-between rounded-[var(--radius-md)] border border-[var(--border)] bg-[var(--surface-muted)]/40 p-3 text-xs transition-colors hover:bg-[var(--surface-muted)]"
+              className="flex items-center justify-between rounded-[var(--radius-md)] border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)]/40 p-3 text-xs transition-colors hover:bg-[var(--color-bg-subtle)]/80"
             >
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-[var(--foreground)]">
+                  <span className="font-semibold text-[var(--color-fg-default)]">
                     {prop.title}
                   </span>
                   {getStatusBadge(prop.status)}
                 </div>
-                <div className="flex items-center gap-3 text-[11px] text-[var(--muted-foreground)]">
+                <div className="flex items-center gap-3 text-[11px] text-[var(--color-fg-muted)] font-medium">
                   <span>Base Rev #{prop.base_revision_number}</span>
                   <span>•</span>
                   <span>{prop.operations_count} operation(s)</span>
@@ -148,6 +143,6 @@ export function QuoteProposalsSection({ quote }: QuoteProposalsSectionProps) {
           }}
         />
       )}
-    </div>
+    </Card>
   );
 }
