@@ -23,9 +23,10 @@ test.describe("Phase 2 Core CRM & Industrial Catalog E2E Workflows", () => {
     await expect(page.getByText("Active Accounts")).toBeVisible();
     await expect(page.getByText("Overdue Tasks", { exact: true })).toBeVisible();
 
-    // Verify Phase 3 active and Phase 4 availability markers are clearly indicated
-    await expect(page.getByText(/Phase 3/)).toBeVisible();
-    await expect(page.getByText(/Active in Phase 4|Available in Phase 4/)).toBeVisible();
+    // Verify Work queues section
+    await expect(page.getByRole("heading", { name: "Work queues" })).toBeVisible();
+    await expect(page.getByRole("link", { name: /Review RFQs/i })).toBeVisible();
+    await expect(page.getByRole("link", { name: /View quotations/i })).toBeVisible();
 
     // Verify Attention Queue
     await expect(page.getByRole("heading", { name: "Attention Required" })).toBeVisible();
@@ -37,7 +38,7 @@ test.describe("Phase 2 Core CRM & Industrial Catalog E2E Workflows", () => {
 
     // Verify seeded accounts are rendered
     await page.fill('input[placeholder*="Search by name"]', "Bharat Petrochem");
-    await expect(page.getByText("Bharat Petrochem Equipment Corp.")).toBeVisible();
+    await expect(page.locator('a:visible', { hasText: "Bharat Petrochem Equipment Corp." })).toBeVisible();
     await page.fill('input[placeholder*="Search by name"]', "");
 
     // Create a new account
@@ -49,7 +50,7 @@ test.describe("Phase 2 Core CRM & Industrial Catalog E2E Workflows", () => {
     await page.getByRole("button", { name: "Create Account" }).click();
 
     // Verify account appears in list
-    await expect(page.getByRole("link", { name: uniqueAccountName })).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('a:visible', { hasText: uniqueAccountName })).toBeVisible({ timeout: 5000 });
 
     // 4. Opportunities page & pipeline toggle
     await page.goto("/app/opportunities");
@@ -73,7 +74,7 @@ test.describe("Phase 2 Core CRM & Industrial Catalog E2E Workflows", () => {
     await expect(page.getByRole("heading", { name: "Tasks & Follow-ups" })).toBeVisible();
 
     // Complete first open task
-    const completeBtn = page.getByRole("button", { name: "Mark as completed" }).first();
+    const completeBtn = page.getByRole("button", { name: /as completed/i }).first();
     await completeBtn.click();
 
     // Verify 10-second Undo toast appears
