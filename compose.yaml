@@ -1,0 +1,70 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: forgeflow-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-forgeflow}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-forgeflow_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-forgeflow}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5434}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./scripts/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-forgeflow} -d ${POSTGRES_DB:-forgeflow}"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+      start_period: 3s
+
+  backend:
+    image: crm-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: forgeflow-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      DEMO_MODE: ${DEMO_MODE:-true}
+      APP_SECRET_KEY: ${APP_SECRET_KEY:-forgeflow-local-development-secret-key-32chars-min!}
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-forgeflow}:${POSTGRES_PASSWORD:-forgeflow_dev}@db:5432/${POSTGRES_DB:-forgeflow}
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost:3000}
+      SESSION_COOKIE_NAME: ${SESSION_COOKIE_NAME:-forgeflow_session}
+      SESSION_TTL_HOURS: ${SESSION_TTL_HOURS:-12}
+      SESSION_IDLE_TTL_MINUTES: ${SESSION_IDLE_TTL_MINUTES:-60}
+      CSRF_COOKIE_NAME: ${CSRF_COOKIE_NAME:-forgeflow_csrf}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    ports:
+      - "127.0.0.1:8000:8000"
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/live')"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+  frontend:
+    image: crm-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: forgeflow-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: http://backend:8000
+      INTERNAL_API_URL: http://backend:8000
+    ports:
+      - "127.0.0.1:3000:3000"
+
+volumes:
+  pgdata:

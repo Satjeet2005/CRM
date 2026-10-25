@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quotation {{ dto.quote_number }} - Rev {{ dto.revision_number }}</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 18mm 16mm 22mm 16mm;
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-family: 'DejaVu Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                font-size: 8pt;
+                color: #64748b;
+            }
+            @bottom-left {
+                content: "ForgeFlow Operations Platform — Commercial Quotation";
+                font-family: 'DejaVu Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                font-size: 8pt;
+                color: #64748b;
+            }
+        }
+
+        body {
+            font-family: 'DejaVu Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #0f172a;
+            font-size: 9pt;
+            line-height: 1.4;
+            margin: 0;
+            padding: 0;
+        }
+
+        {% if dto.is_watermarked %}
+        .watermark {
+            position: fixed;
+            top: 40%;
+            left: -15%;
+            width: 130%;
+            text-align: center;
+            font-size: 32pt;
+            font-weight: 800;
+            color: rgba(220, 38, 38, 0.16);
+            transform: rotate(-32deg);
+            pointer-events: none;
+            z-index: 9999;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1.3;
+        }
+        .draft-banner {
+            background-color: #fef2f2;
+            border: 1px solid #f87171;
+            color: #991b1b;
+            padding: 6px 12px;
+            font-weight: bold;
+            font-size: 8.5pt;
+            text-align: center;
+            margin-bottom: 14px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        {% endif %}
+
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .header-table td {
+            vertical-align: top;
+            padding: 0;
+        }
+        .brand-title {
+            font-size: 18pt;
+            font-weight: 800;
+            color: #4f46e5;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+        .brand-subtitle {
+            font-size: 8.5pt;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+        .quote-title-block {
+            text-align: right;
+        }
+        .quote-heading {
+            font-size: 16pt;
+            font-weight: 800;
+            color: #0f172a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .quote-meta-row {
+            font-size: 8.5pt;
+            color: #334155;
+            margin-bottom: 2px;
+        }
+        .quote-meta-row strong {
+            color: #0f172a;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 8pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+        .status-approved {
+            background-color: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+        .status-sent {
+            background-color: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+        .status-draft {
+            background-color: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fcd34d;
+        }
+
+        .parties-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+        }
+        .parties-table td {
+            width: 50%;
+            padding: 12px 16px;
+            vertical-align: top;
+        }
+        .party-title {
+            font-size: 8pt;
+            text-transform: uppercase;
+            font-weight: bold;
+            color: #64748b;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .party-name {
+            font-size: 10.5pt;
+            font-weight: bold;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+        .party-details {
+            font-size: 8.5pt;
+            color: #334155;
+            line-height: 1.4;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+        }
+        .items-table thead {
+            display: table-header-group;
+        }
+        .items-table th {
+            background-color: #f1f5f9;
+            color: #334155;
+            font-size: 8pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            padding: 8px 6px;
+            border-top: 1px solid #cbd5e1;
+            border-bottom: 2px solid #94a3b8;
+            text-align: left;
+        }
+        .items-table th.text-right, .items-table td.text-right {
+            text-align: right;
+        }
+        .items-table th.text-center, .items-table td.text-center {
+            text-align: center;
+        }
+        .items-table tr {
+            page-break-inside: avoid;
+        }
+        .items-table td {
+            padding: 8px 6px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 8.5pt;
+            vertical-align: top;
+        }
+        .item-sku {
+            font-family: monospace;
+            font-size: 8pt;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+        .item-name {
+            font-weight: 600;
+            color: #0f172a;
+        }
+        .item-desc {
+            font-size: 7.5pt;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .totals-container {
+            width: 100%;
+            page-break-inside: avoid;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        .totals-table {
+            width: 48%;
+            margin-left: auto;
+            border-collapse: collapse;
+        }
+        .totals-table td {
+            padding: 5px 8px;
+            font-size: 8.5pt;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .totals-table td.total-label {
+            color: #475569;
+            text-align: left;
+        }
+        .totals-table td.total-val {
+            text-align: right;
+            font-weight: 600;
+            color: #0f172a;
+        }
+        .totals-table tr.grand-total td {
+            border-top: 2px solid #0f172a;
+            border-bottom: 2px solid #0f172a;
+            font-size: 10.5pt;
+            font-weight: 800;
+            color: #0f172a;
+            padding: 8px 8px;
+            background-color: #f8fafc;
+        }
+
+        .terms-container {
+            page-break-inside: avoid;
+            margin-top: 20px;
+            padding: 12px 14px;
+            background-color: #fafafa;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+        }
+        .terms-heading {
+            font-size: 8.5pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #334155;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+        .terms-item {
+            font-size: 8pt;
+            color: #475569;
+            margin-bottom: 4px;
+        }
+        .terms-item strong {
+            color: #1e293b;
+        }
+    </style>
+</head>
+<body>
+
+{% if dto.is_watermarked %}
+<div class="watermark">{{ dto.watermark_text }}</div>
+<div class="draft-banner">Notice: {{ dto.watermark_text }}</div>
+{% endif %}
+
+<table class="header-table">
+    <tr>
+        <td style="width: 55%;">
+            <div class="brand-title">ForgeFlow</div>
+            <div class="brand-subtitle">{{ dto.seller.company_name }}</div>
+            <div style="font-size: 8pt; color: #475569; line-height: 1.3;">
+                {% if dto.seller.address %}{{ dto.seller.address }}<br>{% endif %}
+                {% if dto.seller.tax_id %}<strong>GSTIN / Tax ID:</strong> {{ dto.seller.tax_id }}<br>{% endif %}
+                {% if dto.seller.contact_email %}<strong>Email:</strong> {{ dto.seller.contact_email }} &bull; {% endif %}
+                {% if dto.seller.contact_phone %}<strong>Phone:</strong> {{ dto.seller.contact_phone }}{% endif %}
+            </div>
+        </td>
+        <td class="quote-title-block" style="width: 45%;">
+            <div class="quote-heading">Quotation</div>
+            <div class="quote-meta-row"><strong>Quote #:</strong> {{ dto.quote_number }}</div>
+            <div class="quote-meta-row"><strong>Revision:</strong> Rev {{ dto.revision_number }}</div>
+            <div class="quote-meta-row"><strong>Date:</strong> {{ dto.issue_date }}</div>
+            <div class="quote-meta-row">
+                <strong>Valid Until:</strong> {{ dto.valid_until or "No valid expiry date" }}
+            </div>
+            <div>
+                <span class="status-badge {% if dto.status == 'approved' %}status-approved{% elif dto.status == 'sent' %}status-sent{% else %}status-draft{% endif %}">
+                    {{ dto.status }}
+                </span>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<table class="parties-table">
+    <tr>
+        <td>
+            <div class="party-title">Bill To / Customer</div>
+            <div class="party-name">{{ dto.customer.account_name }}</div>
+            <div class="party-details">
+                {% if dto.customer.legal_name and dto.customer.legal_name != dto.customer.account_name %}
+                    <strong>Legal:</strong> {{ dto.customer.legal_name }}<br>
+                {% endif %}
+                {% if dto.customer.billing_address %}
+                    {{ dto.customer.billing_address }}<br>
+                {% endif %}
+                {% if dto.customer.email %}<strong>Email:</strong> {{ dto.customer.email }}<br>{% endif %}
+                {% if dto.customer.phone %}<strong>Phone:</strong> {{ dto.customer.phone }}<br>{% endif %}
+            </div>
+        </td>
+        <td>
+            <div class="party-title">Project & Commercial Terms</div>
+            <div class="party-details">
+                {% if dto.opportunity_title %}
+                    <strong>Opportunity:</strong> {{ dto.opportunity_title }}<br>
+                {% endif %}
+                <strong>Payment Terms:</strong> {{ dto.payment_terms or "Standard Net 30" }}<br>
+                <strong>Delivery Terms:</strong> {{ dto.delivery_terms or "FOB Origin" }}<br>
+                <strong>Currency:</strong> {{ dto.currency }} (Indian Rupee)<br>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<table class="items-table">
+    <thead>
+        <tr>
+            <th class="text-center" style="width: 5%;">#</th>
+            <th style="width: 25%;">SKU & Item Name</th>
+            <th style="width: 28%;">Description</th>
+            <th class="text-center" style="width: 6%;">Unit</th>
+            <th class="text-right" style="width: 8%;">Qty</th>
+            <th class="text-right" style="width: 10%;">Unit Price</th>
+            <th class="text-right" style="width: 6%;">Disc %</th>
+            <th class="text-right" style="width: 6%;">Tax %</th>
+            <th class="text-right" style="width: 12%;">Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for line in dto.lines %}
+        <tr>
+            <td class="text-center">{{ line.line_number }}</td>
+            <td>
+                <div class="item-sku">{{ line.sku }}</div>
+                <div class="item-name">{{ line.product_name }}</div>
+            </td>
+            <td>
+                <div class="item-desc">{{ line.description or "Standard industrial specification" }}</div>
+            </td>
+            <td class="text-center">{{ line.unit }}</td>
+            <td class="text-right">{{ "%.2f"|format(line.quantity|float) }}</td>
+            <td class="text-right">{{ "%.2f"|format(line.unit_price|float) }}</td>
+            <td class="text-right">{{ "%.1f"|format(line.discount_percent|float) }}%</td>
+            <td class="text-right">{{ "%.1f"|format(line.tax_rate_percent|float) }}%</td>
+            <td class="text-right" style="font-weight: 600;">{{ "%.2f"|format(line.line_total|float) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="totals-container">
+    <table class="totals-table">
+        <tr>
+            <td class="total-label">Subtotal (Gross Amount):</td>
+            <td class="total-val">{{ dto.currency }} {{ "%.2f"|format(dto.subtotal_amount|float) }}</td>
+        </tr>
+        <tr>
+            <td class="total-label">Total Commercial Discount:</td>
+            <td class="total-val">- {{ dto.currency }} {{ "%.2f"|format(dto.total_discount_amount|float) }}</td>
+        </tr>
+        <tr>
+            <td class="total-label">Taxable Base Amount:</td>
+            <td class="total-val">{{ dto.currency }} {{ "%.2f"|format(dto.taxable_amount|float) }}</td>
+        </tr>
+        <tr>
+            <td class="total-label">Estimated Tax (GST):</td>
+            <td class="total-val">{{ dto.currency }} {{ "%.2f"|format(dto.total_tax_amount|float) }}</td>
+        </tr>
+        <tr class="grand-total">
+            <td class="total-label">Grand Total:</td>
+            <td class="total-val">{{ dto.currency }} {{ "%.2f"|format(dto.grand_total|float) }}</td>
+        </tr>
+    </table>
+</div>
+
+<div class="terms-container">
+    <div class="terms-heading">Standard Commercial Terms & Notes</div>
+    <div class="terms-item"><strong>Payment Terms:</strong> {{ dto.payment_terms or "Standard Net 30 Days from date of invoice." }}</div>
+    <div class="terms-item"><strong>Delivery Terms:</strong> {{ dto.delivery_terms or "Ex-Works / Standard freight arrangements apply." }}</div>
+    {% if dto.customer_notes %}
+    <div class="terms-item"><strong>Special Instructions:</strong> {{ dto.customer_notes }}</div>
+    {% endif %}
+    <div class="terms-item" style="margin-top: 6px; font-size: 7.5pt; color: #64748b;">
+        This quotation is valid until {{ dto.valid_until or "the date specified" }} and is subject to standard industrial commercial conditions. All quotes are issued electronically by ForgeFlow.
+    </div>
+</div>
+
+</body>
+</html>

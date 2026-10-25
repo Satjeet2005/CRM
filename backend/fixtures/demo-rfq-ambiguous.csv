@@ -1,0 +1,12 @@
+Item Description,Quantity,UOM,Notes
+GI Pipe 15mm Class A,25,mtr,High priority turnaround line
+GI Pipe 25mm Class B,50,mtr,Galvanized iron medium
+MS Hex Bolt M12x50,100,nos,Missing grade specification (ambiguous tie 4.6 vs 8.8)
+MS Hex Bolt M16x60 Grade 8.8,200,nos,High tensile flange connection
+Brass Ball Valve Screwed 25mm,15,nos,Threaded isolation valve
+Brass Gate Valve Screwed 50mm,10,nos,Full bore isolation
+GI 90 Degree Elbow 25mm Class B,40,nos,Screwed fitting
+Welding Electrodes MS E6013 3.15mm,5,box,General fabrication consumable
+PTFE Thread Seal Tape 12mm x 10m,100,roll,Sealing tape
+Special Titanium Alloy Impeller Casing,-5,nos,Negative quantity blocking validation
+Unknown Exotic Ceramic Seal Ring 45mm,2,ea,Custom item not in catalog
