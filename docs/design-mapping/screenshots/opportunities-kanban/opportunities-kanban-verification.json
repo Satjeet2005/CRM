@@ -1,0 +1,141 @@
+{
+  "timestamp": "2026-10-25T17:52:23.086Z",
+  "axeResults": {
+    "desktop": {
+      "violationsCount": 0,
+      "violations": []
+    },
+    "desktopDark": {
+      "violationsCount": 0,
+      "violations": []
+    },
+    "tablet": {
+      "violationsCount": 0,
+      "violations": []
+    },
+    "mobile": {
+      "violationsCount": 0,
+      "violations": []
+    }
+  },
+  "measurements": {
+    "desktop": {
+      "columnsCount": 7,
+      "columnWidth": 352,
+      "columnHeight": 480,
+      "columnBorderRadius": "12px",
+      "columnPadding": "12px 12px 12px 12px",
+      "columnBackground": "rgb(250, 250, 249)",
+      "header": {
+        "height": 32,
+        "dotWidth": 8,
+        "dotHeight": 8,
+        "titleFontSize": "14px",
+        "titleFontWeight": "600",
+        "titleLineHeight": "20px",
+        "countBadgeHeight": 8,
+        "countBadgeFontSize": "16px",
+        "countBadgeBackground": "rgb(46, 144, 250)"
+      },
+      "card": {
+        "width": 326,
+        "height": 149,
+        "borderRadius": "12px",
+        "padding": "12px 12px 12px 12px",
+        "backgroundColor": "rgb(255, 255, 255)",
+        "titleFontSize": "14px",
+        "titleFontWeight": "600",
+        "accountFontSize": "13px",
+        "hasBuildingIcon": true,
+        "valueFontSize": "13px",
+        "valueFontWeight": "600",
+        "actionCount": 2
+      },
+      "stages": [
+        {
+          "name": "Lead",
+          "count": "1",
+          "total": "₹1,85,000.00",
+          "cardCount": 1
+        },
+        {
+          "name": "Qualified",
+          "count": "1",
+          "total": "₹3,40,000.00",
+          "cardCount": 1
+        },
+        {
+          "name": "Solutioning",
+          "count": "1",
+          "total": "₹7,50,000.00",
+          "cardCount": 1
+        },
+        {
+          "name": "Proposal",
+          "count": "2",
+          "total": "₹27,70,000.00",
+          "cardCount": 2
+        },
+        {
+          "name": "Negotiation",
+          "count": "1",
+          "total": "₹14,50,000.00",
+          "cardCount": 1
+        },
+        {
+          "name": "Closed Won",
+          "count": "2",
+          "total": "₹7,90,000.00",
+          "cardCount": 2
+        },
+        {
+          "name": "Closed Lost",
+          "count": "2",
+          "total": "₹11,00,000.00",
+          "cardCount": 2
+        }
+      ]
+    },
+    "mobile": {
+      "hasHorizontalOverflow": false,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "columnsRendered": 7,
+      "firstColWidth": 352
+    }
+  },
+  "screenshots": [
+    {
+      "name": "desktopPage",
+      "path": "/home/satjeet/Desktop/CRM/docs/design-mapping/screenshots/opportunities-kanban/opportunities-kanban-page-desktop-1440x900.png"
+    },
+    {
+      "name": "desktopBoardCrop",
+      "path": "/home/satjeet/Desktop/CRM/docs/design-mapping/screenshots/opportunities-kanban/opportunities-kanban-desktop-1440x900.png"
+    },
+    {
+      "name": "cardCloseUp",
+      "path": "/home/satjeet/Desktop/CRM/docs/design-mapping/screenshots/opportunities-kanban/opportunities-card-desktop-1440x900.png"
+    },
+    {
+      "name": "cardHover",
+      "path": "/home/satjeet/Desktop/CRM/docs/design-mapping/screenshots/opportunities-kanban/opportunities-card-hover-desktop-1440x900.png"
+    },
+    {
+      "name": "dropTarget",
+      "path": "/home/satjeet/Desktop/CRM/docs/design-mapping/screenshots/opportunities-kanban/opportunities-drop-target-desktop-1440x900.png"
+    },
+    {
+      "name": "desktopDarkBoard",
+      "path": "/home/satjeet/Desktop/CRM/docs/design-mapping/screenshots/opportunities-kanban/opportunities-kanban-dark-desktop-1440x900.png"
+    },
+    {
+      "name": "tabletBoard",
+      "path": "/home/satjeet/Desktop/CRM/docs/design-mapping/screenshots/opportunities-kanban/opportunities-kanban-tablet-1024x768.png"
+    },
+    {
+      "name": "mobileBoard",
+      "path": "/home/satjeet/Desktop/CRM/docs/design-mapping/screenshots/opportunities-kanban/opportunities-kanban-mobile-390x844.png"
+    }
+  ]
+}

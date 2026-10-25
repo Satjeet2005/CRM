@@ -86,7 +86,7 @@ export default function OpportunitiesPage() {
               </button>
             </div>
 
-            <Button onClick={() => setCreateDialogOpen(true)} className="gap-1.5">
+            <Button onClick={() => setCreateDialogOpen(true)} className="h-9 gap-1.5 font-medium">
               <Plus className="h-4 w-4" />
               <span>New Opportunity</span>
             </Button>
@@ -95,13 +95,14 @@ export default function OpportunitiesPage() {
       />
 
       {/* Search & Stage Filter */}
-      <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-[var(--color-border-subtle)] pb-4">
         <div className="relative flex-1 max-w-md">
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search deals by title..."
             leadingIcon={<Search className="h-4 w-4 text-[var(--color-fg-muted)]" />}
+            className="h-8 text-xs"
           />
         </div>
 
