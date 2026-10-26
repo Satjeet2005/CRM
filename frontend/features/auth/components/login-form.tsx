@@ -15,6 +15,11 @@ const loginSchema = z.object({
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
+type BackendStatus = "checking" | "waking" | "ready" | "unavailable";
+
+const DEFAULT_HEALTH_CHECK_INTERVAL_MS = 2_500;
+const DEFAULT_HEALTH_CHECK_TIMEOUT_MS = 8_000;
+const DEFAULT_BACKEND_WAKE_TIMEOUT_MS = 120_000;
 
 const DEMO_ACCOUNTS = [
   {
@@ -47,6 +52,89 @@ export function LoginForm() {
   const { login, isLoggingIn } = useAuth();
   const [showPassword, setShowPassword] = React.useState(false);
   const [serverError, setServerError] = React.useState<string | null>(null);
+  const [backendStatus, setBackendStatus] = React.useState<BackendStatus>("checking");
+  const [healthCheckAttempt, setHealthCheckAttempt] = React.useState(0);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    let retryTimer: number | undefined;
+    let requestTimeout: number | undefined;
+    let activeController: AbortController | null = null;
+
+    const wakeTimeoutMs =
+      (typeof window !== "undefined" &&
+        (window as unknown as { __BACKEND_WAKE_TIMEOUT_MS__?: number })
+          .__BACKEND_WAKE_TIMEOUT_MS__) ||
+      DEFAULT_BACKEND_WAKE_TIMEOUT_MS;
+
+    const intervalMs =
+      (typeof window !== "undefined" &&
+        (window as unknown as { __HEALTH_CHECK_INTERVAL_MS__?: number })
+          .__HEALTH_CHECK_INTERVAL_MS__) ||
+      DEFAULT_HEALTH_CHECK_INTERVAL_MS;
+
+    const requestTimeoutMs =
+      (typeof window !== "undefined" &&
+        (window as unknown as { __HEALTH_CHECK_TIMEOUT_MS__?: number })
+          .__HEALTH_CHECK_TIMEOUT_MS__) ||
+      DEFAULT_HEALTH_CHECK_TIMEOUT_MS;
+
+    const deadline = Date.now() + wakeTimeoutMs;
+
+    const checkBackend = async (): Promise<void> => {
+      if (cancelled) return;
+
+      const controller = new AbortController();
+      activeController = controller;
+      requestTimeout = window.setTimeout(
+        () => controller.abort(),
+        requestTimeoutMs
+      );
+
+      try {
+        // This request goes through the frontend's existing /health rewrite.
+        // A first 502/503 may be expected while Render wakes the free backend.
+        const response = await fetch("/health/ready", {
+          method: "GET",
+          cache: "no-store",
+          credentials: "same-origin",
+          headers: { "Cache-Control": "no-cache" },
+          signal: controller.signal,
+        });
+
+        if (response.ok) {
+          if (!cancelled) setBackendStatus("ready");
+          return;
+        }
+      } catch {
+        // Keep retrying while the backend starts or the request times out.
+      } finally {
+        if (requestTimeout !== undefined) {
+          window.clearTimeout(requestTimeout);
+          requestTimeout = undefined;
+        }
+      }
+
+      if (cancelled) return;
+
+      if (Date.now() >= deadline) {
+        setBackendStatus("unavailable");
+        return;
+      }
+
+      setBackendStatus("waking");
+      retryTimer = window.setTimeout(checkBackend, intervalMs);
+    };
+
+    void checkBackend();
+
+    return () => {
+      cancelled = true;
+      if (retryTimer !== undefined) window.clearTimeout(retryTimer);
+      if (requestTimeout !== undefined) window.clearTimeout(requestTimeout);
+      activeController?.abort();
+    };
+  }, [healthCheckAttempt]);
 
   const {
     register,
@@ -63,6 +151,12 @@ export function LoginForm() {
 
   const onSubmit = async (data: LoginFormData) => {
     setServerError(null);
+
+    if (backendStatus !== "ready") {
+      setServerError("Please wait for the server to finish starting before signing in.");
+      return;
+    }
+
     try {
       await login(data);
     } catch (err: unknown) {
@@ -79,6 +173,14 @@ export function LoginForm() {
     setValue("password", "ForgeFlowDemo!2026", { shouldValidate: true });
     setServerError(null);
   };
+
+  const retryBackendConnection = () => {
+    setServerError(null);
+    setBackendStatus("checking");
+    setHealthCheckAttempt((attempt) => attempt + 1);
+  };
+
+  const isBackendChecking = backendStatus === "checking" || backendStatus === "waking";
 
   return (
     <div className="w-full max-w-md space-y-6 rounded-[var(--radius-xl)] border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] p-6 sm:p-8 shadow-sm">
@@ -121,6 +223,42 @@ export function LoginForm() {
           ))}
         </div>
       </div>
+
+      {/* Cold-start status: wake the API and wait for DB readiness before allowing login. */}
+      {backendStatus === "ready" ? (
+        <div
+          role="status"
+          className="flex items-center gap-2 rounded-[var(--radius-lg)] border border-[var(--color-success-border)] bg-[var(--color-success-bg)] p-3 text-xs text-[var(--color-success-fg)]"
+        >
+          <span className="h-2 w-2 rounded-full bg-current" aria-hidden="true" />
+          <span>Server is ready. You can sign in.</span>
+        </div>
+      ) : backendStatus === "unavailable" ? (
+        <Alert
+          color="warning"
+          role="alert"
+          title="Server is taking longer than expected"
+          description="We couldn't confirm that the server is ready yet. Check your connection and retry."
+        >
+          <div className="pt-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={retryBackendConnection}
+            >
+              Retry connection
+            </Button>
+          </div>
+        </Alert>
+      ) : (
+        <Alert
+          color="info"
+          role="status"
+          title={backendStatus === "checking" ? "Connecting to ForgeFlow" : "Waking up the server"}
+          description="The preview server may be asleep after inactivity. We’re starting it and checking database readiness automatically. Sign-in will unlock as soon as it is ready."
+        />
+      )}
 
       {/* Form Error Banner */}
       {serverError && (
@@ -173,9 +311,16 @@ export function LoginForm() {
           variant="primary"
           size="lg"
           className="w-full mt-2 font-medium"
-          isLoading={isLoggingIn}
+          isLoading={isLoggingIn || isBackendChecking}
+          disabled={backendStatus !== "ready"}
         >
-          Sign In
+          {backendStatus === "ready"
+            ? "Sign In"
+            : backendStatus === "unavailable"
+              ? "Server unavailable"
+              : backendStatus === "checking"
+                ? "Connecting…"
+                : "Waking up server…"}
         </Button>
       </form>
 
