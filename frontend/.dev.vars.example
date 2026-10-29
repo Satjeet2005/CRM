@@ -1,0 +1,6 @@
+# Cloudflare Workers Local Environment Variables Example
+# Copy to .dev.vars for local wrangler / opennextjs-cloudflare preview
+# DO NOT COMMIT .dev.vars WITH SECRETS
+
+INTERNAL_API_URL=https://forgeflow-backend-preview.onrender.com
+NEXTJS_ENV=development
